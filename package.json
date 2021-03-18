@@ -9,8 +9,10 @@
     "export": "next build && next export"
   },
   "dependencies": {
+    "mongoose": "^5.12.0",
     "next": "10.0.9",
     "react": "17.0.1",
-    "react-dom": "17.0.1"
+    "react-dom": "17.0.1",
+    "ua-parser-js": "^0.7.24"
   }
 }
