@@ -1,81 +1,52 @@
-const mongoose = require("mongoose");
 const UAParser = require("ua-parser-js");
+const mapValuesDeep = require("deepdash/mapValuesDeep");
+const { PrismaClient } = require("@prisma/client");
 
-const response = (statusCode, body) => ({
-  statusCode: statusCode,
-  body: JSON.stringify(body),
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+const prisma = new PrismaClient();
 
-let connection = null;
-const uri = process.env.MONGODB_URI;
+module.exports = async (req, res) => {
+  const uaResults = new UAParser(req.headers["user-agent"]).getResult();
+  const ua = mapValuesDeep({ ...uaResults }, (v) => (v ? v : "#ND"), {});
 
-exports.handler = async function (event, context) {
-  // Only allow POST
-  if (event.httpMethod !== "GET") {
-    return response(405, { message: "Method Not Allowed" });
-  }
-
-  context.callbackWaitsForEmptyEventLoop = false;
-
-  if (connection == null) {
-    connection = mongoose.createConnection(uri, {
-      bufferCommands: false, // Disable mongoose buffering
-      bufferMaxEntries: 0, // and MongoDB driver buffering
-    });
-
-    // `await`ing connection after assigning to the `connection` variable
-    // to avoid multiple function calls creating new connectionections
-    await connection;
-
-    connection.model(
-      "events",
-      new mongoose.Schema({
-        type: String,
-        websiteId: String,
-        ua: {
-          browser: {
-            name: String,
-            version: String,
-            major: String,
-          },
-          engine: {
-            name: String,
-            version: String,
-          },
-          os: {
-            name: String,
-            version: String,
-          },
-          device: {},
+  // Create Event
+  const createdEvent = await prisma.event.create({
+    data: {
+      type: "pageView",
+      website: {
+        connect: {
+          id: 1,
         },
-        /*
-        device: {
-          vendor: String,
-          model: String,
-          type: String,
+      },
+      browser: {
+        create: {
+          name: ua.browser.name,
+          version: ua.browser.version,
+          major: ua.browser.major,
         },
-        */
-      })
-    );
-  }
-
-  const Event = connection.model("events");
-
-  const ua = new UAParser(event.headers["user-agent"]);
-
-  const evt = new Event({
-    type: "pageView",
-    websiteId: "DX8C92MFBN2OSBF03LF93",
-    ua: { ...ua.getResult() },
+      },
+      engine: {
+        create: {
+          name: ua.engine.name,
+          version: ua.engine.version,
+        },
+      },
+      os: {
+        create: {
+          name: ua.os.name,
+          version: ua.os.version,
+        },
+      },
+      device: {
+        create: {
+          vendor: ua.device.vendor,
+          model: ua.device.model,
+          type: ua.device.type,
+        },
+      },
+    },
   });
 
-  try {
-    const res = await evt.save();
-    return response(200, { ...res, event: event });
-  } catch (err) {
-    return response(500, { message: err });
-  }
+  res.json({
+    data: createdEvent,
+  });
 };

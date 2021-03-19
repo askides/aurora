@@ -11,6 +11,7 @@
   "dependencies": {
     "@prisma/client": "^2.19.0",
     "@tailwindcss/forms": "^0.2.1",
+    "deepdash": "^5.3.5",
     "mongoose": "^5.12.0",
     "next": "10.0.9",
     "react": "17.0.1",

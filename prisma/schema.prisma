@@ -13,12 +13,20 @@ generator client {
 model Event {
   id        Int      @id @default(autoincrement())
   type      String   @db.VarChar(255)
-  website   Website  @relation(fields: [websiteId], references: [id])
   websiteId Int
-  browser   Browser  @relation(fields: [browserId], references: [id])
   browserId Int
+  engineId  Int
+  osId      Int
+  deviceId  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // Relationships
+  website Website @relation(fields: [websiteId], references: [id])
+  browser Browser @relation(fields: [browserId], references: [id])
+  engine  Engine  @relation(fields: [engineId], references: [id])
+  os      Os      @relation(fields: [osId], references: [id])
+  device  Device  @relation(fields: [deviceId], references: [id])
 }
 
 model Browser {
@@ -26,27 +34,30 @@ model Browser {
   name      String   @db.VarChar(255)
   version   String   @db.VarChar(255)
   major     String   @db.VarChar(255)
-  event     Event
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  event Event?
 }
 
 model Engine {
   id        Int      @id @default(autoincrement())
   name      String   @db.VarChar(255)
   version   String   @db.VarChar(255)
-  event     Event
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  event Event?
 }
 
 model Os {
   id        Int      @id @default(autoincrement())
   name      String   @db.VarChar(255)
   version   String   @db.VarChar(255)
-  event     Event
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  event Event?
 }
 
 model Device {
@@ -54,9 +65,10 @@ model Device {
   vendor    String   @db.VarChar(255)
   model     String   @db.VarChar(255)
   type      String   @db.VarChar(255)
-  event     Event
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  event Event?
 }
 
 model Website {
