@@ -13,6 +13,7 @@ generator client {
 model Event {
   id        Int      @id @default(autoincrement())
   type      String   @db.VarChar(255)
+  element   String
   websiteId Int
   browserId Int
   engineId  Int
