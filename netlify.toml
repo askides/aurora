@@ -1,7 +1,0 @@
-[build]
-  command = "npm run export"
-  publish = "out"
-  functions = "functions"
-
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
