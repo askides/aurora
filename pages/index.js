@@ -3,6 +3,8 @@ import SideMenu from "../components/layout/SideMenu";
 import SideNarrow from "../components/layout/SideNarrow";
 import Header from "../components/layout/Header";
 import PageHeader from "../components/PageHeader";
+import SimpleChart from "../components/SimpleChart";
+import ListView from "../components/ListView";
 
 export default function Home() {
   return (
@@ -20,7 +22,7 @@ export default function Home() {
           {/*  Top nav */}
           <PageHeader />
 
-          <div className="min-w-0 flex-1 border-t border-gray-200 lg:flex">
+          <div className="min-w-0 border-t border-gray-200 lg:flex p-4 sm:p-6 lg:p-8 space-x-2">
             {/*  Primary column  */}
             <section
               aria-labelledby="primary-heading"
@@ -28,13 +30,16 @@ export default function Home() {
               <h1 id="primary-heading" className="sr-only">
                 Home
               </h1>
-              {/*  Your content  */}
+
+              <SimpleChart />
             </section>
 
             {/*  Secondary column (hidden on smaller screens)  */}
             <aside className="hidden lg:block lg:flex-shrink-0 lg:order-first">
-              <div className="h-full relative flex flex-col w-96 border-r border-gray-200 bg-gray-100">
+              <div className="h-full relative flex flex-col w-96 bg-gray-100">
                 {/*  Your content  */}
+
+                <ListView />
               </div>
             </aside>
           </div>
