@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import useSWR from "swr";
 import {
   BarChart,
   Bar,
@@ -11,7 +11,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const data = [
+const dddd = [
   {
     name: "Page A",
     uv: 4000,
@@ -56,31 +56,39 @@ const data = [
   },
 ];
 
-export default class SimpleChart extends PureComponent {
-  static demoUrl = "https://codesandbox.io/s/stacked-bar-chart-s47i2";
+const SimpleChart = () => {
+  const fetcher = (...args) =>
+    fetch(...args)
+      .then((res) => res.json())
+      .then((res) => res.data);
 
-  render() {
-    return (
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart
-          width={500}
-          height={300}
-          data={data}
-          margin={{
-            top: 20,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="pv" stackId="a" fill="#8884d8" />
-          <Bar dataKey="uv" stackId="a" fill="#82ca9d" />
-        </BarChart>
-      </ResponsiveContainer>
-    );
-  }
-}
+  const { data, error } = useSWR("/api/metrics/daily-views", fetcher);
+
+  if (error) return <div>failed to load</div>;
+  if (!data) return <div>loading...</div>;
+
+  return (
+    <ResponsiveContainer width="100%" height="100%">
+      <BarChart
+        width={500}
+        height={1000}
+        data={data}
+        margin={{
+          top: 5,
+          right: 30,
+          left: 20,
+          bottom: 5,
+        }}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="range" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Bar dataKey="views" fill="#8884d8" />
+        <Bar dataKey="uv" fill="#82ca9d" />
+      </BarChart>
+    </ResponsiveContainer>
+  );
+};
+
+export default SimpleChart;

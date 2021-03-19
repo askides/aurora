@@ -4,14 +4,39 @@ const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
-module.exports = async (req, res) => {
+const allowCors = (fn) => async (req, res) => {
+  res.setHeader("Access-Control-Allow-Credentials", true);
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  // another common pattern
+  // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+  res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS,PATCH,DELETE,POST,PUT");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
+  );
+  if (req.method === "OPTIONS") {
+    res.status(200).end();
+    return;
+  }
+  return await fn(req, res);
+};
+
+const handler = async (req, res) => {
+  // Only POST Available
+  if (req.method !== "POST") {
+    return res.status(405).json({ message: "Method not allowed." });
+  }
+
   const uaResults = new UAParser(req.headers["user-agent"]).getResult();
   const ua = mapValuesDeep({ ...uaResults }, (v) => (v ? v : "#ND"), {});
+
+  const { type, element } = req.body;
 
   // Create Event
   const createdEvent = await prisma.event.create({
     data: {
-      type: "pageView",
+      type: type,
+      element: element,
       website: {
         connect: {
           id: 1,
@@ -46,7 +71,9 @@ module.exports = async (req, res) => {
     },
   });
 
-  res.json({
+  return res.json({
     data: createdEvent,
   });
 };
+
+module.exports = allowCors(handler);

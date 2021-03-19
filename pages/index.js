@@ -24,6 +24,7 @@ export default function Home() {
 
           <div className="min-w-0 border-t border-gray-200 lg:flex p-4 sm:p-6 lg:p-8 space-x-2">
             {/*  Primary column  */}
+            <SimpleChart />
             <section
               aria-labelledby="primary-heading"
               className="min-w-0 flex-1 h-full flex flex-col overflow-hidden lg:order-last">
