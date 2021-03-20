@@ -10,17 +10,17 @@ import Tile from "../components/Tile";
 
 export default function Home() {
   return (
-    <div class="h-screen flex overflow-hidden bg-gray-50">
+    <div className="h-screen flex overflow-hidden bg-gray-50">
       <SideNarrow />
-      <div class="flex flex-col min-w-0 flex-1 overflow-hidden">
+      <div className="flex flex-col min-w-0 flex-1 overflow-hidden">
         {/*  Main area  */}
         <PageHeader />
-        <div class="flex-1 relative z-0 flex">
+        <div className="flex-1 relative z-0 flex">
           <main
-            class="flex-1 relative z-0 overflow-y-auto focus:outline-none xl:order-last"
-            tabindex="0">
-            <div class="absolute inset-0 py-6 px-4 sm:px-6 lg:px-8">
-              <div class="h-full  rounded-lg">
+            className="flex-1 relative z-0 overflow-y-auto focus:outline-none xl:order-last"
+            tabIndex="0">
+            <div className="absolute inset-0 py-6 px-4 sm:px-6 lg:px-8">
+              <div className="h-full  rounded-lg">
                 <SimpleChart />
 
                 <div className="grid grid-cols-3 grid-rows-3 gap-4">
@@ -41,9 +41,9 @@ export default function Home() {
             </div>
           </main>
 
-          <aside class="overflow-y-auto hidden relative xl:order-first xl:flex xl:flex-col flex-shrink-0 w-96 border-r border-gray-200">
-            <div class="absolute inset-0 py-6 px-4 sm:px-6 lg:px-8">
-              <div class="h-full border-2 border-gray-200 border-dashed rounded-lg space-y-4">
+          <aside className="overflow-y-auto hidden relative xl:order-first xl:flex xl:flex-col flex-shrink-0 w-96 border-r border-gray-200">
+            <div className="absolute inset-0 py-6 px-4 sm:px-6 lg:px-8">
+              <div className="h-full border-2 border-gray-200 border-dashed rounded-lg space-y-4">
                 <Stats />
                 <ListView />
                 <ListView />

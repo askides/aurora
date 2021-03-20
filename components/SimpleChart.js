@@ -1,15 +1,7 @@
 import useSWR from "swr";
-import {
-  BarChart,
-  Bar,
-  Cell,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
+import { useState } from "react";
+import { LineChart, PieChart, ColumnChart } from "react-chartkick";
+import "chart.js";
 
 const dddd = [
   {
@@ -57,33 +49,49 @@ const dddd = [
 ];
 
 const SimpleChart = () => {
-  const fetcher = (...args) =>
-    fetch(...args)
+  const [timeRange, setTimeRange] = useState("this_day");
+  const fetcher = (...args) => {
+    const [url, params] = args;
+
+    return fetch(`${url}?range=${params.range}`)
       .then((res) => res.json())
       .then((res) => res.data);
+  };
 
-  const { data, error } = useSWR("/api/metrics/daily-views", fetcher);
+  const { data, error } = useSWR(["/api/metrics/views/series", timeRange], (url, range) =>
+    fetcher(url, { range })
+  );
 
   if (error) return <div>failed to load</div>;
   if (!data) return <div>loading...</div>;
 
   return (
-    <div class="bg-white w-full overflow-hidden shadow rounded-lg divide-y divide-gray-200">
-      <div class="px-4 py-5 sm:px-6">
-        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Daily Views</h3>
+    <div className="bg-white w-full overflow-hidden shadow rounded-lg divide-y divide-gray-200">
+      <div className="bg-white px-4 py-5 sm:px-6">
+        <div className="-ml-4 -mt-4 flex justify-between items-center flex-wrap sm:flex-nowrap">
+          <div className="ml-4 mt-4">
+            <h3 className="text-lg leading-6 font-medium text-gray-900">Job Postings</h3>
+            <p className="mt-1 text-sm text-gray-500">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit quam corrupti consectetur.
+            </p>
+          </div>
+          <div className="ml-4 mt-4 flex-shrink-0">
+            <select
+              value={timeRange}
+              onChange={(e) => setTimeRange(e.target.value)}
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+              <option defaultValue="this_day" value="this_day">
+                Today
+              </option>
+              <option value="this_week">This Week</option>
+              <option value="this_month">This Month</option>
+              <option value="this_year">This Year</option>
+            </select>
+          </div>
+        </div>
       </div>
-      <div class="px-4 py-5 sm:p-6">
-        <ResponsiveContainer width="100%" height={500}>
-          <BarChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} />
-            <XAxis dataKey="range" stroke="#9ca3af" />
-            <YAxis stroke="#9ca3af" />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="views" fill="#8884d8" />
-            <Bar dataKey="uv" fill="#82ca9d" />
-          </BarChart>
-        </ResponsiveContainer>
+      <div className="px-4 py-5 sm:p-6">
+        <ColumnChart data={data} />
       </div>
     </div>
   );
