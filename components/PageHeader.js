@@ -1,6 +1,6 @@
 const PageHeader = () => {
   return (
-    <div className="bg-white">
+    <div className="bg-white shadow z-50">
       <div className="px-4 sm:px-6 lg:mx-auto lg:px-8">
         <div className="py-6 md:flex md:items-center md:justify-between lg:border-t lg:border-gray-200">
           <div className="flex-1 min-w-0">

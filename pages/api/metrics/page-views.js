@@ -18,6 +18,8 @@ module.exports = async (req, res) => {
     ORDER BY views DESC
   `;
 
+  await prisma.$disconnect();
+
   return res.json({
     data: allPageWithViews,
   });
