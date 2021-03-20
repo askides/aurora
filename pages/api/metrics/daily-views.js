@@ -17,6 +17,7 @@ module.exports = async (req, res) => {
       LEFT JOIN (SELECT Date_part('hour', "createdAt") AS hour,
                         Count(id)                      AS views
                 FROM   "Event"
+                WHERE "createdAt" >= now()::date
                 GROUP  BY hour) AS e
             ON range = e.hour
     ORDER  BY range
