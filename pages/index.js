@@ -8,43 +8,32 @@ import ListView from "../components/ListView";
 
 export default function Home() {
   return (
-    <div className="h-screen overflow-hidden bg-gray-100 flex flex-col">
-      {/*  Bottom section  */}
-      <div className="min-h-0 flex-1 flex overflow-hidden">
-        {/*  Narrow sidebar */}
-        <SideNarrow />
-
-        {/* Menu sidebar */}
-        <SideMenu />
-
+    <div class="h-screen flex overflow-hidden bg-gray-50">
+      <SideNarrow />
+      <div class="flex flex-col min-w-0 flex-1 overflow-hidden">
         {/*  Main area  */}
-        <main className="lg:flex flex-1 flex-col">
-          {/*  Top nav */}
-          <PageHeader />
+        <PageHeader />
+        <div class="flex-1 relative z-0 flex overflow-hidden">
+          <main
+            class="flex-1 relative z-0 overflow-y-auto focus:outline-none xl:order-last"
+            tabindex="0">
+            <div class="absolute inset-0 py-6 px-4 sm:px-6 lg:px-8">
+              <div class="h-full border-2 border-gray-200 border-dashed rounded-lg">
+                <SimpleChart />
+              </div>
+            </div>
+          </main>
 
-          <div className="min-w-0 border-t border-gray-200 lg:flex p-4 sm:p-6 lg:p-8 space-x-2">
-            {/*  Primary column  */}
-            <SimpleChart />
-            <section
-              aria-labelledby="primary-heading"
-              className="min-w-0 flex-1 h-full flex flex-col overflow-hidden lg:order-last">
-              <h1 id="primary-heading" className="sr-only">
-                Home
-              </h1>
-
-              <SimpleChart />
-            </section>
-
-            {/*  Secondary column (hidden on smaller screens)  */}
-            <aside className="hidden lg:block lg:flex-shrink-0 lg:order-first">
-              <div className="h-full relative flex flex-col w-96 bg-gray-100">
-                {/*  Your content  */}
-
+          <aside class="hidden relative xl:order-first xl:flex xl:flex-col flex-shrink-0 w-96 border-r border-gray-200">
+            <div class="absolute inset-0 py-6 px-4 sm:px-6 lg:px-8">
+              <div class="h-full border-2 border-gray-200 border-dashed rounded-lg space-y-4">
+                <ListView />
+                <ListView />
                 <ListView />
               </div>
-            </aside>
-          </div>
-        </main>
+            </div>
+          </aside>
+        </div>
       </div>
     </div>
   );

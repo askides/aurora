@@ -23,6 +23,8 @@ module.exports = async (req, res) => {
     ORDER  BY range
   `;
 
+  await prisma.$disconnect();
+
   return res.json({
     data: dailyViews,
   });

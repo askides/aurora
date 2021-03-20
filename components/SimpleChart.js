@@ -68,26 +68,24 @@ const SimpleChart = () => {
   if (!data) return <div>loading...</div>;
 
   return (
-    <ResponsiveContainer width="100%" height="100%">
-      <BarChart
-        width={500}
-        height={1000}
-        data={data}
-        margin={{
-          top: 5,
-          right: 30,
-          left: 20,
-          bottom: 5,
-        }}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="range" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Bar dataKey="views" fill="#8884d8" />
-        <Bar dataKey="uv" fill="#82ca9d" />
-      </BarChart>
-    </ResponsiveContainer>
+    <div class="bg-white w-full overflow-hidden shadow rounded-lg divide-y divide-gray-200">
+      <div class="px-4 py-5 sm:px-6">
+        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Daily Views</h3>
+      </div>
+      <div class="px-4 py-5 sm:p-6">
+        <ResponsiveContainer width="100%" height={500}>
+          <BarChart data={data}>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+            <XAxis dataKey="range" stroke="#6b7287" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="views" fill="#8884d8" />
+            <Bar dataKey="uv" fill="#82ca9d" />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
   );
 };
 

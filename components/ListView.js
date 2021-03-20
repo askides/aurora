@@ -12,27 +12,24 @@ const ListView = () => {
   if (!data) return <div>loading...</div>;
 
   return (
-    <nav class="space-y-1" aria-label="Sidebar">
-      <h3
-        class="text-xs font-semibold text-gray-500 uppercase tracking-wider"
-        id="projects-headline">
-        Pages
-      </h3>
-      {/* Current: "bg-gray-200 text-gray-900", Default: "text-gray-600 hover:bg-gray-50 hover:text-gray-900" */}
-      {data.map((el, key) => (
-        <a
-          href="#"
-          class="bg-gray-100 text-gray-900 group flex items-center py-2 text-sm font-medium rounded-md"
-          aria-current="page">
-          <span class="truncate">{el.element}</span>
+    <div class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
+      <div class="px-4 py-5 sm:px-6">
+        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+          Most Viewed Pages
+        </h3>
+      </div>
+      <div class="px-4 py-5 sm:p-6">
+        <div class="space-y-3">
+          {data.map((el, key) => (
+            <div class="text-black group flex items-center text-sm">
+              <span class="truncate">{el.element}</span>
 
-          {/* Current: "bg-white", Default: "bg-gray-100 group-hover:bg-gray-200" */}
-          <span class="bg-white ml-auto inline-block py-0.5 px-3 text-xs rounded-full">
-            {el.views}
-          </span>
-        </a>
-      ))}
-    </nav>
+              <span class="ml-auto inline-block font-medium">{el.views}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 };
 
