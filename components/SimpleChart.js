@@ -76,8 +76,8 @@ const SimpleChart = () => {
         <ResponsiveContainer width="100%" height={500}>
           <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
-            <XAxis dataKey="range" stroke="#6b7287" />
-            <YAxis />
+            <XAxis dataKey="range" stroke="#9ca3af" />
+            <YAxis stroke="#9ca3af" />
             <Tooltip />
             <Legend />
             <Bar dataKey="views" fill="#8884d8" />
