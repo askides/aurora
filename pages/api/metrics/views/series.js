@@ -3,8 +3,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 const thisRangeViews = async (range = "month") => {
-  console.log("RANGE", range);
-  return await prisma.$queryRaw`
+  return await prisma.$queryRaw(`
     SELECT
       range.generate_series as range,
       COALESCE(e.views, 0) AS views
@@ -12,8 +11,8 @@ const thisRangeViews = async (range = "month") => {
       (
         select
           generate_series(
-            date_trunc(${range}, now()),
-            date_trunc(${range}, now()) + ${`1 ${range}`} :: interval - '1 day' :: interval,
+            date_trunc('${range}', now()),
+            date_trunc('${range}', now()) + '1 ${range}' :: interval - '1 day' :: interval,
             '1 day' :: interval
           ):: date
       ) as range
@@ -28,7 +27,7 @@ const thisRangeViews = async (range = "month") => {
       ) AS e ON range.generate_series = e.day
     ORDER BY
       range
-  `;
+  `);
 };
 
 const thisDayViews = async () =>
@@ -53,6 +52,29 @@ const thisDayViews = async () =>
       range
   `;
 
+const thisYearViews = async () =>
+  await prisma.$queryRaw`
+    SELECT
+      to_char(
+        to_timestamp (range :: text, 'MM'),
+        'TMMonth'
+      ) as range,
+      COALESCE(e.views, 0) AS views
+    FROM
+      Generate_series(1, 12) AS range
+      LEFT JOIN (
+        SELECT
+          Date_part('month', "createdAt") AS month,
+          Count(id) AS views
+        FROM
+          "Event"
+        GROUP BY
+          month
+      ) AS e ON range = e.month
+    ORDER BY
+      range
+  `;
+
 module.exports = async (req, res) => {
   // Only GET Available
   if (req.method !== "GET") {
@@ -72,7 +94,7 @@ module.exports = async (req, res) => {
         await prisma.$disconnect();
       });
   } else if (range === "this_year") {
-    data = await thisRangeViews("year")
+    data = await thisYearViews()
       .catch((e) => {
         throw e;
       })
