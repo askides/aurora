@@ -7,6 +7,8 @@ import SimpleChart from "../components/SimpleChart";
 import ListView from "../components/ListView";
 import Stats from "../components/Stats";
 import Tile from "../components/Tile";
+import BrowsersChart from "../components/BrowsersChart";
+import OsesChart from "../components/OsesChart";
 
 export default function Home() {
   return (
@@ -20,10 +22,13 @@ export default function Home() {
             className="flex-1 relative z-0 overflow-y-auto focus:outline-none xl:order-last"
             tabIndex="0">
             <div className="absolute inset-0 py-6 px-4 sm:px-6 lg:px-8">
-              <div className="h-full  rounded-lg">
+              <div className="h-full rounded-lg space-y-4">
                 <SimpleChart />
+                <BrowsersChart />
+                <OsesChart />
 
                 <div className="grid grid-cols-3 grid-rows-3 gap-4">
+                  {/*
                   <Tile>
                     <div className="flex flex-col text-center">
                       <div>5890</div>
@@ -36,6 +41,7 @@ export default function Home() {
                       <div>Chrome</div>
                     </div>
                   </Tile>
+                  */}
                 </div>
               </div>
             </div>
@@ -43,7 +49,7 @@ export default function Home() {
 
           <aside className="overflow-y-auto hidden relative xl:order-first xl:flex xl:flex-col flex-shrink-0 w-96 border-r border-gray-200">
             <div className="absolute inset-0 py-6 px-4 sm:px-6 lg:px-8">
-              <div className="h-full border-2 border-gray-200 border-dashed rounded-lg space-y-4">
+              <div className="h-full  rounded-lg space-y-4">
                 <Stats />
                 <ListView />
               </div>

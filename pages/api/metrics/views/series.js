@@ -18,10 +18,10 @@ const thisRangeViews = async (range = "month") => {
       ) as range
       LEFT JOIN (
         SELECT
-          "createdAt" :: date AS day,
+          "created_at" :: date AS day,
           Count(id) AS views
         FROM
-          "Event"
+          "events"
         GROUP BY
           day
       ) AS e ON range.generate_series = e.day
@@ -39,12 +39,12 @@ const thisDayViews = async () =>
       Generate_series(0, 23) AS range
       LEFT JOIN (
         SELECT
-          Date_part('hour', "createdAt") AS hour,
+          Date_part('hour', "created_at") AS hour,
           Count(id) AS views
         FROM
-          "Event"
+          "events"
         WHERE
-          "createdAt" >= now() :: date
+          "created_at" >= now() :: date
         GROUP BY
           hour
       ) AS e ON range = e.hour
@@ -64,10 +64,10 @@ const thisYearViews = async () =>
       Generate_series(1, 12) AS range
       LEFT JOIN (
         SELECT
-          Date_part('month', "createdAt") AS month,
+          Date_part('month', "created_at") AS month,
           Count(id) AS views
         FROM
-          "Event"
+          "events"
         GROUP BY
           month
       ) AS e ON range = e.month

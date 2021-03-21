@@ -19,17 +19,17 @@ const pageViewsPerformance = async () => {
         select
           count(id) as c
         from
-          "Event"
+          "events"
         where
-          "createdAt" >= (now() - '1 month' :: interval)
+          "created_at" >= (now() - '1 month' :: interval)
       ) as currentPerformance CROSS
       JOIN (
         select
           count(id) as c
         from
-          "Event"
+          "events"
         where
-          "createdAt" BETWEEN (now() - '2 month' :: interval)
+          "created_at" BETWEEN (now() - '2 month' :: interval)
           and (now() - '1 month' :: interval)
       ) as lastPerformance
   `;
@@ -52,17 +52,17 @@ const uniqueVisitorsPerformance = async () => {
         select
           count(DISTINCT hash) as c
         from
-          "Event"
+          "events"
         where
-          "createdAt" >= (now() - '1 month' :: interval)
+          "created_at" >= (now() - '1 month' :: interval)
       ) as currentPerformance CROSS
       JOIN (
         select
           count(DISTINCT hash) as c
         from
-          "Event"
+          "events"
         where
-          "createdAt" BETWEEN (now() - '2 month' :: interval)
+          "created_at" BETWEEN (now() - '2 month' :: interval)
           and (now() - '1 month' :: interval)
       ) as lastPerformance
   `;
@@ -103,7 +103,7 @@ const bounceRatePerformance = async () => {
                     select
                       count(id) as c
                     from
-                      "Event"
+                      "events"
                     group by
                       hash
                     having
@@ -111,9 +111,9 @@ const bounceRatePerformance = async () => {
                   ) as t
               ) as uniqueViews
             from
-              "Event"
+              "events"
             where
-              "createdAt" >= (now() - '1 month' :: interval)
+              "created_at" >= (now() - '1 month' :: interval)
           ) as x
       ) as currentPerformance CROSS
       JOIN (
@@ -136,7 +136,7 @@ const bounceRatePerformance = async () => {
                     select
                       count(id) as c
                     from
-                      "Event"
+                      "events"
                     group by
                       hash
                     having
@@ -144,9 +144,9 @@ const bounceRatePerformance = async () => {
                   ) as t
               ) as uniqueViews
             from
-              "Event"
+              "events"
             where
-              "createdAt" BETWEEN (now() - '2 month' :: interval)
+              "created_at" BETWEEN (now() - '2 month' :: interval)
               and (now() - '1 month' :: interval)
           ) as x
       ) as lastPerformance
