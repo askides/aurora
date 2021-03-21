@@ -46,8 +46,6 @@ export default function Home() {
               <div className="h-full border-2 border-gray-200 border-dashed rounded-lg space-y-4">
                 <Stats />
                 <ListView />
-                <ListView />
-                <ListView />
               </div>
             </div>
           </aside>

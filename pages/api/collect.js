@@ -1,3 +1,4 @@
+const crypto = require("crypto");
 const UAParser = require("ua-parser-js");
 const mapValuesDeep = require("deepdash/mapValuesDeep");
 const { PrismaClient } = require("@prisma/client");
@@ -32,11 +33,24 @@ const handler = async (req, res) => {
 
   const { type, element } = req.body;
 
+  // const ip = req.headers["x-real-ip"];
+
+  const eventHash = crypto
+    .createHash("sha256")
+    .update(
+      JSON.stringify({
+        ua: ua.ua, // Full user-agent for now.
+        ip: "127.0.0.1", // XXX TODO IP
+      })
+    )
+    .digest("hex");
+
   // Create Event
   const createdEvent = await prisma.event.create({
     data: {
       type: type,
       element: element,
+      hash: eventHash,
       website: {
         connect: {
           id: 1,
@@ -70,6 +84,8 @@ const handler = async (req, res) => {
       },
     },
   });
+
+  console.log("DDDD", req.session);
 
   return res.json({
     data: createdEvent,
