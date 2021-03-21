@@ -14,6 +14,7 @@ model Event {
   id        Int      @id @default(autoincrement())
   type      String   @db.VarChar(255)
   element   String
+  hash      String
   websiteId Int
   browserId Int
   engineId  Int
