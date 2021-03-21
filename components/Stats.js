@@ -16,12 +16,7 @@ const Stats = () => {
 
   return (
     <div>
-      <dl className="grid grid-cols-1 rounded-lg bg-white overflow-hidden shadow divide-y divide-gray-200">
-        <div className="px-4 py-5 sm:px-6">
-          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-            Last 30 Days Performance
-          </h3>
-        </div>
+      <dl className="grid grid-cols-1 rounded-lg bg-white overflow-hidden shadow divide-y divide-gray-200 md:grid-cols-3 md:divide-y-0 md:divide-x">
         <div className="px-4 py-5 sm:p-6">
           <dt className="text-base font-normal text-gray-900">Total Views</dt>
           <dd className="mt-1 flex justify-between items-baseline md:block lg:flex">
