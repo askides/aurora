@@ -1,31 +1,25 @@
-import Head from "next/head";
-import SideMenu from "../components/layout/SideMenu";
 import SideNarrow from "../components/layout/SideNarrow";
-import Header from "../components/layout/Header";
 import PageHeader from "../components/PageHeader";
-import SimpleChart from "../components/SimpleChart";
+import Chart from "../components/Chart";
 import ListView from "../components/ListView";
 import Stats from "../components/Stats";
-import Tile from "../components/Tile";
-import BrowsersChart from "../components/BrowsersChart";
-import OsesChart from "../components/OsesChart";
 
 export default function Home() {
   return (
     <div className="h-screen flex overflow-hidden bg-gray-50">
       <SideNarrow />
-      <div className="flex flex-col min-w-0 flex-1 overflow-hidden">
+      <div className="flex min-w-0 flex-1 overflow-y-auto justify-center">
         {/*  Main area  */}
-        <PageHeader />
-        <div className="flex-1 relative z-0 flex">
-          <main
-            className="flex-1 relative z-0 overflow-y-auto focus:outline-none xl:order-last"
-            tabIndex="0">
+        <div className="flex-1 relative z-0 flex max-w-5xl">
+          <main className="flex-1 relative z-0 focus:outline-none xl:order-last" tabIndex="0">
             <div className="absolute inset-0 py-6 px-4 sm:px-6 lg:px-8">
               <div className="h-full rounded-lg space-y-4">
-                <SimpleChart />
-                <BrowsersChart />
-                <OsesChart />
+                <PageHeader />
+                <Stats />
+                <Chart url="/api/metrics/views/series" timeRange="this_day" title="Page Views" />
+                <ListView />
+                <Chart url="/api/metrics/views/browsers" timeRange="this_day" />
+                <Chart url="/api/metrics/views/oses" timeRange="this_day" />
 
                 <div className="grid grid-cols-3 grid-rows-3 gap-4">
                   {/*
@@ -46,15 +40,6 @@ export default function Home() {
               </div>
             </div>
           </main>
-
-          <aside className="overflow-y-auto hidden relative xl:order-first xl:flex xl:flex-col flex-shrink-0 w-96 border-r border-gray-200">
-            <div className="absolute inset-0 py-6 px-4 sm:px-6 lg:px-8">
-              <div className="h-full  rounded-lg space-y-4">
-                <Stats />
-                <ListView />
-              </div>
-            </div>
-          </aside>
         </div>
       </div>
     </div>
