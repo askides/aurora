@@ -3,7 +3,7 @@ import { useState } from "react";
 import { LineChart, PieChart, ColumnChart } from "react-chartkick";
 import "chart.js";
 
-const SimpleChart = () => {
+const BrowsersChart = () => {
   const [timeRange, setTimeRange] = useState("this_day");
   const fetcher = (...args) => {
     const [url, params] = args;
@@ -13,7 +13,7 @@ const SimpleChart = () => {
       .then((res) => res.data);
   };
 
-  const { data, error } = useSWR(["/api/metrics/views/series", timeRange], (url, range) =>
+  const { data, error } = useSWR(["/api/metrics/views/browsers", timeRange], (url, range) =>
     fetcher(url, { range })
   );
 
@@ -25,7 +25,7 @@ const SimpleChart = () => {
       <div className="bg-white px-4 py-5 sm:px-6">
         <div className="-ml-4 -mt-4 flex justify-between items-center flex-wrap sm:flex-nowrap">
           <div className="ml-4 mt-4">
-            <h3 className="text-lg leading-6 font-medium text-gray-900">Views Chart</h3>
+            <h3 className="text-lg leading-6 font-medium text-gray-900">Browsers Chart</h3>
             <p className="mt-1 text-sm text-gray-500">
               Lorem ipsum dolor sit amet consectetur adipisicing elit quam corrupti consectetur.
             </p>
@@ -52,4 +52,4 @@ const SimpleChart = () => {
   );
 };
 
-export default SimpleChart;
+export default BrowsersChart;

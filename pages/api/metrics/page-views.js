@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
   // All the pages viewed
   const allPageWithViews = await prisma.$queryRaw`
     SELECT element, count(element) as views
-    FROM "Event"
+    FROM "events"
     GROUP BY element
     ORDER BY views DESC
   `;

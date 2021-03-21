@@ -11,76 +11,88 @@ generator client {
 }
 
 model Event {
-  id        Int      @id @default(autoincrement())
-  type      String   @db.VarChar(255)
-  element   String
-  hash      String
-  websiteId Int
-  browserId Int
-  engineId  Int
-  osId      Int
-  deviceId  Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  type       String   @db.VarChar(255)
+  element    String
+  hash       String
+  website_id Int
+  browser_id Int
+  engine_id  Int
+  os_id      Int
+  device_id  Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   // Relationships
-  website Website @relation(fields: [websiteId], references: [id])
-  browser Browser @relation(fields: [browserId], references: [id])
-  engine  Engine  @relation(fields: [engineId], references: [id])
-  os      Os      @relation(fields: [osId], references: [id])
-  device  Device  @relation(fields: [deviceId], references: [id])
+  website Website @relation(fields: [website_id], references: [id])
+  browser Browser @relation(fields: [browser_id], references: [id])
+  engine  Engine  @relation(fields: [engine_id], references: [id])
+  os      Os      @relation(fields: [os_id], references: [id])
+  device  Device  @relation(fields: [device_id], references: [id])
+
+  @@map(name: "events")
 }
 
 model Browser {
-  id        Int      @id @default(autoincrement())
-  name      String   @db.VarChar(255)
-  version   String   @db.VarChar(255)
-  major     String   @db.VarChar(255)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(255)
+  version    String   @db.VarChar(255)
+  major      String   @db.VarChar(255)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   event Event?
+
+  @@map(name: "browsers")
 }
 
 model Engine {
-  id        Int      @id @default(autoincrement())
-  name      String   @db.VarChar(255)
-  version   String   @db.VarChar(255)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(255)
+  version    String   @db.VarChar(255)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   event Event?
+
+  @@map(name: "engines")
 }
 
 model Os {
-  id        Int      @id @default(autoincrement())
-  name      String   @db.VarChar(255)
-  version   String   @db.VarChar(255)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(255)
+  version    String   @db.VarChar(255)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   event Event?
+
+  @@map(name: "oses")
 }
 
 model Device {
-  id        Int      @id @default(autoincrement())
-  vendor    String   @db.VarChar(255)
-  model     String   @db.VarChar(255)
-  type      String   @db.VarChar(255)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  vendor     String   @db.VarChar(255)
+  model      String   @db.VarChar(255)
+  type       String   @db.VarChar(255)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   event Event?
+
+  @@map(name: "devices")
 }
 
 model Website {
-  id        Int      @id @default(autoincrement())
-  url       String
-  owner     User     @relation(fields: [userId], references: [id])
-  userId    Int
-  events    Event[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  url        String
+  owner      User     @relation(fields: [user_id], references: [id])
+  user_id    Int
+  events     Event[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map(name: "websites")
 }
 
 model User {
@@ -89,4 +101,6 @@ model User {
   firstname String    @db.VarChar(255)
   lastname  String    @db.VarChar(255)
   websites  Website[]
+
+  @@map(name: "users")
 }
