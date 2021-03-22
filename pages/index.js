@@ -9,7 +9,7 @@ const Home = () => {
   const [timeRange, setTimeRange] = useState("this_day");
 
   return (
-    <div className="h-full rounded-lg space-y-4">
+    <div className="h-full rounded-lg space-y-4 bg-gray-900">
       <Header />
       <PageHeader onTimeRangeChange={(value) => setTimeRange(value)} />
       <Stats timeRange={timeRange} />

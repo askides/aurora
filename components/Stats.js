@@ -21,18 +21,18 @@ const Stats = ({ timeRange }) => {
 
   return (
     <div>
-      <dl className="grid grid-cols-1 rounded-lg bg-white overflow-hidden shadow divide-y divide-gray-200 md:grid-cols-3 md:divide-y-0 md:divide-x">
+      <dl className="grid grid-cols-1 rounded-lg bg-white overflow-hidden shadow divide-y divide-gray-200 dark:divide-gray-700 md:grid-cols-3 md:divide-y-0 md:divide-x dark:bg-gray-800">
         <div className="px-4 py-5 sm:p-6">
-          <dt className="text-base font-normal text-gray-900">Total Views</dt>
+          <dt className="text-base font-normal text-gray-900 dark:text-green-400">Total Views</dt>
           <dd className="mt-1 flex justify-between items-baseline md:block lg:flex">
-            <div className="flex items-baseline text-2xl font-semibold text-indigo-600">
+            <div className="flex items-baseline text-2xl font-semibold text-indigo-600 dark:text-white">
               <CountUp end={data.pageViews.cp} />
               <span className="ml-2 text-sm font-medium text-gray-500">
                 from <CountUp end={data.pageViews.lp} />
               </span>
             </div>
 
-            <div className="inline-flex items-baseline px-2.5 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800 md:mt-2 lg:mt-0">
+            <div className="inline-flex items-baseline px-2.5 py-0.5 rounded-full text-sm font-medium bg-green-100 dark:bg-gray-700 text-green-800 dark:text-green-500 md:mt-2 lg:mt-0">
               <svg
                 className="-ml-1 mr-0.5 flex-shrink-0 self-center h-5 w-5 text-green-500"
                 fill="currentColor"
@@ -51,16 +51,18 @@ const Stats = ({ timeRange }) => {
         </div>
 
         <div className="px-4 py-5 sm:p-6">
-          <dt className="text-base font-normal text-gray-900">Unique Visitors</dt>
+          <dt className="text-base font-normal text-gray-900 dark:text-green-400">
+            Unique Visitors
+          </dt>
           <dd className="mt-1 flex justify-between items-baseline md:block lg:flex">
-            <div className="flex items-baseline text-2xl font-semibold text-indigo-600">
+            <div className="flex items-baseline text-2xl font-semibold text-indigo-600 dark:text-white">
               <CountUp end={data.uniqueVisitors.cp} />
               <span className="ml-2 text-sm font-medium text-gray-500">
                 from <CountUp end={data.uniqueVisitors.lp} />
               </span>
             </div>
 
-            <div className="inline-flex items-baseline px-2.5 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800 md:mt-2 lg:mt-0">
+            <div className="inline-flex items-baseline px-2.5 py-0.5 rounded-full text-sm font-medium bg-green-100 dark:bg-gray-700 text-green-800 dark:text-green-500 md:mt-2 lg:mt-0">
               <svg
                 className="-ml-1 mr-0.5 flex-shrink-0 self-center h-5 w-5 text-green-500"
                 fill="currentColor"
@@ -79,16 +81,16 @@ const Stats = ({ timeRange }) => {
         </div>
 
         <div className="px-4 py-5 sm:p-6">
-          <dt className="text-base font-normal text-gray-900">Bounce Rate</dt>
+          <dt className="text-base font-normal text-gray-900 dark:text-green-400">Bounce Rate</dt>
           <dd className="mt-1 flex justify-between items-baseline md:block lg:flex">
-            <div className="flex items-baseline text-2xl font-semibold text-indigo-600">
+            <div className="flex items-baseline text-2xl font-semibold text-indigo-600 dark:text-white">
               <CountUp end={data.bounceRate.cp} />%
               <span className="ml-2 text-sm font-medium text-gray-500">
                 from <CountUp end={data.bounceRate.lp} />%
               </span>
             </div>
 
-            <div className="inline-flex items-baseline px-2.5 py-0.5 rounded-full text-sm font-medium bg-red-100 text-red-800 md:mt-2 lg:mt-0">
+            <div className="inline-flex items-baseline px-2.5 py-0.5 rounded-full text-sm font-medium bg-red-100 dark:bg-gray-700 text-red-800 dark:text-red-500 md:mt-2 lg:mt-0">
               <svg
                 className="-ml-1 mr-0.5 flex-shrink-0 self-center h-5 w-5 text-red-500"
                 fill="currentColor"
