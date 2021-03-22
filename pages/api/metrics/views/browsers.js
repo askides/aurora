@@ -2,18 +2,19 @@ const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
-const browserViews = async () =>
-  await prisma.$queryRaw`
+const browserViews = async (range) =>
+  await prisma.$queryRaw(`
     SELECT
       browsers.name as element,
       COUNT(events.id) as views
     FROM
       events
       JOIN browsers ON events.browser_id = browsers.id
+    WHERE events.created_at >= (now() - '1 ${range}'::interval)
     GROUP BY
       browsers.name
     ORDER BY views DESC
-  `;
+  `);
 
 module.exports = async (req, res) => {
   // Only GET Available
@@ -23,7 +24,9 @@ module.exports = async (req, res) => {
 
   const { range } = req.query;
 
-  const data = await browserViews()
+  const r = range.replace("this_", ""); /// XXX TO CHECK VALUES
+
+  const data = await browserViews(r)
     .catch((e) => {
       throw e;
     })
