@@ -1,4 +1,4 @@
-const PageHeader = () => {
+const PageHeader = ({ timeRange, onTimeRangeChange }) => {
   return (
     <div className="mb-10">
       <div>
@@ -82,8 +82,8 @@ const PageHeader = () => {
         </div>
         <div class="mt-4 flex-shrink-0 flex md:mt-0 md:ml-4">
           <select
-            //value={timeRange}
-            //onChange={(e) => setTimeRange(e.target.value)}
+            value={timeRange}
+            onChange={(e) => onTimeRangeChange(e.target.value)}
             className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
             <option defaultValue="this_day" value="this_day">
               Today
