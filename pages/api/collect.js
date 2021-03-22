@@ -85,8 +85,6 @@ const handler = async (req, res) => {
     },
   });
 
-  console.log("DDDD", req.session);
-
   return res.json({
     data: createdEvent,
   });
