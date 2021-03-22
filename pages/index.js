@@ -10,7 +10,7 @@ const Home = () => {
   return (
     <div className="h-full rounded-lg space-y-4">
       <PageHeader onTimeRangeChange={(value) => setTimeRange(value)} />
-      <Stats />
+      <Stats timeRange={timeRange} />
       <Chart url="/api/metrics/views/series" timeRange={timeRange} title="Page Views" />
       <ListView />
       <Chart url="/api/metrics/views/browsers" timeRange={timeRange} />

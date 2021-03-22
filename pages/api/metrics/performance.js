@@ -2,8 +2,8 @@ const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
-const pageViewsPerformance = async () => {
-  return await prisma.$queryRaw`
+const pageViewsPerformance = async (range) => {
+  return await prisma.$queryRaw(`
     select
       currentPerformance.c as cp,
       lastPerformance.c as lp,
@@ -21,7 +21,7 @@ const pageViewsPerformance = async () => {
         from
           "events"
         where
-          "created_at" >= (now() - '1 month' :: interval)
+          "created_at" >= (now() - '1 ${range}' :: interval)
       ) as currentPerformance CROSS
       JOIN (
         select
@@ -29,14 +29,14 @@ const pageViewsPerformance = async () => {
         from
           "events"
         where
-          "created_at" BETWEEN (now() - '2 month' :: interval)
-          and (now() - '1 month' :: interval)
+          "created_at" BETWEEN (now() - '2 ${range}' :: interval)
+          and (now() - '1 ${range}' :: interval)
       ) as lastPerformance
-  `;
+  `);
 };
 
-const uniqueVisitorsPerformance = async () => {
-  return await prisma.$queryRaw`
+const uniqueVisitorsPerformance = async (range) => {
+  return await prisma.$queryRaw(`
     select
       currentPerformance.c as cp,
       lastPerformance.c as lp,
@@ -54,7 +54,7 @@ const uniqueVisitorsPerformance = async () => {
         from
           "events"
         where
-          "created_at" >= (now() - '1 month' :: interval)
+          "created_at" >= (now() - '1 ${range}' :: interval)
       ) as currentPerformance CROSS
       JOIN (
         select
@@ -62,14 +62,14 @@ const uniqueVisitorsPerformance = async () => {
         from
           "events"
         where
-          "created_at" BETWEEN (now() - '2 month' :: interval)
-          and (now() - '1 month' :: interval)
+          "created_at" BETWEEN (now() - '2 ${range}' :: interval)
+          and (now() - '1 ${range}' :: interval)
       ) as lastPerformance
-  `;
+  `);
 };
 
-const bounceRatePerformance = async () => {
-  return await prisma.$queryRaw`
+const bounceRatePerformance = async (range) => {
+  return await prisma.$queryRaw(`
     select
       currentPerformance.c as cp,
       lastPerformance.c as lp,
@@ -113,7 +113,7 @@ const bounceRatePerformance = async () => {
             from
               "events"
             where
-              "created_at" >= (now() - '1 month' :: interval)
+              "created_at" >= (now() - '1 ${range}' :: interval)
           ) as x
       ) as currentPerformance CROSS
       JOIN (
@@ -146,11 +146,11 @@ const bounceRatePerformance = async () => {
             from
               "events"
             where
-              "created_at" BETWEEN (now() - '2 month' :: interval)
-              and (now() - '1 month' :: interval)
+              "created_at" BETWEEN (now() - '2 ${range}' :: interval)
+              and (now() - '1 ${range}' :: interval)
           ) as x
       ) as lastPerformance
-  `;
+  `);
 };
 
 module.exports = async (req, res) => {
@@ -161,7 +161,9 @@ module.exports = async (req, res) => {
 
   const { range } = req.query;
 
-  const pvpp = pageViewsPerformance()
+  const r = range.replace("this_", ""); /// XXX TO CHECK VALUES
+
+  const pvpp = pageViewsPerformance(r)
     .catch((e) => {
       throw e;
     })
@@ -169,7 +171,7 @@ module.exports = async (req, res) => {
       await prisma.$disconnect();
     });
 
-  const uvpp = uniqueVisitorsPerformance()
+  const uvpp = uniqueVisitorsPerformance(r)
     .catch((e) => {
       throw e;
     })
@@ -177,7 +179,7 @@ module.exports = async (req, res) => {
       await prisma.$disconnect();
     });
 
-  const brpp = bounceRatePerformance()
+  const brpp = bounceRatePerformance(r)
     .catch((e) => {
       throw e;
     })

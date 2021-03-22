@@ -1,13 +1,18 @@
 import useSWR from "swr";
 import CountUp from "react-countup";
 
-const Stats = () => {
-  const fetcher = (...args) =>
-    fetch(...args)
+const Stats = ({ timeRange }) => {
+  const fetcher = (...args) => {
+    const [url, params] = args;
+
+    return fetch(`${url}?range=${params.range}`)
       .then((res) => res.json())
       .then((res) => res.data);
+  };
 
-  const { data, error } = useSWR("/api/metrics/performance", fetcher);
+  const { data, error } = useSWR(["/api/metrics/performance", timeRange], (url, range) =>
+    fetcher(url, { range })
+  );
 
   if (error) return <div>failed to load</div>;
   if (!data) return <div>loading...</div>;
