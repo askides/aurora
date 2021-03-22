@@ -1,7 +1,7 @@
 import SideNarrow from "./SideNarrow";
 
 const MainLayout = ({ children }) => (
-  <div className="h-screen flex overflow-hidden bg-gray-50">
+  <div className="h-screen flex overflow-hidden bg-gray-50 dark:bg-gray-900">
     <SideNarrow />
     <div className="flex min-w-0 flex-1 overflow-y-auto justify-center">
       <div className="flex-1 relative z-0 flex max-w-5xl">

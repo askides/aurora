@@ -1,16 +1,16 @@
 const Header = () => (
   <header className="h-16 bg-white flex items-center">
-    <nav class="bg-white shadow w-full">
-      <div class="relative flex justify-between h-16">
-        <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
+    <nav className="bg-gray-900 shadow w-full">
+      <div className="relative flex justify-between h-16">
+        <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
           <button
             type="button"
-            class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+            className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
             aria-controls="mobile-menu"
             aria-expanded="false">
-            <span class="sr-only">Open main menu</span>
+            <span className="sr-only">Open main menu</span>
             <svg
-              class="h-6 w-6 block"
+              className="h-6 w-6 block"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -23,7 +23,7 @@ const Header = () => (
                 d="M4 6h16M4 12h16M4 18h16"></path>
             </svg>
             <svg
-              class="h-6 w-6 hidden"
+              className="h-6 w-6 hidden"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -37,21 +37,21 @@ const Header = () => (
             </svg>
           </button>
         </div>
-        <div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
-          <div class="flex-shrink-0 flex items-center">
+        <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
+          <div className="flex-shrink-0 flex items-center">
             <img
-              class="block lg:hidden h-8 w-auto"
+              className="block lg:hidden h-8 w-auto"
               src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
               alt="Workflow"
             />
-            <img class="hidden lg:block h-8 w-auto" src="/logos/aurora.svg" alt="Workflow" />
+            <img className="hidden lg:block h-8 w-auto" src="/logos/aurora.svg" alt="Workflow" />
           </div>
         </div>
-        <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-          <button class="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-            <span class="sr-only">View notifications</span>
+        <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+          <button className="bg-gray-800 p-1 rounded-full text-gray-400 dark:text-green-500 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <span className="sr-only">View notifications</span>
             <svg
-              class="h-6 w-6"
+              className="h-6 w-6"
               x-description="Heroicon name: outline/bell"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -66,36 +66,36 @@ const Header = () => (
             </svg>
           </button>
 
-          <div x-data="{ open: false }" class="ml-3 relative">
+          <div x-data="{ open: false }" className="ml-3 relative">
             <img
-              class="h-8 w-8 rounded-full"
-              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&amp;ixqx=JftsyaTinb&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=2&amp;w=256&amp;h=256&amp;q=80"
+              className="h-8 w-8 rounded-full ring-2 dark:border-green-500 dark:ring-green-500"
+              src="https://avatars.dicebear.com/api/jdenticon/aurora.svg"
               alt=""
             />
           </div>
         </div>
       </div>
 
-      <div class="sm:hidden">
-        <div class="pt-2 pb-4 space-y-1">
+      <div className="sm:hidden">
+        <div className="pt-2 pb-4 space-y-1">
           <a
             href="#"
-            class="bg-indigo-50 border-indigo-500 text-indigo-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+            className="bg-indigo-50 border-indigo-500 text-indigo-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
             Dashboard
           </a>
           <a
             href="#"
-            class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+            className="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
             Team
           </a>
           <a
             href="#"
-            class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+            className="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
             Projects
           </a>
           <a
             href="#"
-            class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+            className="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
             Calendar
           </a>
         </div>
