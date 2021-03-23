@@ -1,9 +1,14 @@
 import useSWR from "swr";
-import { useState } from "react";
-import { LineChart, PieChart, ColumnChart } from "react-chartkick";
+import React, { useState } from "react";
+import x, { LineChart, PieChart, ColumnChart, AreaChart } from "react-chartkick";
 import "chart.js";
 
-const Chart = ({ url, timeRange, title = "Chart" }) => {
+const Components = {
+  columnChart: ColumnChart,
+  areaChart: AreaChart,
+};
+
+const Chart = ({ url, timeRange, title = "Chart", type = "columnChart" }) => {
   const fetcher = (...args) => {
     const [url, params] = args;
 
@@ -30,10 +35,12 @@ const Chart = ({ url, timeRange, title = "Chart" }) => {
         </div>
       </div>
       <div className="px-4 py-5 sm:p-6">
-        <ColumnChart
-          data={data}
-          colors={["#66c48170", "#666"]}
-          library={{
+        {React.createElement(Components[type], {
+          data: data,
+          colors: ["#66c48170", "#666"],
+          curve: false,
+          points: false,
+          library: {
             legend: {
               labels: {
                 fontColor: "#fff",
@@ -52,8 +59,8 @@ const Chart = ({ url, timeRange, title = "Chart" }) => {
                 },
               ],
             },
-          }}
-        />
+          },
+        })}
       </div>
     </div>
   );
