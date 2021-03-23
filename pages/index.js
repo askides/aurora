@@ -13,7 +13,12 @@ const Home = () => {
       <Header />
       <PageHeader onTimeRangeChange={(value) => setTimeRange(value)} />
       <Stats timeRange={timeRange} />
-      <Chart url="/api/metrics/views/series" timeRange={timeRange} title="Page Views" />
+      <Chart
+        url="/api/metrics/views/series"
+        timeRange={timeRange}
+        title="Page Views"
+        type="areaChart"
+      />
       <ListView />
       <Chart url="/api/metrics/views/browsers" timeRange={timeRange} />
       <Chart url="/api/metrics/views/oses" timeRange={timeRange} />
