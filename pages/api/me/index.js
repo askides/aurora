@@ -1,4 +1,4 @@
-const { default: withAuth } = require("../../../utils/withAuth");
+const withAuth = require("../../../utils/with-auth");
 
 const handle = async function (req, res) {
   // Only allow GET

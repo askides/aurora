@@ -87,6 +87,7 @@ model Device {
 model Website {
   id         Int      @id @default(autoincrement())
   url        String
+  seed       String
   owner      User     @relation(fields: [user_id], references: [id])
   user_id    Int
   events     Event[]
