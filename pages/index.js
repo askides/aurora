@@ -22,23 +22,6 @@ const Home = () => {
       <ListView />
       <Chart url="/api/metrics/views/browsers" timeRange={timeRange} />
       <Chart url="/api/metrics/views/oses" timeRange={timeRange} />
-
-      <div className="grid grid-cols-3 grid-rows-3 gap-4">
-        {/*
-                  <Tile>
-                    <div className="flex flex-col text-center">
-                      <div>5890</div>
-                      <div>iPhone</div>
-                    </div>
-                  </Tile>
-                  <Tile>
-                    <div className="flex flex-col text-center">
-                      <div>1456</div>
-                      <div>Chrome</div>
-                    </div>
-                  </Tile>
-                  */}
-      </div>
     </div>
   );
 };
