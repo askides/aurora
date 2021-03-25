@@ -3,10 +3,14 @@ const UserAgent = require("user-agents");
 const crypto = require("crypto");
 const UAParser = require("ua-parser-js");
 const mapValuesDeep = require("deepdash/mapValuesDeep");
+const bcrypt = require("bcrypt");
 const generateSeed = require("../utils/generate-seed");
 const prisma = new PrismaClient();
 
 async function seedWebsiteAndUser() {
+  const seed = generateSeed();
+  const password = bcrypt.hashSync("password", 10);
+
   const initialWebsite = await prisma.user.upsert({
     where: { email: "info@renatopozzi.me" },
     update: {},
@@ -14,10 +18,11 @@ async function seedWebsiteAndUser() {
       email: `info@renatopozzi.me`,
       firstname: "Renato",
       lastname: "Pozzi",
+      password: password,
       websites: {
         create: {
           url: "https://renatopozzi.me",
-          seed: generateSeed(),
+          seed: seed,
         },
       },
     },

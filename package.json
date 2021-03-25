@@ -11,6 +11,7 @@
   "dependencies": {
     "@prisma/client": "^2.19.0",
     "@tailwindcss/forms": "^0.2.1",
+    "bcrypt": "^5.0.1",
     "chart.js": "^2.9.4",
     "deepdash": "^5.3.5",
     "jsonwebtoken": "^8.5.1",
