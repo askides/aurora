@@ -16,6 +16,8 @@ const handleDelete = async (req, res) => {
     },
   });
 
+  await prisma.$disconnect();
+
   return res.status(200).json({ message: "Record deleted." });
 };
 

@@ -1,4 +1,6 @@
 const jwt = require("jsonwebtoken");
+const { parse } = require("cookie");
+const { AUTH_COOKIE } = require("./constants");
 
 const verifyJwt = ({ accessToken }) => {
   try {
@@ -10,15 +12,17 @@ const verifyJwt = ({ accessToken }) => {
 
 // TODO VERIFY USER EXISTS ON DATABASE
 const withAuth = (fn) => (req, res) => {
-  const { authorization } = req.headers;
+  const { cookie } = req.headers;
 
-  if (!authorization) {
+  const allCookies = parse(cookie);
+
+  if (!allCookies.hasOwnProperty(AUTH_COOKIE)) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
-  const [tokenType, accessToken] = authorization.split(" ");
+  const accessToken = allCookies[AUTH_COOKIE];
 
-  if (tokenType !== "Bearer" || !verifyJwt({ accessToken })) {
+  if (!verifyJwt({ accessToken })) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 

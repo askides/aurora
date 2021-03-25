@@ -14,6 +14,7 @@
     "axios": "^0.21.1",
     "bcrypt": "^5.0.1",
     "chart.js": "^2.9.4",
+    "cookie": "^0.4.1",
     "deepdash": "^5.3.5",
     "formik": "^2.2.6",
     "jsonwebtoken": "^8.5.1",
