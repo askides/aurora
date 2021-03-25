@@ -17,8 +17,6 @@ const Stats = ({ timeRange }) => {
   if (error) return <div>failed to load</div>;
   if (!data) return <div>loading...</div>;
 
-  console.log("data", data);
-
   return (
     <div>
       <dl className="grid grid-cols-1 rounded-lg bg-white overflow-hidden shadow divide-y divide-gray-200 dark:divide-gray-700 md:grid-cols-3 md:divide-y-0 md:divide-x dark:bg-gray-800">
