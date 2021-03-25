@@ -20,8 +20,8 @@ const Home = () => {
         type="areaChart"
       />
       <ListView />
-      <Chart url="/api/metrics/views/browsers" timeRange={timeRange} />
-      <Chart url="/api/metrics/views/oses" timeRange={timeRange} />
+      <Chart url="/api/metrics/views/browsers" title="Browsers" timeRange={timeRange} />
+      <Chart url="/api/metrics/views/oses" title="Operative Systems" timeRange={timeRange} />
     </div>
   );
 };
