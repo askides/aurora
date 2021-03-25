@@ -3,6 +3,7 @@ const UserAgent = require("user-agents");
 const crypto = require("crypto");
 const UAParser = require("ua-parser-js");
 const mapValuesDeep = require("deepdash/mapValuesDeep");
+const generateSeed = require("../utils/generate-seed");
 const prisma = new PrismaClient();
 
 async function seedWebsiteAndUser() {
@@ -16,6 +17,7 @@ async function seedWebsiteAndUser() {
       websites: {
         create: {
           url: "https://renatopozzi.me",
+          seed: generateSeed(),
         },
       },
     },

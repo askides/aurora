@@ -27,4 +27,4 @@ const withAuth = (fn) => (req, res) => {
   return fn(enhancedReq, res);
 };
 
-export default withAuth;
+module.exports = withAuth;

@@ -1,5 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
-const { default: withAuth } = require("../../../utils/withAuth");
+const generateSeed = require("../../../utils/generate-seed");
+const withAuth = require("../../../utils/with-auth");
 
 const prisma = new PrismaClient();
 
@@ -20,11 +21,13 @@ const handler = async (req, res) => {
     return res.json({ data: websites });
   } else if (req.method === "POST") {
     const { url } = req.body;
+    const seed = generateSeed();
 
     // Create Event
     const createdWebsite = await prisma.website.create({
       data: {
         url: url,
+        seed: seed,
         owner: {
           connect: {
             email: user.email,
