@@ -18,12 +18,12 @@ const Websites = () => {
   const columns = [
     {
       Header: "ID",
-      accessor: "id",
+      accessor: "seed",
       Cell: ({ cell, value }) => (
         <div className="flex items-center justify-between space-x-3">
           <div className="flex items-center truncate space-x-3">
             <div className="flex-shrink-0 w-2.5 h-2.5 rounded-full bg-pink-600"></div>
-            <a href={`/websites/${cell.row.original.id}/edit`} className="">
+            <a href={`/websites/${value}/edit`} className="">
               {value}
             </a>
           </div>
