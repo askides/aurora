@@ -1,9 +1,12 @@
 const jwt = require("jsonwebtoken");
+const { serialize } = require("cookie");
 const { PrismaClient } = require("@prisma/client");
+const { AUTH_COOKIE, AUTH_COOKIE_LIFETIME } = require("../../../utils/constants");
 
 const prisma = new PrismaClient();
 
-const makeJwt = ({ data }) => jwt.sign({ data: data }, process.env.JWT_SECRET, { expiresIn: 3600 });
+const makeJwt = ({ data }) =>
+  jwt.sign({ data: data }, process.env.JWT_SECRET, { expiresIn: AUTH_COOKIE_LIFETIME });
 
 const attempt = async ({ email, password }) => {
   const user = await prisma.user.findUnique({
@@ -11,6 +14,8 @@ const attempt = async ({ email, password }) => {
       email: email,
     },
   });
+
+  await prisma.$disconnect();
 
   if (user && true /* XXX password === "password" */) {
     return {
@@ -44,11 +49,16 @@ module.exports = async function (req, res) {
   if (user) {
     const accessToken = makeJwt({ data: user });
 
-    return res.status(200).json({
-      access_token: accessToken,
-      token_type: "Bearer",
-      expires_in: 3600,
+    const cookie = serialize(AUTH_COOKIE, accessToken, {
+      path: "/",
+      httpOnly: true,
+      sameSite: true,
+      maxAge: AUTH_COOKIE_LIFETIME,
     });
+
+    res.setHeader("Set-Cookie", [cookie]);
+
+    return res.status(200).json({ access_token: accessToken });
   }
 
   // Set unauthorized.
