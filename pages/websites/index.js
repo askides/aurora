@@ -10,7 +10,7 @@ const Websites = () => {
       .then((res) => res.json())
       .then((res) => res.data);
 
-  const { data, error } = useSWR("/api/users/1/websites", fetcher);
+  const { data, error } = useSWR("/api/me/websites", fetcher);
 
   if (error) return <div>failed to load</div>;
   if (!data) return <div>loading...</div>;
