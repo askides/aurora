@@ -86,8 +86,8 @@ model Device {
 
 model Website {
   id         Int      @id @default(autoincrement())
-  url        String
-  seed       String
+  url        String   @unique
+  seed       String   @unique
   owner      User     @relation(fields: [user_id], references: [id])
   user_id    Int
   events     Event[]
@@ -102,6 +102,7 @@ model User {
   email     String    @unique
   firstname String    @db.VarChar(255)
   lastname  String    @db.VarChar(255)
+  password  String
   websites  Website[]
 
   @@map(name: "users")
