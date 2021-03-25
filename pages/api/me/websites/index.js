@@ -1,6 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
-const generateSeed = require("../../../utils/generate-seed");
-const withAuth = require("../../../utils/with-auth");
+const generateSeed = require("../../../../utils/generate-seed");
+const withAuth = require("../../../../utils/with-auth");
 
 const prisma = new PrismaClient();
 
