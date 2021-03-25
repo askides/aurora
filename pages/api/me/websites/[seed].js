@@ -3,26 +3,37 @@ const withAuth = require("../../../../utils/with-auth");
 
 const prisma = new PrismaClient();
 
-const handler = async (req, res) => {
+const handlePut = (req, res) => ({ status: 405, data: { message: "Method not allowed." } });
+
+const handleDelete = async (req, res) => {
   const user = req.accessTokenBody.data;
+  const { seed } = req.query;
 
-  if (req.method === "PUT") {
-    // THINKING: Need to think if is correct...
-    return res.status(405).json({ message: "Method not allowed." });
-  } else if (req.method === "DELETE") {
-    const { seed } = req.query;
+  // Delete Website XXX CHECK OWNERSHIP
+  await prisma.website.delete({
+    where: {
+      seed: seed,
+    },
+  });
 
-    // Delete Website XXX CHECK OWNERSHIP
-    await prisma.website.delete({
-      where: {
-        seed: seed,
-      },
-    });
+  return res.status(200).json({ message: "Record deleted." });
+};
 
-    return res.status(200).json({ message: "Record deleted." });
-  } else {
-    return res.status(405).json({ message: "Method not allowed." });
+const handler = async (req, res) => {
+  let { status, data } = {};
+
+  switch (req.method) {
+    case "PUT":
+      ({ status, data } = await handlePut(req, res));
+      break;
+    case "DELETE":
+      ({ status, data } = await handleDelete(req, res));
+      break;
+    default:
+      return res.status(405).json({ message: "Method not allowed." });
   }
+
+  return res.status(status).json({ data: data });
 };
 
 module.exports = withAuth(handler);
