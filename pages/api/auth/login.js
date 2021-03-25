@@ -12,7 +12,7 @@ const attempt = async ({ email, password }) => {
     },
   });
 
-  if (user && true /* password === "password" */) {
+  if (user && true /* XXX password === "password" */) {
     return {
       email: user.email,
     };
