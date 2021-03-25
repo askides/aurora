@@ -31,7 +31,7 @@ const handler = async (req, res) => {
   const uaResults = new UAParser(req.headers["user-agent"]).getResult();
   const ua = mapValuesDeep({ ...uaResults }, (v) => (v ? v : "#ND"), {});
 
-  const { type, element } = req.body;
+  const { type, element, locale } = req.body;
 
   // const ip = req.headers["x-real-ip"];
 
@@ -50,6 +50,7 @@ const handler = async (req, res) => {
     data: {
       type: type,
       element: element,
+      locale: locale,
       hash: eventHash,
       website: {
         connect: {

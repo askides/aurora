@@ -93,6 +93,7 @@ seedWebsiteAndUser()
     await prisma.$disconnect();
   });
 
+/*
 seedFakeEvents()
   .catch((e) => {
     console.error(e);
@@ -101,3 +102,4 @@ seedFakeEvents()
   .finally(async () => {
     await prisma.$disconnect();
   });
+  */
