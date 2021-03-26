@@ -3,6 +3,24 @@ const withAuth = require("../../../../utils/with-auth");
 
 const prisma = new PrismaClient();
 
+const handleGet = async (req, res) => {
+  const user = req.accessTokenBody.data;
+  const { seed } = req.query;
+
+  const ws = await prisma.website.findFirst({
+    where: {
+      seed: seed,
+      owner: {
+        email: user.email,
+      },
+    },
+  });
+
+  await prisma.$disconnect();
+
+  return res.status(200).json({ data: ws });
+};
+
 const handlePut = (req, res) => ({ status: 405, data: { message: "Method not allowed." } });
 
 const handleDelete = async (req, res) => {
@@ -25,6 +43,9 @@ const handler = async (req, res) => {
   let { status, data } = {};
 
   switch (req.method) {
+    case "GET":
+      ({ status, data } = await handleGet(req, res));
+      break;
     case "PUT":
       ({ status, data } = await handlePut(req, res));
       break;
