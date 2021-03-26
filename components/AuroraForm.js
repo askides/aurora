@@ -53,7 +53,7 @@ export const TextField = ({ label, type, ...props }) => {
         <input
           {...field}
           type={type}
-          className="appearance-none block w-full px-3 py-2 dark:text-white border border-gray-300 dark:border-gray-700 dark:bg-gray-700 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 dark:focus:ring-green-500 focus:border-indigo-500 dark:focus:border-green-500 sm:text-sm"
+          className="appearance-none block w-full px-3 py-2 dark:text-white border ring-1 ring-gray-600 border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 dark:focus:ring-green-500 focus:border-indigo-500 dark:focus:border-green-500 sm:text-sm"
         />
       </div>
       {meta.error && meta.touched ? <div>{meta.error}</div> : null}
