@@ -1,7 +1,7 @@
 import { useState } from "react";
 import WebsiteInfo from "../components/WebsiteInfo";
-import Chart from "../components/Chart";
-import ListView from "../components/ListView";
+import Chart from "../components/charts/Chart";
+import ListView from "../components/charts/ListView";
 import Stats from "../components/Stats";
 
 const Home = () => {
