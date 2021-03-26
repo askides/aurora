@@ -3,8 +3,7 @@ import { Formik, Form } from "formik";
 import { useEffect, useState } from "react";
 
 import PageTitle from "../../../components/layout/PageTitle";
-import TextField from "../../../components/forms/TextField";
-import Button from "../../../components/forms/Button";
+import { TextField, Button } from "../../../components/AuroraForm";
 
 export async function getServerSideProps(context) {
   const { seed } = context.query;
@@ -34,7 +33,7 @@ const Websites = ({ seed }) => {
       .finally(() => setSubmitting(false));
 
   return (
-    <>
+    <div className="h-full rounded-lg space-y-4 bg-gray-900">
       <PageTitle text="Create New Website" />
 
       <div className="bg-white dark:bg-gray-800 w-full overflow-hidden shadow rounded-lg divide-y divide-gray-200 dark:divide-gray-700">
@@ -65,7 +64,7 @@ const Websites = ({ seed }) => {
           </Formik>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
