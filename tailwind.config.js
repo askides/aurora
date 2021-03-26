@@ -8,6 +8,7 @@ module.exports = {
     extend: {
       transform: ["hover"],
       borderWidth: ["hover"],
+      padding: ["first", "last"],
     },
   },
   plugins: [require("@tailwindcss/forms")],

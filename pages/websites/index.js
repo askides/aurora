@@ -2,6 +2,7 @@ import useSWR from "swr";
 import Link from "next/link";
 import PageTitle from "../../components/layout/PageTitle";
 import { Button } from "../../components/AuroraForm";
+import { Panel, StackedList, StackedListItem } from "../../components/Primitives";
 
 const Websites = () => {
   const fetcher = (...args) =>
@@ -18,25 +19,22 @@ const Websites = () => {
     <div className="h-full rounded-lg space-y-4 bg-gray-900">
       <PageTitle text="Websites" actions={<Button href="/websites/create" label="Create New" />} />
 
-      <ul class="divide-y divide-gray-200 dark:divide-gray-700">
-        {data.map((el, key) => (
-          <li key={key} class="py-4 flex">
-            <img
-              class="h-10 w-10 rounded-full"
-              src={`https://avatars.dicebear.com/api/jdenticon/${el.url}.svg`}
-              alt=""
-            />
-            <div class="ml-3">
-              <p class="text-sm font-medium text-gray-900 dark:text-white">
+      <Panel>
+        <StackedList>
+          {data.map((el, key) => (
+            <StackedListItem
+              key={key}
+              avatar={`https://avatars.dicebear.com/api/jdenticon/${el.url}.svg`}
+              title={
                 <Link href={`/websites/${el.seed}/edit`}>
                   <a>Nome da mettere</a>
                 </Link>
-              </p>
-              <p class="text-sm text-gray-500 dark:text-white">{el.url}</p>
-            </div>
-          </li>
-        ))}
-      </ul>
+              }
+              subtitle={el.url}
+            />
+          ))}
+        </StackedList>
+      </Panel>
     </div>
   );
 };
