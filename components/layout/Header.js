@@ -1,5 +1,5 @@
 const Header = () => (
-  <header className="h-16 bg-white flex items-center">
+  <header className="h-16 bg-white flex items-center mb-10">
     <nav className="bg-gray-900 shadow w-full">
       <div className="relative flex justify-between h-16">
         <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">

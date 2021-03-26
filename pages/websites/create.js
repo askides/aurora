@@ -2,8 +2,8 @@ import axios from "axios";
 import { Formik, Form } from "formik";
 import { useRouter } from "next/router";
 
-import PageTitle from "../../components/layout/PageTitle";
 import { Button, TextField } from "../../components/AuroraForm";
+import { Panel } from "../../components/Primitives";
 
 const Websites = () => {
   const router = useRouter();
@@ -19,36 +19,33 @@ const Websites = () => {
 
   return (
     <div className="h-full rounded-lg space-y-4 bg-gray-900">
-      <PageTitle text="Create New Website" />
-
-      <div className="bg-white dark:bg-gray-800 w-full overflow-hidden shadow rounded-lg divide-y divide-gray-200 dark:divide-gray-700">
-        <div className="px-4 py-5 sm:p-6">
-          <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-            {({ isSubmitting }) => (
-              <Form>
-                <div class="space-y-6">
-                  <div class="space-y-1">
-                    <h1 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">
-                      Website Informations
-                    </h1>
-                    <p class="text-sm leading-5 text-gray-500 dark:text-white">
-                      Insert the Website information by filling in the form below.
-                    </p>
-                  </div>
-
-                  <div class="space-y-1">
-                    <TextField label="Website URL" name="url" type="text" autocomplete="none" />
-                  </div>
-
-                  <div class="flex items-center justify-end space-x-4">
-                    <Button type="submit" isLoading={isSubmitting} label="Create" />
-                  </div>
+      <Panel
+        header={
+          <div class="space-y-1">
+            <h1 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">
+              Create Website
+            </h1>
+            <p class="text-sm leading-5 text-gray-500 dark:text-white">
+              Insert the Website information by filling in the form below.
+            </p>
+          </div>
+        }>
+        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+          {({ isSubmitting }) => (
+            <Form>
+              <div class="space-y-6">
+                <div class="space-y-1">
+                  <TextField label="Website URL" name="url" type="text" autocomplete="none" />
                 </div>
-              </Form>
-            )}
-          </Formik>
-        </div>
-      </div>
+
+                <div class="flex items-center justify-end space-x-4">
+                  <Button type="submit" isLoading={isSubmitting} label="Create" />
+                </div>
+              </div>
+            </Form>
+          )}
+        </Formik>
+      </Panel>
     </div>
   );
 };
