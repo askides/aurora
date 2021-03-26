@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useField } from "formik";
 
 export const SvgLoader = () => (
@@ -20,7 +21,17 @@ export const SvgLoader = () => (
   </svg>
 );
 
-export const Button = ({ label, type, isLoading }) => {
+export const Button = ({ label, type, isLoading, href }) => {
+  if (href) {
+    return (
+      <Link href={href}>
+        <a className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-green-500">
+          {label}
+        </a>
+      </Link>
+    );
+  }
+
   return (
     <button
       type={type}
