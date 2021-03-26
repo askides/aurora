@@ -2,7 +2,7 @@ import axios from "axios";
 import { Formik, Form } from "formik";
 import { useRouter } from "next/router";
 
-import PageTitle from "../../components/PageTitle";
+import PageTitle from "../../components/layout/PageTitle";
 import { Button, TextField } from "../../components/AuroraForm";
 
 const Websites = () => {

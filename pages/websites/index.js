@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import PageTitle from "../../components/PageTitle";
+import PageTitle from "../../components/layout/PageTitle";
 import HeadlessTable from "../../components/HeadlessTable";
 
 const Websites = () => {

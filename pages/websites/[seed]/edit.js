@@ -2,7 +2,7 @@ import axios from "axios";
 import { Formik, Form } from "formik";
 import { useEffect, useState } from "react";
 
-import PageTitle from "../../../components/PageTitle";
+import PageTitle from "../../../components/layout/PageTitle";
 import TextField from "../../../components/forms/TextField";
 import Button from "../../../components/forms/Button";
 
