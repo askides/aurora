@@ -18,7 +18,7 @@ const Websites = () => {
       .finally(() => setSubmitting(false));
 
   return (
-    <>
+    <div className="h-full rounded-lg space-y-4 bg-gray-900">
       <PageTitle text="Create New Website" />
 
       <div className="bg-white dark:bg-gray-800 w-full overflow-hidden shadow rounded-lg divide-y divide-gray-200 dark:divide-gray-700">
@@ -49,7 +49,7 @@ const Websites = () => {
           </Formik>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
