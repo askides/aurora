@@ -1,6 +1,6 @@
 import useSWR from "swr";
-import React, { useState } from "react";
-import { LineChart, PieChart, ColumnChart, AreaChart } from "react-chartkick";
+import React from "react";
+import { ColumnChart, AreaChart } from "react-chartkick";
 import "chart.js";
 
 const Components = {
