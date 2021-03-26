@@ -1,8 +1,6 @@
 import useSWR from "swr";
-import AdminPageHeader from "../../components/AdminPageHeader";
+import PageTitle from "../../components/PageTitle";
 import HeadlessTable from "../../components/HeadlessTable";
-import Header from "../../components/layout/Header";
-import PageHeader from "../../components/PageHeader";
 
 const Websites = () => {
   const fetcher = (...args) =>
@@ -46,15 +44,23 @@ const Websites = () => {
   ];
 
   return (
-    <>
-      <Header />
-      <AdminPageHeader text="Websites" />
+    <div className="h-full rounded-lg space-y-4 bg-gray-900">
+      <PageTitle
+        text="Websites"
+        actions={
+          <button
+            type="button"
+            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500">
+            Create New
+          </button>
+        }
+      />
       <HeadlessTable
         data={data}
         columns={columns}
         onFetchData={({ filters }) => console.log("fedt", filters)}
       />
-    </>
+    </div>
   );
 };
 

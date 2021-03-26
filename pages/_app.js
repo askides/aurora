@@ -7,7 +7,6 @@ import "../assets/css/scrollbar.css";
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
-  console.log(router.pathname);
 
   if (router.pathname.startsWith("/auth")) {
     return (

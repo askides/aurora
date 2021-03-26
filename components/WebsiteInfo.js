@@ -1,6 +1,6 @@
 import useSWR from "swr";
 
-const PageHeader = ({ timeRange, onTimeRangeChange }) => {
+const WebsiteInfo = ({ timeRange, onTimeRangeChange }) => {
   const fetcher = (...args) =>
     fetch(...args)
       .then((res) => res.json())
@@ -43,4 +43,4 @@ const PageHeader = ({ timeRange, onTimeRangeChange }) => {
   );
 };
 
-export default PageHeader;
+export default WebsiteInfo;

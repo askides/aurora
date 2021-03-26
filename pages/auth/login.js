@@ -1,8 +1,7 @@
 import axios from "axios";
 import { Formik, Form } from "formik";
 import { useRouter } from "next/router";
-import Button from "../../components/forms/Button";
-import TextField from "../../components/forms/TextField";
+import { Button, TextField } from "../../components/AuroraForm";
 
 const Login = () => {
   const router = useRouter();

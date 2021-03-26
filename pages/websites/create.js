@@ -2,10 +2,8 @@ import axios from "axios";
 import { Formik, Form } from "formik";
 import { useRouter } from "next/router";
 
-import AdminPageHeader from "../../components/AdminPageHeader";
-import Header from "../../components/layout/Header";
-import TextField from "../../components/forms/TextField";
-import Button from "../../components/forms/Button";
+import PageTitle from "../../components/PageTitle";
+import { Button, TextField } from "../../components/AuroraForm";
 
 const Websites = () => {
   const router = useRouter();
@@ -21,8 +19,7 @@ const Websites = () => {
 
   return (
     <>
-      <Header />
-      <AdminPageHeader text="Create New Website" />
+      <PageTitle text="Create New Website" />
 
       <div className="bg-white dark:bg-gray-800 w-full overflow-hidden shadow rounded-lg divide-y divide-gray-200 dark:divide-gray-700">
         <div className="px-4 py-5 sm:p-6">
