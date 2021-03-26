@@ -1,13 +1,26 @@
+import React from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
+
+export const SideNarrowItem = ({ href, children }) => {
+  const router = useRouter();
+
+  let className = children.props.className || "";
+
+  if (router.pathname === href) {
+    className = `bg-gray-900 text-white flex-shrink-0 inline-flex items-center justify-center h-14 w-14 rounded-lg`;
+  }
+
+  return <Link href={href}>{React.cloneElement(children, { className })}</Link>;
+};
 
 const SideNarrow = () => (
   <nav
     aria-label="Sidebar"
     className="hidden md:block md:flex-shrink-0 md:bg-gray-800 md:overflow-y-auto">
     <div className="relative w-20 flex flex-col p-3 space-y-3">
-      <Link href="/">
-        <a className="bg-gray-900 text-white flex-shrink-0 inline-flex items-center justify-center h-14 w-14 rounded-lg">
-          <span className="sr-only">Open</span>
+      <SideNarrowItem href="/">
+        <a className="text-gray-400 hover:bg-gray-700 flex-shrink-0 inline-flex items-center justify-center h-14 w-14 rounded-lg">
           {/*  Heroicon name: outline/inbox  */}
           <svg
             className="h-6 w-6"
@@ -24,9 +37,9 @@ const SideNarrow = () => (
             />
           </svg>
         </a>
-      </Link>
+      </SideNarrowItem>
 
-      <Link href="/websites">
+      <SideNarrowItem href="/websites">
         <a className="text-gray-400 hover:bg-gray-700 flex-shrink-0 inline-flex items-center justify-center h-14 w-14 rounded-lg">
           <span className="sr-only">Flagged</span>
           {/*  Heroicon name: outline/flag  */}
@@ -45,7 +58,7 @@ const SideNarrow = () => (
             />
           </svg>
         </a>
-      </Link>
+      </SideNarrowItem>
 
       <a
         href="#"
