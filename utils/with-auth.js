@@ -14,7 +14,7 @@ const verifyJwt = ({ accessToken }) => {
 const withAuth = (fn) => (req, res) => {
   const { cookie } = req.headers;
 
-  const allCookies = parse(cookie);
+  const allCookies = parse(cookie || "");
 
   if (!allCookies.hasOwnProperty(AUTH_COOKIE)) {
     return res.status(401).json({ message: "Unauthorized" });
