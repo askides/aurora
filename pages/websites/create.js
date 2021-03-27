@@ -21,11 +21,11 @@ const Websites = () => {
     <div className="h-full rounded-lg space-y-4 bg-gray-900">
       <Panel
         header={
-          <div class="space-y-1">
-            <h1 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">
+          <div className="space-y-1">
+            <h1 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">
               Create Website
             </h1>
-            <p class="text-sm leading-5 text-gray-500 dark:text-white">
+            <p className="text-sm leading-5 text-gray-500 dark:text-white">
               Insert the Website information by filling in the form below.
             </p>
           </div>
@@ -33,12 +33,12 @@ const Websites = () => {
         <Formik initialValues={initialValues} onSubmit={handleSubmit}>
           {({ isSubmitting }) => (
             <Form>
-              <div class="space-y-6">
-                <div class="space-y-1">
+              <div className="space-y-6">
+                <div className="space-y-1">
                   <TextField label="Website URL" name="url" type="text" autocomplete="none" />
                 </div>
 
-                <div class="flex items-center justify-end space-x-4">
+                <div className="flex items-center justify-end space-x-4">
                   <Button type="submit" isLoading={isSubmitting} label="Create" />
                 </div>
               </div>
