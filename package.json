@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "pre:build": "npm run build:aurora && npm run build:prisma",
-    "build": "next build && npm run build:aurora && npm run build:prisma",
+    "prebuild": "npm run build:aurora && npm run build:prisma",
+    "build": "next build",
     "build:aurora": "webpack --config tracker.config.js --mode production",
     "build:prisma": "prisma migrate deploy",
     "start": "next start",
