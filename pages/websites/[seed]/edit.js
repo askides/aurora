@@ -6,13 +6,13 @@ import { TextField, Button } from "../../../components/AuroraForm";
 import { Panel } from "../../../components/Primitives";
 import { withAuth } from "../../../components/utils/withAuth";
 
-export const getServerSideProps = withAuth((context) => {
+export async function getServerSideProps(context) {
   const { seed } = context.query;
 
   return {
     props: { seed },
   };
-});
+}
 
 const Websites = ({ seed }) => {
   const [initialValues, setInitialValues] = useState({ url: "" });
@@ -88,4 +88,4 @@ const Websites = ({ seed }) => {
   );
 };
 
-export default Websites;
+export default withAuth(Websites);

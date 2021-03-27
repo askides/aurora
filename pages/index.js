@@ -5,17 +5,12 @@ import { Button } from "../components/AuroraForm";
 import { Panel, StackedList, StackedListItem } from "../components/Primitives";
 import { withAuth } from "../components/utils/withAuth";
 
-export const getServerSideProps = withAuth((context) => {
-  return { props: {} };
-});
-
 const Websites = () => {
-  const fetcher = (...args) =>
+  const { data, error } = useSWR("/api/me/websites", (...args) =>
     fetch(...args)
       .then((res) => res.json())
-      .then((res) => res.data);
-
-  const { data, error } = useSWR("/api/me/websites", fetcher);
+      .then((res) => res.data)
+  );
 
   if (error) return <div>failed to load</div>;
   if (!data) return <div>loading...</div>;
@@ -54,4 +49,4 @@ const Websites = () => {
   );
 };
 
-export default Websites;
+export default withAuth(Websites);

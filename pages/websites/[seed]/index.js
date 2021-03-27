@@ -5,13 +5,13 @@ import ListView from "../../../components/charts/ListView";
 import Stats from "../../../components/Stats";
 import { withAuth } from "../../../components/utils/withAuth";
 
-export const getServerSideProps = withAuth((context) => {
+export async function getServerSideProps(context) {
   const { seed } = context.query;
 
   return {
     props: { seed },
   };
-});
+}
 
 const Website = ({ seed }) => {
   const [timeRange, setTimeRange] = useState("this_day");
@@ -40,4 +40,4 @@ const Website = ({ seed }) => {
   );
 };
 
-export default Website;
+export default withAuth(Website);
