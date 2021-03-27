@@ -2,17 +2,19 @@ const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
-const browserViews = async (range) =>
+const osesViews = async (range, seed) =>
   await prisma.$queryRaw(`
     SELECT
-      browsers.name as element,
+      oses.name as element,
       COUNT(events.id) as views
     FROM
       events
-      JOIN browsers ON events.browser_id = browsers.id
+      JOIN oses ON events.os_id = oses.id
+      JOIN websites ON events.website_id = websites.id
     WHERE events.created_at >= (now() - '1 ${range}'::interval)
+    AND websites.seed = '${seed}'
     GROUP BY
-      browsers.name
+      oses.name
     ORDER BY views DESC
   `);
 
@@ -22,11 +24,11 @@ module.exports = async (req, res) => {
     return res.status(405).json({ message: "Method not allowed." });
   }
 
-  const { range } = req.query;
+  const { range, seed } = req.query;
 
   const r = range.replace("this_", ""); /// XXX TO CHECK VALUES
 
-  const data = await browserViews(r)
+  const data = await osesViews(r, seed)
     .catch((e) => {
       throw e;
     })

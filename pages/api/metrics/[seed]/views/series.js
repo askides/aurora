@@ -2,7 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
-const thisRangeViews = async (range = "month") => {
+const thisRangeViews = async (range = "month", seed) => {
   return await prisma.$queryRaw(`
     SELECT
       range.generate_series as range,
@@ -18,10 +18,13 @@ const thisRangeViews = async (range = "month") => {
       ) as range
       LEFT JOIN (
         SELECT
-          "created_at" :: date AS day,
-          Count(id) AS views
+          events.created_at :: date AS day,
+          Count(events.id) AS views
         FROM
-          "events"
+          events
+          JOIN websites on websites.id = events.website_id
+        WHERE
+          websites.seed = '${seed}'
         GROUP BY
           day
       ) AS e ON range.generate_series = e.day
@@ -30,8 +33,8 @@ const thisRangeViews = async (range = "month") => {
   `);
 };
 
-const thisDayViews = async () =>
-  await prisma.$queryRaw`
+const thisDayViews = async (seed) =>
+  await prisma.$queryRaw(`
     SELECT
       range,
       COALESCE(e.views, 0) AS views
@@ -39,21 +42,23 @@ const thisDayViews = async () =>
       Generate_series(0, 23) AS range
       LEFT JOIN (
         SELECT
-          Date_part('hour', "created_at") AS hour,
-          Count(id) AS views
+          Date_part('hour', events.created_at) AS hour,
+          Count(events.id) AS views
         FROM
-          "events"
+          events
+          JOIN websites on websites.id = events.website_id
         WHERE
-          "created_at" >= now() :: date
+          events.created_at >= now() :: date
+          AND websites.seed = '${seed}'
         GROUP BY
           hour
       ) AS e ON range = e.hour
     ORDER BY
       range
-  `;
+  `);
 
-const thisYearViews = async () =>
-  await prisma.$queryRaw`
+const thisYearViews = async (seed) =>
+  await prisma.$queryRaw(`
     SELECT
       to_char(
         to_timestamp (range :: text, 'MM'),
@@ -64,16 +69,19 @@ const thisYearViews = async () =>
       Generate_series(1, 12) AS range
       LEFT JOIN (
         SELECT
-          Date_part('month', "created_at") AS month,
-          Count(id) AS views
+          Date_part('month', events.created_at) AS month,
+          Count(events.id) AS views
         FROM
-          "events"
+          events
+          JOIN websites on websites.id = events.website_id
+        WHERE
+          websites.seed = '${seed}'
         GROUP BY
           month
       ) AS e ON range = e.month
     ORDER BY
       range
-  `;
+  `);
 
 module.exports = async (req, res) => {
   // Only GET Available
@@ -81,12 +89,12 @@ module.exports = async (req, res) => {
     return res.status(405).json({ message: "Method not allowed." });
   }
 
-  const { range } = req.query;
+  const { seed, range } = req.query;
 
   let data = {};
 
   if (range === "this_day") {
-    data = await thisDayViews()
+    data = await thisDayViews(seed)
       .catch((e) => {
         throw e;
       })
@@ -94,7 +102,7 @@ module.exports = async (req, res) => {
         await prisma.$disconnect();
       });
   } else if (range === "this_year") {
-    data = await thisYearViews()
+    data = await thisYearViews(seed)
       .catch((e) => {
         throw e;
       })
@@ -102,7 +110,7 @@ module.exports = async (req, res) => {
         await prisma.$disconnect();
       });
   } else if (range === "this_month") {
-    data = await thisRangeViews("month")
+    data = await thisRangeViews("month", seed)
       .catch((e) => {
         throw e;
       })
@@ -110,7 +118,7 @@ module.exports = async (req, res) => {
         await prisma.$disconnect();
       });
   } else if (range === "this_week") {
-    data = await thisRangeViews("week")
+    data = await thisRangeViews("week", seed)
       .catch((e) => {
         throw e;
       })
@@ -121,8 +129,6 @@ module.exports = async (req, res) => {
     data = [];
   }
 
-  //console.log("data", data);
-  // format data
   const x = data.map((dv) => [dv.range, dv.views]);
 
   return res.json({
