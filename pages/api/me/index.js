@@ -4,7 +4,7 @@ const { hash } = require("../../../utils/hash");
 
 const prisma = new PrismaClient();
 
-const handleGet = (req, res) => req.accessTokenBody.data;
+const handleGet = (req, res) => ({ status: 200, data: req.accessTokenBody.data });
 
 const handlePut = async (req, res) => {
   const user = req.accessTokenBody.data;
@@ -21,7 +21,7 @@ const handlePut = async (req, res) => {
 
   await prisma.$disconnect();
 
-  return res.status(200).json({ message: "User info updated." });
+  return { status: 200, data: { message: "User info updated." } };
 };
 
 const handle = async function (req, res) {
