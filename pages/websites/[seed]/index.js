@@ -1,10 +1,10 @@
 import { useState } from "react";
-import WebsiteInfo from "../components/WebsiteInfo";
-import Chart from "../components/charts/Chart";
-import ListView from "../components/charts/ListView";
-import Stats from "../components/Stats";
+import WebsiteInfo from "../../../components/WebsiteInfo";
+import Chart from "../../../components/charts/Chart";
+import ListView from "../../../components/charts/ListView";
+import Stats from "../../../components/Stats";
 
-const Home = () => {
+const Website = () => {
   const [timeRange, setTimeRange] = useState("this_day");
 
   return (
@@ -24,4 +24,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Website;
