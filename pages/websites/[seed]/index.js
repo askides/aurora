@@ -17,7 +17,10 @@ const Website = ({ seed }) => {
 
   return (
     <div className="h-full rounded-lg space-y-4 bg-gray-900">
-      <WebsiteInfo onTimeRangeChange={(value) => setTimeRange(value)} />
+      <WebsiteInfo
+        url={`/api/metrics/${seed}/realtime/visitors`}
+        onTimeRangeChange={(value) => setTimeRange(value)}
+      />
       <Stats url={`/api/metrics/${seed}/performance`} timeRange={timeRange} />
       <Chart
         url={`/api/metrics/${seed}/views/series`}

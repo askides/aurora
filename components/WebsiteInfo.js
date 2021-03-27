@@ -1,12 +1,12 @@
 import useSWR from "swr";
 
-const WebsiteInfo = ({ timeRange, onTimeRangeChange }) => {
+const WebsiteInfo = ({ url, timeRange, onTimeRangeChange }) => {
   const fetcher = (...args) =>
     fetch(...args)
       .then((res) => res.json())
       .then((res) => res.data);
 
-  const { data, error } = useSWR("/api/metrics/realtime/visitors", fetcher);
+  const { data, error } = useSWR(url, fetcher);
 
   return (
     <div className="pt-10">
