@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const { serialize } = require("cookie");
 const { PrismaClient } = require("@prisma/client");
 const { AUTH_COOKIE, AUTH_COOKIE_LIFETIME } = require("../../../utils/constants");
+const { verify } = require("../../../utils/hash");
 
 const prisma = new PrismaClient();
 
@@ -17,7 +18,7 @@ const attempt = async ({ email, password }) => {
 
   await prisma.$disconnect();
 
-  if (user && true /* XXX password === "password" */) {
+  if (user && verify(password, user.password)) {
     return {
       email: user.email,
     };
