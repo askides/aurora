@@ -4,14 +4,15 @@ import { useEffect, useState } from "react";
 
 import { TextField, Button } from "../../../components/AuroraForm";
 import { Panel } from "../../../components/Primitives";
+import { withAuth } from "../../../components/utils/withAuth";
 
-export async function getServerSideProps(context) {
+export const getServerSideProps = withAuth((context) => {
   const { seed } = context.query;
 
   return {
     props: { seed },
   };
-}
+});
 
 const Websites = ({ seed }) => {
   const [initialValues, setInitialValues] = useState({ url: "" });

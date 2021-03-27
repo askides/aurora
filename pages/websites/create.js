@@ -4,6 +4,11 @@ import { useRouter } from "next/router";
 
 import { Button, TextField } from "../../components/AuroraForm";
 import { Panel } from "../../components/Primitives";
+import { withAuth } from "../../components/utils/withAuth";
+
+export const getServerSideProps = withAuth((context) => {
+  return { props: {} };
+});
 
 const Websites = () => {
   const router = useRouter();

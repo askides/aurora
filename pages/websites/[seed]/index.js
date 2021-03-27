@@ -3,14 +3,15 @@ import WebsiteInfo from "../../../components/WebsiteInfo";
 import Chart from "../../../components/charts/Chart";
 import ListView from "../../../components/charts/ListView";
 import Stats from "../../../components/Stats";
+import withAuth from "../../../components/utils/withAuth";
 
-export async function getServerSideProps(context) {
+export const getServerSideProps = withAuth((context) => {
   const { seed } = context.query;
 
   return {
     props: { seed },
   };
-}
+});
 
 const Website = ({ seed }) => {
   const [timeRange, setTimeRange] = useState("this_day");
