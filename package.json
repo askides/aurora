@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "npm run build:aurora && npm run build:prisma",
+    "prebuild": "npm run build:rollup && npm run build:prisma",
     "build": "next build",
     "build:aurora": "webpack --config tracker.config.js --mode production",
+    "build:rollup": "rollup --config tracker.rollup.config.js",
     "build:prisma": "prisma migrate deploy",
     "start": "next start",
     "export": "next build && next export"
@@ -43,6 +44,8 @@
     "babel-loader": "^8.2.2",
     "postcss": "^8.2.8",
     "prisma": "^2.19.0",
+    "rollup": "^2.43.0",
+    "rollup-plugin-terser": "^7.0.2",
     "tailwindcss": "^2.0.4",
     "webpack": "^5.28.0",
     "webpack-cli": "^4.6.0"
