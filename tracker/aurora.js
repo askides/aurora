@@ -14,25 +14,25 @@ const { default: axios } = require("axios");
   } = window;
 
   // Check Script Exists
-  const script = document.querySelector("script[data-website-id]");
+  const script = document.querySelector("script[aurora-id]");
 
-  //if (!script) return false;
+  if (!script) return false;
 
-  console.log("Screen", screen);
-  console.log("Navigator", navigator);
-  console.log("Location", location);
-  console.log("document", document);
-  console.log("history", history);
-  console.log("SessionStorage", sessionStorage);
+  const analyticsUrl = script.getAttribute("src").replace("/aurora.js", "/api/collect");
+
+  // console.log("Screen", screen);
+  // console.log("Navigator", navigator);
+  // console.log("Location", location);
+  // console.log("document", document);
+  // console.log("history", history);
+  // console.log("SessionStorage", sessionStorage);
 
   const rawResponse = await axios
-    .post("http://localhost:3000/api/collect", {
+    .post(analyticsUrl, {
       type: "pageView",
       element: location.pathname,
       locale: navigator.language,
     })
-    .then((res) => res.json())
-    .then((res) => console.log("res", res))
     .catch((err) => console.log(err));
   // const rawResponse = await fetch("http://localhost:3000/api/collect", {
   //   method: "POST",
@@ -46,8 +46,4 @@ const { default: axios } = require("axios");
   //     element: location.pathname,
   //   }),
   // });
-
-  const content = await rawResponse.json();
-
-  console.log("content", content);
 })(window);
