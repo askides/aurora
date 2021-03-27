@@ -10,7 +10,7 @@ const Login = () => {
   const handleSubmit = (values, setSubmitting) =>
     axios
       .post("/api/auth/login", values)
-      .then(() => router.push("/"))
+      .then(() => router.push("/websites"))
       .catch((err) => console.log(err))
       .finally(() => setSubmitting(false));
 

@@ -3,6 +3,11 @@ import Link from "next/link";
 import PageTitle from "../../components/layout/PageTitle";
 import { Button } from "../../components/AuroraForm";
 import { Panel, StackedList, StackedListItem } from "../../components/Primitives";
+import { withAuth } from "../../components/utils/withAuth";
+
+export const getServerSideProps = withAuth((context) => {
+  return { props: {} };
+});
 
 const Websites = () => {
   const fetcher = (...args) =>
