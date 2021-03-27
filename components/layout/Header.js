@@ -76,6 +76,7 @@ const Header = () => (
         </div>
       </div>
 
+      {/*
       <div className="sm:hidden">
         <div className="pt-2 pb-4 space-y-1">
           <a
@@ -100,6 +101,7 @@ const Header = () => (
           </a>
         </div>
       </div>
+      */}
     </nav>
   </header>
 );
