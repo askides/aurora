@@ -4,7 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "pre:build": "npm run build:aurora",
     "build": "next build",
+    "build:aurora": "webpack --config tracker.config.js --mode production",
+    "build:prisma": "prisma migrate deploy",
     "start": "next start",
     "export": "next build && next export"
   },
@@ -34,9 +37,14 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.13.13",
+    "@babel/preset-env": "^7.13.12",
     "autoprefixer": "^10.2.5",
+    "babel-loader": "^8.2.2",
     "postcss": "^8.2.8",
     "prisma": "^2.19.0",
-    "tailwindcss": "^2.0.4"
+    "tailwindcss": "^2.0.4",
+    "webpack": "^5.28.0",
+    "webpack-cli": "^4.6.0"
   }
 }
