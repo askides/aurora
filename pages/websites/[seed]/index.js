@@ -6,7 +6,7 @@ import Stats from "../../../components/Stats";
 
 export async function getServerSideProps(context) {
   const { seed } = context.query;
-  console.log("seed", seed);
+
   return {
     props: { seed },
   };
@@ -18,14 +18,14 @@ const Website = ({ seed }) => {
   return (
     <div className="h-full rounded-lg space-y-4 bg-gray-900">
       <WebsiteInfo onTimeRangeChange={(value) => setTimeRange(value)} />
-      <Stats timeRange={timeRange} />
+      <Stats url={`/api/metrics/${seed}/performance`} timeRange={timeRange} />
       <Chart
         url={`/api/metrics/${seed}/views/series`}
         timeRange={timeRange}
         title="Page Views"
         type="areaChart"
       />
-      <ListView />
+      <ListView url={`/api/metrics/${seed}/page-views`} />
       <Chart url={`/api/metrics/${seed}/views/browsers`} title="Browsers" timeRange={timeRange} />
       <Chart
         url={`/api/metrics/${seed}/views/oses`}

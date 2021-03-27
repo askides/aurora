@@ -8,15 +8,23 @@ module.exports = async (req, res) => {
     return res.status(405).json({ message: "Method not allowed." });
   }
 
-  const { type, element } = req.body;
+  const { seed } = req.body;
 
   // All the pages viewed
-  const allPageWithViews = await prisma.$queryRaw`
-    SELECT element, count(element) as views
-    FROM "events"
-    GROUP BY element
-    ORDER BY views DESC
-  `;
+  const allPageWithViews = await prisma.$queryRaw(`
+    SELECT
+      element,
+      count(element) as views
+    FROM
+      events
+      JOIN websites ON events.website_id = websites.id
+    WHERE
+      websites.seed = '${seed}'
+    GROUP BY
+      element
+    ORDER BY
+      views DESC
+  `);
 
   await prisma.$disconnect();
 

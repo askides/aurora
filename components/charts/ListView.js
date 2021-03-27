@@ -1,12 +1,12 @@
 import useSWR from "swr";
 
-const ListView = () => {
+const ListView = ({ url }) => {
   const fetcher = (...args) =>
     fetch(...args)
       .then((res) => res.json())
       .then((res) => res.data);
 
-  const { data, error } = useSWR("/api/metrics/page-views", fetcher);
+  const { data, error } = useSWR(url, fetcher);
 
   if (error) return <div>failed to load</div>;
   if (!data) return <div>loading...</div>;
