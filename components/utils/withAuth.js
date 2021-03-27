@@ -22,7 +22,7 @@ export function withAuth(getServerSideProps) {
 
     const { cookie } = req.headers;
 
-    const allCookies = parse(cookie);
+    const allCookies = parse(cookie || "");
 
     if (!allCookies.hasOwnProperty(AUTH_COOKIE)) {
       return redirect(res, "/auth/login");
