@@ -18,7 +18,7 @@ const handleGet = async (req, res) => {
 
   await prisma.$disconnect();
 
-  return res.status(200).json({ data: ws });
+  return { status: 200, data: ws };
 };
 
 const handlePut = (req, res) => ({ status: 405, data: { message: "Method not allowed." } });
@@ -36,7 +36,7 @@ const handleDelete = async (req, res) => {
 
   await prisma.$disconnect();
 
-  return res.status(200).json({ message: "Record deleted." });
+  return { status: 200, data: null };
 };
 
 const handler = async (req, res) => {
