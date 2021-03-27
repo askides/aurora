@@ -8,7 +8,7 @@ module.exports = async (req, res) => {
     return res.status(405).json({ message: "Method not allowed." });
   }
 
-  const { seed } = req.body;
+  const { seed } = req.query;
 
   // All the pages viewed
   const allPageWithViews = await prisma.$queryRaw(`
