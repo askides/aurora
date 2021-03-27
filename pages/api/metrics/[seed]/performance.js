@@ -2,7 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
-const pageViewsPerformance = async (range) => {
+const pageViewsPerformance = async (range, seed) => {
   return await prisma.$queryRaw(`
     select
       currentPerformance.c as cp,
@@ -17,25 +17,29 @@ const pageViewsPerformance = async (range) => {
     from
       (
         select
-          count(id) as c
+          count(events.id) as c
         from
-          "events"
+          events
+        JOIN websites ON events.website_id = websites.id
         where
-          "created_at" >= (now() - '1 ${range}' :: interval)
+          events.created_at >= (now() - '1 ${range}' :: interval)
+          AND websites.seed = '${seed}'
       ) as currentPerformance CROSS
       JOIN (
         select
-          count(id) as c
+          count(events.id) as c
         from
-          "events"
+          events
+          JOIN websites ON events.website_id = websites.id
         where
-          "created_at" BETWEEN (now() - '2 ${range}' :: interval)
+          events.created_at BETWEEN (now() - '2 ${range}' :: interval)
           and (now() - '1 ${range}' :: interval)
+          AND websites.seed = '${seed}'
       ) as lastPerformance
   `);
 };
 
-const uniqueVisitorsPerformance = async (range) => {
+const uniqueVisitorsPerformance = async (range, seed) => {
   return await prisma.$queryRaw(`
     select
       currentPerformance.c as cp,
@@ -52,23 +56,27 @@ const uniqueVisitorsPerformance = async (range) => {
         select
           count(DISTINCT hash) as c
         from
-          "events"
+          events
+        JOIN websites ON events.website_id = websites.id
         where
-          "created_at" >= (now() - '1 ${range}' :: interval)
+          events.created_at >= (now() - '1 ${range}' :: interval)
+          AND websites.seed = '${seed}'
       ) as currentPerformance CROSS
       JOIN (
         select
           count(DISTINCT hash) as c
         from
-          "events"
+          events
+        JOIN websites ON events.website_id = websites.id
         where
-          "created_at" BETWEEN (now() - '2 ${range}' :: interval)
+          events.created_at BETWEEN (now() - '2 ${range}' :: interval)
           and (now() - '1 ${range}' :: interval)
+          AND websites.seed = '${seed}'
       ) as lastPerformance
   `);
 };
 
-const bounceRatePerformance = async (range) => {
+const bounceRatePerformance = async (range, seed) => {
   return await prisma.$queryRaw(`
     select
       currentPerformance.c as cp,
@@ -94,26 +102,28 @@ const bounceRatePerformance = async (range) => {
         from
           (
             select
-              count(id) as totalViews,
+              count(events.id) as totalViews,
               (
                 select
                   sum(t.c)
                 from
                   (
                     select
-                      count(id) as c
+                      count(events.id) as c
                     from
-                      "events"
+                      events
                     group by
                       hash
                     having
-                      count(id) = 1
+                      count(events.id) = 1
                   ) as t
               ) as uniqueViews
             from
-              "events"
+              events
+            JOIN websites ON events.website_id = websites.id
             where
-              "created_at" >= (now() - '1 ${range}' :: interval)
+              events.created_at >= (now() - '1 ${range}' :: interval)
+              AND websites.seed = '${seed}'
           ) as x
       ) as currentPerformance CROSS
       JOIN (
@@ -127,27 +137,29 @@ const bounceRatePerformance = async (range) => {
         from
           (
             select
-              count(id) as totalViews,
+              count(events.id) as totalViews,
               (
                 select
                   sum(t.c)
                 from
                   (
                     select
-                      count(id) as c
+                      count(events.id) as c
                     from
-                      "events"
+                      events
                     group by
                       hash
                     having
-                      count(id) = 1
+                      count(events.id) = 1
                   ) as t
               ) as uniqueViews
             from
-              "events"
+              events
+            JOIN websites ON events.website_id = websites.id
             where
-              "created_at" BETWEEN (now() - '2 ${range}' :: interval)
+              events.created_at BETWEEN (now() - '2 ${range}' :: interval)
               and (now() - '1 ${range}' :: interval)
+              AND websites.seed = '${seed}'
           ) as x
       ) as lastPerformance
   `);
@@ -159,11 +171,11 @@ module.exports = async (req, res) => {
     return res.status(405).json({ message: "Method not allowed." });
   }
 
-  const { range } = req.query;
+  const { range, seed } = req.query;
 
   const r = range.replace("this_", ""); /// XXX TO CHECK VALUES
 
-  const pvpp = pageViewsPerformance(r)
+  const pvpp = pageViewsPerformance(r, seed)
     .catch((e) => {
       throw e;
     })
@@ -171,7 +183,7 @@ module.exports = async (req, res) => {
       await prisma.$disconnect();
     });
 
-  const uvpp = uniqueVisitorsPerformance(r)
+  const uvpp = uniqueVisitorsPerformance(r, seed)
     .catch((e) => {
       throw e;
     })
@@ -179,7 +191,7 @@ module.exports = async (req, res) => {
       await prisma.$disconnect();
     });
 
-  const brpp = bounceRatePerformance(r)
+  const brpp = bounceRatePerformance(r, seed)
     .catch((e) => {
       throw e;
     })

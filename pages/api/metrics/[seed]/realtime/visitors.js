@@ -8,11 +8,19 @@ module.exports = async (req, res) => {
     return res.status(405).json({ message: "Method not allowed." });
   }
 
+  const { seed } = req.query;
+
   // All the pages viewed
-  const lastNSecondsVisitors = await prisma.$queryRaw`
-    SELECT count(DISTINCT hash) as visitors from events
-    where created_at >= (now() - '30 second'::interval)
-  `;
+  const lastNSecondsVisitors = await prisma.$queryRaw(`
+    SELECT
+      count(DISTINCT hash) as visitors
+    from
+      events
+      JOIN websites ON events.website_id = websites.id
+    where
+      events.created_at >= (now() - '30 second' :: interval)
+      AND websites.seed = '${seed}'
+  `);
 
   await prisma.$disconnect();
 
