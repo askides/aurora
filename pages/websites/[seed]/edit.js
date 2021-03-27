@@ -16,7 +16,14 @@ export async function getServerSideProps(context) {
 const Websites = ({ seed }) => {
   const [initialValues, setInitialValues] = useState({ url: "" });
 
-  useEffect(() => init(), []);
+  useEffect(() => {
+    init();
+
+    // Set Script
+    document.getElementById(
+      "aurora_script"
+    ).innerText = `<script src="https://app.aurora.app/_next/static/chunks/pages/_app-ad192986390a7c7db827.js" aurora-id="${seed}"></script>`;
+  }, []);
 
   const init = () =>
     axios
@@ -36,11 +43,11 @@ const Websites = ({ seed }) => {
     <div className="h-full rounded-lg space-y-4 bg-gray-900">
       <Panel
         header={
-          <div class="space-y-1">
-            <h1 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">
+          <div className="space-y-1">
+            <h1 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">
               Edit Website
             </h1>
-            <p class="text-sm leading-5 text-gray-500 dark:text-white">
+            <p className="text-sm leading-5 text-gray-500 dark:text-white">
               Insert the Website information by filling in the form below.
             </p>
           </div>
@@ -48,18 +55,32 @@ const Websites = ({ seed }) => {
         <Formik enableReinitialize initialValues={initialValues} onSubmit={handleSubmit}>
           {({ isSubmitting }) => (
             <Form>
-              <div class="space-y-6">
-                <div class="space-y-1">
+              <div className="space-y-6">
+                <div className="space-y-1">
                   <TextField label="Website URL" name="url" type="text" autocomplete="none" />
                 </div>
 
-                <div class="flex items-center justify-end space-x-4">
+                <div className="flex items-center justify-end space-x-4">
                   <Button type="submit" isLoading={isSubmitting} label="Create" />
                 </div>
               </div>
             </Form>
           )}
         </Formik>
+      </Panel>
+
+      <Panel
+        header={
+          <div className="space-y-1">
+            <h1 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">
+              Connect Your Website
+            </h1>
+            <p className="text-sm leading-5 text-gray-500 dark:text-white">
+              Copy this line of code in the HEAD of your page.
+            </p>
+          </div>
+        }>
+        <div className="text-white" id="aurora_script"></div>
       </Panel>
     </div>
   );
