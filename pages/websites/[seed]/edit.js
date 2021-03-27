@@ -23,7 +23,7 @@ const Websites = ({ seed }) => {
     // Set Script
     document.getElementById(
       "aurora_script"
-    ).innerText = `<script src="https://app.aurora.app/_next/static/chunks/pages/_app-ad192986390a7c7db827.js" aurora-id="${seed}"></script>`;
+    ).innerText = `<script async defer src="${window.location.protocol}//${window.location.hostname}/aurora.js" aurora-id="${seed}"></script>`;
   }, []);
 
   const init = () =>
