@@ -58,6 +58,7 @@ const Websites = ({ seed }) => {
             <Form>
               <div className="space-y-6">
                 <div className="space-y-1">
+                  <TextField label="Name" name="name" type="text" autocomplete="none" />
                   <TextField label="Website URL" name="url" type="text" autocomplete="none" />
                 </div>
 

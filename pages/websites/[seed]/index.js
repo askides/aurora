@@ -3,7 +3,7 @@ import WebsiteInfo from "../../../components/WebsiteInfo";
 import Chart from "../../../components/charts/Chart";
 import ListView from "../../../components/charts/ListView";
 import Stats from "../../../components/Stats";
-import withAuth from "../../../components/utils/withAuth";
+import { withAuth } from "../../../components/utils/withAuth";
 
 export const getServerSideProps = withAuth((context) => {
   const { seed } = context.query;

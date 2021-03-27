@@ -86,6 +86,7 @@ model Device {
 
 model Website {
   id         Int      @id @default(autoincrement())
+  name       String
   url        String   @unique
   seed       String   @unique
   owner      User     @relation(fields: [user_id], references: [id])

@@ -4,7 +4,7 @@ const crypto = require("crypto");
 const UAParser = require("ua-parser-js");
 const mapValuesDeep = require("deepdash/mapValuesDeep");
 const generateSeed = require("../utils/generate-seed");
-const { hash } = require("../../utils/hash");
+const { hash } = require("../utils/hash");
 const prisma = new PrismaClient();
 
 async function seedWebsiteAndUser() {
@@ -21,6 +21,7 @@ async function seedWebsiteAndUser() {
       password: password,
       websites: {
         create: {
+          name: "Renato Pozzi",
           url: "https://renatopozzi.me",
           seed: seed,
         },

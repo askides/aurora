@@ -30,11 +30,7 @@ const Websites = () => {
             <StackedListItem
               key={key}
               avatar={`https://avatars.dicebear.com/api/jdenticon/${el.url}.svg`}
-              title={
-                <Link href={`/websites/${el.seed}/edit`}>
-                  <a>Nome da mettere</a>
-                </Link>
-              }
+              title={el.name}
               subtitle={el.url}
               actions={
                 <div className="space-x-2">

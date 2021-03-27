@@ -23,13 +23,14 @@ const handleGet = async (req, res) => {
 const handlePost = async (req, res) => {
   const user = req.accessTokenBody.data;
 
-  const { url } = req.body;
+  const { name, url } = req.body;
   const seed = generateSeed();
 
   // Create Event
   const createdWebsite = await prisma.website.create({
     data: {
       url: url,
+      name: name,
       seed: seed,
       owner: {
         connect: {
