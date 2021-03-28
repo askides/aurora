@@ -1,7 +1,7 @@
 import { useState } from "react";
 import WebsiteInfo from "../../../components/WebsiteInfo";
 import Chart from "../../../components/charts/Chart";
-import Stats from "../../../components/Stats";
+import Performance from "../../../components/charts/Performance";
 import { withAuth } from "../../../components/utils/withAuth";
 import BrowserViews from "../../../components/charts/BrowserViews";
 import OsViews from "../../../components/charts/OsViews";
@@ -25,7 +25,7 @@ const Website = ({ seed }) => {
         url={`/api/metrics/${seed}/realtime/visitors`}
         onTimeRangeChange={(value) => setTimeRange(value)}
       />
-      <Stats url={`/api/metrics/${seed}/performance`} timeRange={timeRange} />
+      <Performance url={`/api/metrics/${seed}/performance`} timeRange={timeRange} />
       <Chart
         url={`/api/metrics/${seed}/views/series`}
         timeRange={timeRange}
