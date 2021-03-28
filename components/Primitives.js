@@ -70,7 +70,7 @@ export const ProgressListItem = ({ percentage, children }) => (
 );
 
 export const Stats = ({ children }) => (
-  <dl className="grid grid-cols-1 rounded-lg bg-white overflow-hidden shadow divide-y divide-gray-200 dark:divide-gray-700 md:grid-cols-3 md:divide-y-0 md:divide-x dark:bg-gray-800">
+  <dl className="grid grid-cols-1 rounded-t-lg bg-white overflow-hidden shadow divide-y divide-gray-200 dark:divide-gray-800 md:grid-cols-3 md:divide-y-0 md:divide-x dark:bg-gray-800">
     {children}
   </dl>
 );

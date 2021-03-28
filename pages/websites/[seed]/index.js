@@ -35,14 +35,16 @@ const Website = ({ seed }) => {
         </div>
       </div>
 
-      <Performance url={`/api/metrics/${seed}/performance`} timeRange={timeRange} />
+      <div>
+        <Performance url={`/api/metrics/${seed}/performance`} timeRange={timeRange} />
 
-      <Chart
-        url={`/api/metrics/${seed}/views/series`}
-        timeRange={timeRange}
-        title="Page Views"
-        type="lineChart"
-      />
+        <Chart
+          url={`/api/metrics/${seed}/views/series`}
+          timeRange={timeRange}
+          title="Page Views"
+          type="lineChart"
+        />
+      </div>
 
       <PageViews url={`/api/metrics/${seed}/views/pages`} timeRange={timeRange} />
       <OsViews url={`/api/metrics/${seed}/views/oses`} timeRange={timeRange} />
