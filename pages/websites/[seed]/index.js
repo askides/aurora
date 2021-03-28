@@ -6,6 +6,7 @@ import { withAuth } from "../../../components/utils/withAuth";
 import BrowserViews from "../../../components/charts/BrowserViews";
 import OsViews from "../../../components/charts/OsViews";
 import PageViews from "../../../components/charts/PageViews";
+import CountryViews from "../../../components/charts/CountryViews";
 
 export async function getServerSideProps(context) {
   const { seed } = context.query;
@@ -34,6 +35,7 @@ const Website = ({ seed }) => {
       <PageViews url={`/api/metrics/${seed}/views/pages`} timeRange={timeRange} />
       <OsViews url={`/api/metrics/${seed}/views/oses`} timeRange={timeRange} />
       <BrowserViews url={`/api/metrics/${seed}/views/browsers`} timeRange={timeRange} />
+      <CountryViews url={`/api/metrics/${seed}/views/countries`} timeRange={timeRange} />
     </div>
   );
 };
