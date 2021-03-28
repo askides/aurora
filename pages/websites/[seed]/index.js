@@ -4,6 +4,8 @@ import Chart from "../../../components/charts/Chart";
 import ListView from "../../../components/charts/ListView";
 import Stats from "../../../components/Stats";
 import { withAuth } from "../../../components/utils/withAuth";
+import ProgressList from "../../../components/charts/ProgressList";
+import BrowserViews from "../../../components/charts/ProgressList";
 
 export async function getServerSideProps(context) {
   const { seed } = context.query;
@@ -36,6 +38,7 @@ const Website = ({ seed }) => {
         title="Operative Systems"
         timeRange={timeRange}
       />
+      <BrowserViews />
     </div>
   );
 };
