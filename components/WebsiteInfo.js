@@ -17,8 +17,8 @@ const WebsiteInfo = ({ url, timeRange, onTimeRangeChange }) => {
           </h2>
           <div className="flex items-center">
             <span className="mr-3 flex relative h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
             </span>
             <div className="text-white text-sm">
               Current Visitors: {!error && data ? data.visitors : 0}
