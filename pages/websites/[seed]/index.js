@@ -41,7 +41,7 @@ const Website = ({ seed }) => {
         url={`/api/metrics/${seed}/views/series`}
         timeRange={timeRange}
         title="Page Views"
-        type="areaChart"
+        type="lineChart"
       />
 
       <PageViews url={`/api/metrics/${seed}/views/pages`} timeRange={timeRange} />
