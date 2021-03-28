@@ -1,4 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
+const percentage = require("../../../../../utils/percentage");
 
 const prisma = new PrismaClient();
 
@@ -6,7 +7,8 @@ const browserViews = async (range, seed) =>
   await prisma.$queryRaw(`
     SELECT
       browsers.name as element,
-      COUNT(events.id) as views
+      COUNT(events.id) as views,
+      COUNT(DISTINCT events.hash) as unique
     FROM
       events
       JOIN browsers ON events.browser_id = browsers.id
@@ -28,7 +30,7 @@ module.exports = async (req, res) => {
 
   const r = range.replace("this_", ""); /// XXX TO CHECK VALUES
 
-  const data = await browserViews(r, seed)
+  const rows = await browserViews(r, seed)
     .catch((e) => {
       throw e;
     })
@@ -36,9 +38,18 @@ module.exports = async (req, res) => {
       await prisma.$disconnect();
     });
 
-  const x = data.map((dv) => [dv.element, dv.views]);
+  const totalViews = rows.reduce((acc, el) => acc + el.views, 0);
 
-  return res.json({
-    data: x,
+  const data = rows.map((el) => {
+    const perc = percentage(el.views, totalViews);
+
+    return {
+      element: el.element,
+      views: el.views,
+      unique: el.unique,
+      percentage: perc,
+    };
   });
+
+  return res.json({ data: data });
 };

@@ -62,7 +62,7 @@ export const ProgressListItem = ({ percentage, children }) => (
   <div className="space-y-3">
     {children}
     <div className="w-full bg-gray-900 rounded-lg">
-      <div class="rounded-lg bg-green-400 h-1 sm:h-2" style={{ width: `${percentage}%` }}></div>
+      <div className="rounded-lg bg-green-400 h-1 sm:h-2" style={{ width: `${percentage}%` }}></div>
     </div>
   </div>
 );

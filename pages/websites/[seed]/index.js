@@ -1,11 +1,11 @@
 import { useState } from "react";
 import WebsiteInfo from "../../../components/WebsiteInfo";
 import Chart from "../../../components/charts/Chart";
-import ListView from "../../../components/charts/ListView";
 import Stats from "../../../components/Stats";
 import { withAuth } from "../../../components/utils/withAuth";
-import ProgressList from "../../../components/charts/ProgressList";
-import BrowserViews from "../../../components/charts/ProgressList";
+import BrowserViews from "../../../components/charts/BrowserViews";
+import OsViews from "../../../components/charts/OsViews";
+import PageViews from "../../../components/charts/PageViews";
 
 export async function getServerSideProps(context) {
   const { seed } = context.query;
@@ -31,14 +31,9 @@ const Website = ({ seed }) => {
         title="Page Views"
         type="areaChart"
       />
-      <ListView url={`/api/metrics/${seed}/page-views`} />
-      <Chart url={`/api/metrics/${seed}/views/browsers`} title="Browsers" timeRange={timeRange} />
-      <Chart
-        url={`/api/metrics/${seed}/views/oses`}
-        title="Operative Systems"
-        timeRange={timeRange}
-      />
-      <BrowserViews />
+      <PageViews url={`/api/metrics/${seed}/views/pages`} timeRange={timeRange} />
+      <OsViews url={`/api/metrics/${seed}/views/oses`} timeRange={timeRange} />
+      <BrowserViews url={`/api/metrics/${seed}/views/browsers`} timeRange={timeRange} />
     </div>
   );
 };
