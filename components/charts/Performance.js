@@ -1,8 +1,8 @@
 import CountUp from "react-countup";
-import { Stats, StatsItem } from "./Primitives";
-import { useGraph } from "./utils/useGraph";
+import { Stats, StatsItem } from "../Primitives";
+import { useGraph } from "../utils/useGraph";
 
-const Statssss = ({ url, timeRange }) => {
+const Performance = ({ url, timeRange }) => {
   const { graph, isLoading, isError } = useGraph(url, timeRange);
 
   if (isLoading) return <div>Loading..</div>;
@@ -34,4 +34,4 @@ const Statssss = ({ url, timeRange }) => {
   );
 };
 
-export default Statssss;
+export default Performance;
