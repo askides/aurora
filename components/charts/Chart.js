@@ -1,6 +1,6 @@
-import useSWR from "swr";
 import React from "react";
 import { ColumnChart, AreaChart, LineChart } from "react-chartkick";
+import { LoadingPanel } from "../Primitives";
 import { useGraph } from "../utils/useGraph";
 import "chart.js";
 
@@ -13,7 +13,7 @@ const Components = {
 const Chart = ({ url, timeRange, title = "Chart", type = "columnChart" }) => {
   const { graph, isLoading, isError } = useGraph(url, timeRange);
 
-  if (isLoading) return <div className="animate-pulse rounded-lg bg-gray-200 h-96 w-full"></div>;
+  if (isLoading) return <LoadingPanel />;
   if (isError) return <div>failed to load</div>;
 
   return (
