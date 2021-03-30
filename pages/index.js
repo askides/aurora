@@ -28,14 +28,14 @@ const Websites = () => {
               title={el.name}
               subtitle={el.url}
               actions={
-                <div className="space-x-2">
+                <div className="space-x-2 divide-y-1 divide-gray-700">
                   <Link href={`/websites/${el.seed}/edit`}>
-                    <a className="inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50">
+                    <a className="inline-flex items-center shadow-sm px-2.5 py-0.5 text-sm leading-5 font-medium rounded-full text-gray-700 dark:text-blue-500">
                       Edit
                     </a>
                   </Link>
                   <Link href={`/websites/${el.seed}`}>
-                    <a className="inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50">
+                    <a className="inline-flex items-center shadow-sm px-2.5 py-0.5 text-sm leading-5 font-medium rounded-full text-gray-700 dark:text-blue-500">
                       VIew Dashboard
                     </a>
                   </Link>
