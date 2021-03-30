@@ -41,7 +41,7 @@ export const ProgressList = ({ configuration = {} }) => (
         </div>
       </div>
       <div className="space-y-5">
-        {configuration.body &&
+        {configuration.body && configuration.body.values.length ? (
           configuration.body.values.map((row, rowKey) => (
             <div key={rowKey} className="space-y-3">
               <ProgressListItem percentage={row.percentage}>
@@ -55,7 +55,10 @@ export const ProgressList = ({ configuration = {} }) => (
                 </div>
               </ProgressListItem>
             </div>
-          ))}
+          ))
+        ) : (
+          <div className="text-sm text-white">No Data Available</div>
+        )}
       </div>
     </div>
   </Panel>
