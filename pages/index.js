@@ -2,7 +2,7 @@ import useSWR from "swr";
 import Link from "next/link";
 import PageTitle from "../components/layout/PageTitle";
 import { Button } from "../components/AuroraForm";
-import { Panel, StackedList, StackedListItem } from "../components/Primitives";
+import { LoadingPanel, Panel, StackedList, StackedListItem } from "../components/Primitives";
 import { withAuth } from "../components/utils/withAuth";
 
 const Websites = () => {
@@ -13,7 +13,7 @@ const Websites = () => {
   );
 
   if (error) return <div>failed to load</div>;
-  if (!data) return <div>loading...</div>;
+  if (!data) return <LoadingPanel />;
 
   return (
     <div className="h-full rounded-lg space-y-4 bg-gray-900">

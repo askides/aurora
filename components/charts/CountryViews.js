@@ -1,4 +1,4 @@
-import { ProgressList } from "../Primitives";
+import { ProgressList, LoadingPanel } from "../Primitives";
 import { useGraph } from "../utils/useGraph";
 
 const applyConfiguration = (data) => ({
@@ -17,7 +17,7 @@ const applyConfiguration = (data) => ({
 const CountryViews = ({ url, timeRange }) => {
   const { graph, isLoading, isError } = useGraph(url, timeRange);
 
-  if (isLoading) return <div>Loading..</div>;
+  if (isLoading) return <LoadingPanel />;
   if (isError) return <div>failed to load</div>;
 
   return <ProgressList configuration={applyConfiguration(graph)} />;

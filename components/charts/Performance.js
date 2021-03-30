@@ -1,11 +1,11 @@
 import CountUp from "react-countup";
-import { Stats, StatsItem } from "../Primitives";
+import { Stats, StatsItem, LoadingPanel } from "../Primitives";
 import { useGraph } from "../utils/useGraph";
 
 const Performance = ({ url, timeRange }) => {
   const { graph, isLoading, isError } = useGraph(url, timeRange);
 
-  if (isLoading) return <div>Loading..</div>;
+  if (isLoading) return <LoadingPanel />;
   if (isError) return <div>failed to load</div>;
 
   return (
