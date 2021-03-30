@@ -1,4 +1,5 @@
 import useSWR from "swr";
+import clean from "../utils/url-cleaner";
 
 const WebsiteName = ({ seed }) => {
   const fetcher = (...args) =>
@@ -12,8 +13,8 @@ const WebsiteName = ({ seed }) => {
   if (!data) return <div>loading...</div>;
 
   return (
-    <h2 className="text-2xl font-bold leading-7 text-gray-900 dark:text-white sm:text-3xl sm:truncate">
-      {data.url}
+    <h2 className="text-2xl tracking-tight font-bold leading-7 text-gray-900 dark:text-white sm:text-3xl sm:truncate">
+      {clean(data.url)}
     </h2>
   );
 };

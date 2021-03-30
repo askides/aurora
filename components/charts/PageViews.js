@@ -4,7 +4,7 @@ import { useGraph } from "../utils/useGraph";
 const applyConfiguration = (data) => ({
   header: {
     columns: [
-      { label: "Page", accessor: "element", className: "col-span-2" },
+      { label: "Page", accessor: "element", className: "col-span-2 truncate" },
       { label: "Views", accessor: "views", className: "col-span-1 text-right" },
       { label: "Unique", accessor: "unique", className: "col-span-1 text-right" },
     ],

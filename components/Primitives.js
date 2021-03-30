@@ -79,7 +79,7 @@ export const StatsItem = ({ title, currentValue, previousValue, increment }) => 
   <div className="px-4 py-5 sm:p-6">
     <dt className="text-base font-medium text-gray-900 dark:text-white">{title}</dt>
     <dd className="mt-1 flex justify-between items-baseline md:block lg:flex">
-      <div className="flex items-baseline text-2xl font-semibold text-indigo-600 dark:text-white">
+      <div className="flex items-baseline text-2xl font-semibold text-blue-600 dark:text-white">
         {currentValue}
         <span className="ml-2 text-sm font-medium text-gray-500">from {previousValue}</span>
       </div>
