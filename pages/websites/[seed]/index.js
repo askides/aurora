@@ -19,7 +19,7 @@ export async function getServerSideProps(context) {
 }
 
 const Website = ({ seed }) => {
-  const [timeRange, setTimeRange] = useState("this_day");
+  const [timeRange, setTimeRange] = useState("day");
 
   return (
     <div className="h-full rounded-lg space-y-4 bg-gray-900">
