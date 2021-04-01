@@ -1,19 +1,13 @@
 const { PrismaClient } = require("@prisma/client");
 const locale = require("locale-codes");
+
+const withAuth = require("../../../../../utils/with-auth");
 const percentage = require("../../../../../utils/percentage");
 
 const prisma = new PrismaClient();
 
-module.exports = async (req, res) => {
-  // Only GET Available
-  if (req.method !== "GET") {
-    return res.status(405).json({ message: "Method not allowed." });
-  }
-
-  const { range, seed } = req.query;
-
-  //  AND events.created_at >= (now() - '1 ${range}'::interval)
-  const rows = await prisma.$queryRaw(`
+const countryViews = async (range, seed) =>
+  await prisma.$queryRaw(`
     SELECT
       locale as element,
       count(element) as views,
@@ -22,15 +16,24 @@ module.exports = async (req, res) => {
       events
       JOIN websites ON events.website_id = websites.id
     WHERE
-      websites.seed = '${seed}'
-
+      events.created_at >= DATE_TRUNC('${range}', now())
+      AND websites.seed = '${seed}'
     GROUP BY
       locale
     ORDER BY
       views DESC
   `);
 
-  await prisma.$disconnect();
+const handleGet = async (req, res) => {
+  const { range, seed } = req.query;
+
+  const rows = await countryViews(range, seed)
+    .catch((e) => {
+      throw e;
+    })
+    .finally(async () => {
+      await prisma.$disconnect();
+    });
 
   const totalViews = rows.reduce((acc, el) => acc + el.views, 0);
 
@@ -46,5 +49,21 @@ module.exports = async (req, res) => {
     };
   });
 
-  return res.json({ data: data });
+  return { status: 200, data: data };
 };
+
+const handle = async function (req, res) {
+  let { status, data } = {};
+
+  switch (req.method) {
+    case "GET":
+      ({ status, data } = await handleGet(req, res));
+      break;
+    default:
+      return res.status(405).json({ message: "Method not allowed." });
+  }
+
+  return res.status(status).json({ data: data });
+};
+
+module.exports = withAuth(handle);

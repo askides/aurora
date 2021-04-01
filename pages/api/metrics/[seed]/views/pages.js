@@ -1,33 +1,38 @@
 const { PrismaClient } = require("@prisma/client");
+
+const withAuth = require("../../../../../utils/with-auth");
 const percentage = require("../../../../../utils/percentage");
 
 const prisma = new PrismaClient();
 
-module.exports = async (req, res) => {
-  // Only GET Available
-  if (req.method !== "GET") {
-    return res.status(405).json({ message: "Method not allowed." });
-  }
-
-  const { seed } = req.query;
-
-  const rows = await prisma.$queryRaw(`
+const pageViews = async (range, seed) =>
+  await prisma.$queryRaw(`
     SELECT
       element,
-      count(element) as views,
+      COUNT(events.id) as views,
       COUNT(DISTINCT events.hash) as unique
     FROM
       events
       JOIN websites ON events.website_id = websites.id
     WHERE
-      websites.seed = '${seed}'
+      events.created_at >= DATE_TRUNC('${range}', now())
+      AND websites.seed = '${seed}'
     GROUP BY
       element
     ORDER BY
       views DESC
   `);
 
-  await prisma.$disconnect();
+const handleGet = async (req, res) => {
+  const { range, seed } = req.query;
+
+  const rows = await pageViews(range, seed)
+    .catch((e) => {
+      throw e;
+    })
+    .finally(async () => {
+      await prisma.$disconnect();
+    });
 
   const totalViews = rows.reduce((acc, el) => acc + el.views, 0);
 
@@ -42,5 +47,21 @@ module.exports = async (req, res) => {
     };
   });
 
-  return res.json({ data: data });
+  return { status: 200, data: data };
 };
+
+const handle = async function (req, res) {
+  let { status, data } = {};
+
+  switch (req.method) {
+    case "GET":
+      ({ status, data } = await handleGet(req, res));
+      break;
+    default:
+      return res.status(405).json({ message: "Method not allowed." });
+  }
+
+  return res.status(status).json({ data: data });
+};
+
+module.exports = withAuth(handle);
