@@ -1,4 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
+
+const withAuth = require("../../../../../utils/with-auth");
 const percentage = require("../../../../../utils/percentage");
 
 const prisma = new PrismaClient();
@@ -13,24 +15,19 @@ const osesViews = async (range, seed) =>
       events
       JOIN oses ON events.os_id = oses.id
       JOIN websites ON events.website_id = websites.id
-    WHERE events.created_at >= (now() - '1 ${range}'::interval)
-    AND websites.seed = '${seed}'
+    WHERE
+      events.created_at >= DATE_TRUNC('${range}', now())
+      AND websites.seed = '${seed}'
     GROUP BY
       oses.name
-    ORDER BY views DESC
+    ORDER BY
+      views DESC
   `);
 
-module.exports = async (req, res) => {
-  // Only GET Available
-  if (req.method !== "GET") {
-    return res.status(405).json({ message: "Method not allowed." });
-  }
-
+const handleGet = async (req, res) => {
   const { range, seed } = req.query;
 
-  const r = range.replace("this_", ""); /// XXX TO CHECK VALUES
-
-  const rows = await osesViews(r, seed)
+  const rows = await osesViews(range, seed)
     .catch((e) => {
       throw e;
     })
@@ -51,5 +48,21 @@ module.exports = async (req, res) => {
     };
   });
 
-  return res.json({ data: data });
+  return { status: 200, data: data };
 };
+
+const handle = async function (req, res) {
+  let { status, data } = {};
+
+  switch (req.method) {
+    case "GET":
+      ({ status, data } = await handleGet(req, res));
+      break;
+    default:
+      return res.status(405).json({ message: "Method not allowed." });
+  }
+
+  return res.status(status).json({ data: data });
+};
+
+module.exports = withAuth(handle);
