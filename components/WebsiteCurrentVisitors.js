@@ -6,7 +6,9 @@ const WebsiteCurrentVisitors = ({ seed }) => {
       .then((res) => res.json())
       .then((res) => res.data);
 
-  const { data, error } = useSWR(`/api/metrics/${seed}/realtime/visitors`, fetcher);
+  const { data, error } = useSWR(`/api/metrics/${seed}/realtime/visitors`, fetcher, {
+    refreshInterval: 2000,
+  });
 
   if (error) return <div>failed to load</div>;
   if (!data) return <div>loading...</div>;
