@@ -36,23 +36,28 @@ const thisRangeViews = async (range = "month", seed) => {
 const thisDayViews = async (seed) =>
   await prisma.$queryRaw(`
     SELECT
-      range,
+      range.generate_series::timestamp::time as range,
       COALESCE(e.views, 0) AS views
     FROM
-      Generate_series(0, 23) AS range
+        (select
+          generate_series(
+            date_trunc('day', now()),
+            date_trunc('day', now()) + '1 day' :: interval - '1 hour' :: interval,
+            '1 hour' :: interval
+          )) AS range
       LEFT JOIN (
         SELECT
-          Date_part('hour', events.created_at) AS hour,
+          date_trunc('hour', events.created_at) AS hour,
           Count(events.id) AS views
         FROM
           events
           JOIN websites on websites.id = events.website_id
-        WHERE
-          events.created_at >= now() :: date
+      WHERE
+          events.created_at >= date_trunc('day', now())
           AND websites.seed = '${seed}'
         GROUP BY
           hour
-      ) AS e ON range = e.hour
+      ) AS e ON range.generate_series = e.hour
     ORDER BY
       range
   `);
@@ -79,8 +84,6 @@ const thisYearViews = async (seed) =>
         GROUP BY
           month
       ) AS e ON range = e.month
-    ORDER BY
-      range
   `);
 
 module.exports = async (req, res) => {
@@ -93,7 +96,7 @@ module.exports = async (req, res) => {
 
   let data = {};
 
-  if (range === "this_day") {
+  if (range === "day") {
     data = await thisDayViews(seed)
       .catch((e) => {
         throw e;
@@ -101,7 +104,7 @@ module.exports = async (req, res) => {
       .finally(async () => {
         await prisma.$disconnect();
       });
-  } else if (range === "this_year") {
+  } else if (range === "year") {
     data = await thisYearViews(seed)
       .catch((e) => {
         throw e;
@@ -109,7 +112,7 @@ module.exports = async (req, res) => {
       .finally(async () => {
         await prisma.$disconnect();
       });
-  } else if (range === "this_month") {
+  } else if (range === "month") {
     data = await thisRangeViews("month", seed)
       .catch((e) => {
         throw e;
@@ -117,7 +120,7 @@ module.exports = async (req, res) => {
       .finally(async () => {
         await prisma.$disconnect();
       });
-  } else if (range === "this_week") {
+  } else if (range === "week") {
     data = await thisRangeViews("week", seed)
       .catch((e) => {
         throw e;
