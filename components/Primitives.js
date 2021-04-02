@@ -85,9 +85,9 @@ export const StatsItem = ({ title, currentValue, previousValue, increment }) => 
     <dt className="text-base font-medium text-gray-900 dark:text-white">{title}</dt>
     <dd className="mt-1 flex justify-between items-baseline md:block lg:flex">
       <div className="flex items-baseline text-2xl font-semibold text-blue-600 dark:text-white">
-        <CountUp end={currentValue} />
+        <CountUp end={currentValue || 0} />
         <span className="ml-2 text-sm font-medium text-gray-500">
-          from <CountUp end={previousValue} />
+          from <CountUp end={previousValue || 0} />
         </span>
       </div>
 
@@ -98,7 +98,7 @@ export const StatsItem = ({ title, currentValue, previousValue, increment }) => 
             : "bg-green-100 dark:bg-gray-700 text-green-800 dark:text-green-500"
         }`}>
         {increment < 0 ? <ArrowDown /> : <ArrowUp />}
-        <CountUp end={increment} />
+        <CountUp end={increment || 0} />
       </div>
     </dd>
   </div>
