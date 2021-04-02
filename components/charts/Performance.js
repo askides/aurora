@@ -24,7 +24,7 @@ const Performance = ({ url, timeRange }) => {
       />
 
       <StatsItem
-        title="Bounce Rate"
+        title="Bounces"
         currentValue={graph.bounceRate.cp}
         previousValue={graph.bounceRate.lp}
         increment={graph.bounceRate.inc}

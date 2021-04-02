@@ -139,7 +139,7 @@ const handleGet = async (req, res) => {
     bounceRate: {
       cp: perf.cp_bounces,
       lp: perf.lp_bounces,
-      inc: 0,
+      inc: perf.cp_bounces - perf.lp_bounces,
     },
   };
 
