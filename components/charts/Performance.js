@@ -1,4 +1,3 @@
-import CountUp from "react-countup";
 import { Stats, StatsItem, LoadingPanel } from "../Primitives";
 import { useGraph } from "../utils/useGraph";
 
@@ -12,23 +11,23 @@ const Performance = ({ url, timeRange }) => {
     <Stats>
       <StatsItem
         title="Total Views"
-        currentValue={<CountUp end={graph.pageViews.cp} />}
-        previousValue={<CountUp end={graph.pageViews.lp} />}
-        increment={<CountUp end={graph.pageViews.inc} />}
+        currentValue={graph.pageViews.cp}
+        previousValue={graph.pageViews.lp}
+        increment={graph.pageViews.inc}
       />
 
       <StatsItem
         title="Unique Visitors"
-        currentValue={<CountUp end={graph.uniqueVisitors.cp} />}
-        previousValue={<CountUp end={graph.uniqueVisitors.lp} />}
-        increment={<CountUp end={graph.uniqueVisitors.inc} />}
+        currentValue={graph.uniqueVisitors.cp}
+        previousValue={graph.uniqueVisitors.lp}
+        increment={graph.uniqueVisitors.inc}
       />
 
       <StatsItem
         title="Bounce Rate"
-        currentValue={<CountUp end={graph.bounceRate.cp} />}
-        previousValue={<CountUp end={graph.bounceRate.lp} />}
-        increment={<CountUp end={graph.bounceRate.inc} />}
+        currentValue={graph.bounceRate.cp}
+        previousValue={graph.bounceRate.lp}
+        increment={graph.bounceRate.inc}
       />
     </Stats>
   );
