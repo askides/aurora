@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
 const countryViews = async (range, seed) =>
   await prisma.$queryRaw(`
     SELECT
-      SPLIT_PART(locale, '-', 1) as element,
+      locale as element,
       COUNT(element) as views,
       COUNT(DISTINCT events.hash) as unique
     FROM
@@ -19,7 +19,7 @@ const countryViews = async (range, seed) =>
       events.created_at >= DATE_TRUNC('${range}', now())
       AND websites.seed = '${seed}'
     GROUP BY
-      SPLIT_PART(locale, '-', 1)
+      locale
     ORDER BY
       views DESC
   `);
