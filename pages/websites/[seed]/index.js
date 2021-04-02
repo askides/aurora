@@ -23,15 +23,13 @@ const Website = ({ seed }) => {
 
   return (
     <div className="h-full rounded-lg space-y-4 bg-gray-900">
-      <div className="pt-10">
-        <div className="mt-2 md:flex md:items-center md:justify-between">
-          <div className="flex-1 min-w-0 space-y-2">
-            <WebsiteName seed={seed} />
-            <WebsiteCurrentVisitors seed={seed} />
-          </div>
-          <div className="mt-4 flex-shrink-0 flex md:mt-0 md:ml-4">
-            <RangeSelector onTimeRangeChange={(value) => setTimeRange(value)} />
-          </div>
+      <div className="mt-2 md:flex md:items-center md:justify-between">
+        <div className="flex-1 min-w-0 space-y-2">
+          <WebsiteName seed={seed} />
+          <WebsiteCurrentVisitors seed={seed} />
+        </div>
+        <div className="mt-4 flex-shrink-0 flex md:mt-0 md:ml-4">
+          <RangeSelector onTimeRangeChange={(value) => setTimeRange(value)} />
         </div>
       </div>
 
