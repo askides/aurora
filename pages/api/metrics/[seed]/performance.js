@@ -1,181 +1,121 @@
 const { PrismaClient } = require("@prisma/client");
 
+const withAuth = require("../../../../utils/with-auth");
+const percentage = require("../../../../utils/percentage");
+
 const prisma = new PrismaClient();
 
-const pageViewsPerformance = async (range, seed) => {
+// const pageViewsPerformance = async (range, seed) => {
+//   return await prisma.$queryRaw(`
+//     SELECT
+//       *
+//     from
+//       (
+//         SELECT
+//           COUNT(events.created_at) as cp_views,
+//           COUNT(DISTINCT events.hash) as cp_unique
+//         FROM
+//           events
+//           JOIN websites ON events.website_id = websites.id
+//         WHERE
+//           events.created_at >= DATE_TRUNC('${range}', now())
+//           AND websites.seed = '${seed}'
+//       ) as cp CROSS
+//       JOIN (
+//         SELECT
+//           COUNT(events.created_at) as lp_views,
+//           COUNT(DISTINCT events.hash) as lp_unique
+//         FROM
+//           events
+//           JOIN websites ON events.website_id = websites.id
+//         WHERE
+//           events.created_at BETWEEN (
+//             DATE_TRUNC('${range}', now()) - '1 ${range}' :: interval
+//           )
+//           and DATE_TRUNC('${range}', now())
+//           AND websites.seed = '${seed}'
+//       ) as lp
+//   `);
+// };
+
+const performance = async (range, seed) => {
   return await prisma.$queryRaw(`
-    select
-      currentPerformance.c as cp,
-      lastPerformance.c as lp,
-      (
-        (
-          (
-            currentPerformance.c - lastPerformance.c
-          ):: float / (CASE lastPerformance.c WHEN 0 THEN 1 ELSE lastPerformance.c END) :: float
-        )* 100
-      ) inc
+    SELECT
+      *
     from
       (
-        select
-          count(events.id) as c
-        from
-          events
-        JOIN websites ON events.website_id = websites.id
-        where
-          events.created_at >= (now() - '1 ${range}' :: interval)
-          AND websites.seed = '${seed}'
-      ) as currentPerformance CROSS
-      JOIN (
-        select
-          count(events.id) as c
-        from
+        SELECT
+          COUNT(events.created_at) as cp_views,
+          COUNT(DISTINCT events.hash) as cp_unique,
+          (
+            select
+              sum(t.c)
+            from
+              (
+                select
+                  count(events.id) as c
+                from
+                  events
+                JOIN websites ON events.website_id = websites.id
+                WHERE
+                  events.created_at >= DATE_TRUNC('${range}', now())
+                  AND websites.seed = '${seed}'
+                group by
+                  hash
+                having
+                  count(events.id) = 1
+              ) as t
+          ) as cp_bounces
+        FROM
           events
           JOIN websites ON events.website_id = websites.id
-        where
-          events.created_at BETWEEN (now() - '2 ${range}' :: interval)
-          and (now() - '1 ${range}' :: interval)
+        WHERE
+          events.created_at >= DATE_TRUNC('${range}', now())
           AND websites.seed = '${seed}'
-      ) as lastPerformance
-  `);
-};
-
-const uniqueVisitorsPerformance = async (range, seed) => {
-  return await prisma.$queryRaw(`
-    select
-      currentPerformance.c as cp,
-      lastPerformance.c as lp,
-      (
-        (
-          (
-            currentPerformance.c - lastPerformance.c
-          ):: float / (CASE lastPerformance.c WHEN 0 THEN 1 ELSE lastPerformance.c END) :: float
-        )* 100
-      ) inc
-    from
-      (
-        select
-          count(DISTINCT hash) as c
-        from
-          events
-        JOIN websites ON events.website_id = websites.id
-        where
-          events.created_at >= (now() - '1 ${range}' :: interval)
-          AND websites.seed = '${seed}'
-      ) as currentPerformance CROSS
+      ) as cp CROSS
       JOIN (
-        select
-          count(DISTINCT hash) as c
-        from
-          events
-        JOIN websites ON events.website_id = websites.id
-        where
-          events.created_at BETWEEN (now() - '2 ${range}' :: interval)
-          and (now() - '1 ${range}' :: interval)
-          AND websites.seed = '${seed}'
-      ) as lastPerformance
-  `);
-};
-
-const bounceRatePerformance = async (range, seed) => {
-  return await prisma.$queryRaw(`
-    select
-      currentPerformance.c as cp,
-      lastPerformance.c as lp,
-      (
-        (
-          (
-            currentPerformance.c - lastPerformance.c
-          ):: float / (
-            CASE lastPerformance.c WHEN 0 THEN 1 ELSE lastPerformance.c END
-          ) :: float
-        )* 100
-      ) inc
-    from
-      (
-        select
-          CASE totalViews WHEN 0 THEN 0 ELSE round(
-            (
-              (uniqueViews / totalViews) * 100
-            ),
-            2
-          ) END as c
-        from
+        SELECT
+          COUNT(events.created_at) as lp_views,
+          COUNT(DISTINCT events.hash) as lp_unique,
           (
             select
-              count(events.id) as totalViews,
+              sum(t.c)
+            from
               (
                 select
-                  sum(t.c)
+                  count(events.id) as c
                 from
-                  (
-                    select
-                      count(events.id) as c
-                    from
-                      events
-                    group by
-                      hash
-                    having
-                      count(events.id) = 1
-                  ) as t
-              ) as uniqueViews
-            from
-              events
-            JOIN websites ON events.website_id = websites.id
-            where
-              events.created_at >= (now() - '1 ${range}' :: interval)
-              AND websites.seed = '${seed}'
-          ) as x
-      ) as currentPerformance CROSS
-      JOIN (
-        select
-          CASE totalViews WHEN 0 THEN 0 ELSE round(
-            (
-              (uniqueViews / totalViews) * 100
-            ),
-            2
-          ) END as c
-        from
-          (
-            select
-              count(events.id) as totalViews,
-              (
-                select
-                  sum(t.c)
-                from
-                  (
-                    select
-                      count(events.id) as c
-                    from
-                      events
-                    group by
-                      hash
-                    having
-                      count(events.id) = 1
-                  ) as t
-              ) as uniqueViews
-            from
-              events
-            JOIN websites ON events.website_id = websites.id
-            where
-              events.created_at BETWEEN (now() - '2 ${range}' :: interval)
-              and (now() - '1 ${range}' :: interval)
-              AND websites.seed = '${seed}'
-          ) as x
-      ) as lastPerformance
+                  events
+                JOIN websites ON events.website_id = websites.id
+                WHERE
+                  events.created_at BETWEEN (
+                    DATE_TRUNC('${range}', now()) - '1 ${range}' :: interval
+                  )
+                  and DATE_TRUNC('${range}', now())
+                  AND websites.seed = '${seed}'
+                group by
+                  hash
+                having
+                  count(events.id) = 1
+              ) as t
+          ) as lp_bounces
+        FROM
+          events
+          JOIN websites ON events.website_id = websites.id
+        WHERE
+          events.created_at BETWEEN (
+            DATE_TRUNC('${range}', now()) - '1 ${range}' :: interval
+          )
+          and DATE_TRUNC('${range}', now())
+          AND websites.seed = '${seed}'
+      ) as lp
   `);
 };
 
-module.exports = async (req, res) => {
-  // Only GET Available
-  if (req.method !== "GET") {
-    return res.status(405).json({ message: "Method not allowed." });
-  }
-
+const handleGet = async (req, res) => {
   const { range, seed } = req.query;
 
-  const r = range.replace("this_", ""); /// XXX TO CHECK VALUES
-
-  const pvpp = pageViewsPerformance(r, seed)
+  const rows = await performance(range, seed)
     .catch((e) => {
       throw e;
     })
@@ -183,29 +123,43 @@ module.exports = async (req, res) => {
       await prisma.$disconnect();
     });
 
-  const uvpp = uniqueVisitorsPerformance(r, seed)
-    .catch((e) => {
-      throw e;
-    })
-    .finally(async () => {
-      await prisma.$disconnect();
-    });
+  const perf = await rows.reduce((acc, el) => el, {});
 
-  const brpp = bounceRatePerformance(r, seed)
-    .catch((e) => {
-      throw e;
-    })
-    .finally(async () => {
-      await prisma.$disconnect();
-    });
+  const data = {
+    pageViews: {
+      cp: perf.cp_views,
+      lp: perf.lp_views,
+      inc: perf.cp_views - perf.lp_views,
+    },
+    uniqueVisitors: {
+      cp: perf.cp_unique,
+      lp: perf.lp_unique,
+      inc: perf.cp_unique - perf.lp_unique,
+    },
+    bounceRate: {
+      cp: perf.cp_bounces,
+      lp: perf.lp_bounces,
+      inc: 0,
+    },
+  };
 
-  return await Promise.all([pvpp, uvpp, brpp]).then(([pvp, uvp, brp]) =>
-    res.json({
-      data: {
-        pageViews: pvp[0], // XXX
-        uniqueVisitors: uvp[0], // XXX
-        bounceRate: brp[0], // XXX
-      },
-    })
-  );
+  //   const perc = percentage(el.views, totalViews);
+
+  return { status: 200, data: data };
 };
+
+const handle = async function (req, res) {
+  let { status, data } = {};
+
+  switch (req.method) {
+    case "GET":
+      ({ status, data } = await handleGet(req, res));
+      break;
+    default:
+      return res.status(405).json({ message: "Method not allowed." });
+  }
+
+  return res.status(status).json({ data: data });
+};
+
+module.exports = withAuth(handle);

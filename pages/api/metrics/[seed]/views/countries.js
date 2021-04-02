@@ -39,7 +39,7 @@ const handleGet = async (req, res) => {
 
   const data = rows.map((el) => {
     const perc = percentage(el.views, totalViews);
-    const location = locale.getByTag(el.element).location;
+    const location = locale.getByTag(el.element)?.location || "#ND";
 
     return {
       element: location,
