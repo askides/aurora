@@ -80,32 +80,29 @@ export const Stats = ({ children }) => (
   </dl>
 );
 
-export const StatsItem = ({ title, currentValue, previousValue, increment }) => {
-  console.log("incremente", increment, increment < 0);
-  return (
-    <div className="px-4 py-5 sm:p-6">
-      <dt className="text-base font-medium text-gray-900 dark:text-white">{title}</dt>
-      <dd className="mt-1 flex justify-between items-baseline md:block lg:flex">
-        <div className="flex items-baseline text-2xl font-semibold text-blue-600 dark:text-white">
-          <CountUp end={currentValue} />
-          <span className="ml-2 text-sm font-medium text-gray-500">
-            from <CountUp end={previousValue} />
-          </span>
-        </div>
+export const StatsItem = ({ title, currentValue, previousValue, increment }) => (
+  <div className="px-4 py-5 sm:p-6">
+    <dt className="text-base font-medium text-gray-900 dark:text-white">{title}</dt>
+    <dd className="mt-1 flex justify-between items-baseline md:block lg:flex">
+      <div className="flex items-baseline text-2xl font-semibold text-blue-600 dark:text-white">
+        <CountUp end={currentValue} />
+        <span className="ml-2 text-sm font-medium text-gray-500">
+          from <CountUp end={previousValue} />
+        </span>
+      </div>
 
-        <div
-          className={`inline-flex items-baseline px-2.5 py-0.5 rounded-full text-sm font-medium md:mt-2 lg:mt-0 ${
-            increment < 0
-              ? "bg-red-100 dark:bg-gray-700 text-red-800 dark:text-red-500"
-              : "bg-green-100 dark:bg-gray-700 text-green-800 dark:text-green-500"
-          }`}>
-          {increment < 0 ? <ArrowDown /> : <ArrowUp />}
-          <CountUp end={increment} />
-        </div>
-      </dd>
-    </div>
-  );
-};
+      <div
+        className={`inline-flex items-baseline px-2.5 py-0.5 rounded-full text-sm font-medium md:mt-2 lg:mt-0 ${
+          increment < 0
+            ? "bg-red-100 dark:bg-gray-700 text-red-800 dark:text-red-500"
+            : "bg-green-100 dark:bg-gray-700 text-green-800 dark:text-green-500"
+        }`}>
+        {increment < 0 ? <ArrowDown /> : <ArrowUp />}
+        <CountUp end={increment} />
+      </div>
+    </dd>
+  </div>
+);
 
 export const LoadingPanel = () => (
   <Panel>
