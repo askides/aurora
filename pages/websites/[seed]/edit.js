@@ -54,8 +54,8 @@ const Websites = ({ seed }) => {
                     as="select"
                     allowEmpty={false}
                     options={[
-                      { id: false, value: "No" },
-                      { id: true, value: "Yes" },
+                      { id: 0, value: "No" },
+                      { id: 1, value: "Yes" },
                     ]}
                   />
                 </div>

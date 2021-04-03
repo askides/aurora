@@ -16,12 +16,31 @@ const handleGet = async (req, res) => {
     },
   });
 
+  // Boolean to Number
+  ws.shared = +ws.shared;
+
   await prisma.$disconnect();
 
   return { status: 200, data: ws };
 };
 
-const handlePut = (req, res) => ({ status: 405, data: { message: "Method not allowed." } });
+const handlePut = async (req, res) => {
+  const { seed } = req.query;
+  const { shared } = req.body;
+
+  const updateWebsite = await prisma.website.update({
+    where: {
+      seed: seed,
+    },
+    data: {
+      shared: Boolean(Number(shared)),
+    },
+  });
+
+  await prisma.$disconnect();
+
+  return { status: 200, data: { message: "Updated." } };
+};
 
 const handleDelete = async (req, res) => {
   const user = req.accessTokenBody.data;
