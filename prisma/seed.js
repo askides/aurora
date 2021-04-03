@@ -5,6 +5,7 @@ const UAParser = require("ua-parser-js");
 const mapValuesDeep = require("deepdash/mapValuesDeep");
 const generateSeed = require("../utils/generate-seed");
 const { hash } = require("../utils/hash");
+const { executionAsyncResource } = require("async_hooks");
 const prisma = new PrismaClient();
 
 async function seedWebsiteAndUser() {
@@ -35,6 +36,52 @@ function randomDate(start, end) {
 }
 
 async function seedFakeEvents() {
+  const items = ["/homepage", "/users/new", "/faq", "/bookings?status=opened", "/", "/doggos"];
+  const locales = [
+    "en-JM",
+    "en-MY",
+    "en-NZ",
+    "en-PH",
+    "en-SG",
+    "en-TT",
+    "en-US",
+    "en-ZA",
+    "en-ZW",
+    "es-AR",
+    "es-BO",
+    "es-CL",
+    "es-CO",
+    "es-CR",
+    "es-DO",
+    "es-EC",
+    "es-ES",
+    "es-GT",
+    "es-HN",
+    "es-MX",
+    "es-NI",
+    "es-PA",
+    "es-PE",
+    "es-PR",
+    "es-PY",
+    "es-SV",
+    "es-US",
+    "es-UY",
+    "es-VE",
+    "et-EE",
+    "eu-ES",
+    "fa-IR",
+    "fi-FI",
+    "fil-PH",
+    "fo-FO",
+    "fr-BE",
+    "fr-CA",
+    "fr-CH",
+    "fr-FR",
+    "fr-LU",
+    "fr-MC",
+    "fy-NL",
+  ];
+
   for (let i = 0; i < 1000; i++) {
     const userAgent = new UserAgent();
     const uaResults = new UAParser(userAgent.toString()).getResult();
@@ -54,8 +101,9 @@ async function seedFakeEvents() {
     const createdEvent = await prisma.event.create({
       data: {
         type: "pageView",
-        element: "/",
+        element: items[Math.floor(Math.random() * items.length)],
         hash: eventHash,
+        locale: locales[Math.floor(Math.random() * items.length)],
         website: {
           connect: {
             id: 1,
@@ -101,7 +149,6 @@ seedWebsiteAndUser()
     await prisma.$disconnect();
   });
 
-/*
 seedFakeEvents()
   .catch((e) => {
     console.error(e);
@@ -110,4 +157,3 @@ seedFakeEvents()
   .finally(async () => {
     await prisma.$disconnect();
   });
-  */

@@ -1,19 +1,15 @@
-import useSWR from "swr";
 import Link from "next/link";
 import PageTitle from "../components/layout/PageTitle";
 import { Button } from "../components/AuroraForm";
 import { LoadingPanel, Panel, StackedList, StackedListItem } from "../components/Primitives";
 import { withAuth } from "../components/utils/withAuth";
+import { useWebsites } from "../components/utils/useWebsites";
 
 const Websites = () => {
-  const { data, error } = useSWR("/api/me/websites", (...args) =>
-    fetch(...args)
-      .then((res) => res.json())
-      .then((res) => res.data)
-  );
+  const { websites, isLoading, isError } = useWebsites();
 
-  if (error) return <div>failed to load</div>;
-  if (!data) return <LoadingPanel />;
+  if (isLoading) return <LoadingPanel />;
+  if (isError) return <div>failed to load</div>;
 
   return (
     <div className="h-full rounded-lg space-y-4 bg-gray-900">
@@ -21,7 +17,7 @@ const Websites = () => {
 
       <Panel>
         <StackedList>
-          {data.map((el, key) => (
+          {websites.map((el, key) => (
             <StackedListItem
               key={key}
               avatar={`https://avatars.dicebear.com/api/jdenticon/${el.url}.svg`}
@@ -36,7 +32,7 @@ const Websites = () => {
                   </Link>
                   <Link href={`/websites/${el.seed}`}>
                     <a className="inline-flex items-center shadow-sm px-2.5 py-0.5 text-sm leading-5 font-medium rounded-full text-gray-700 dark:text-blue-500">
-                      VIew Dashboard
+                      View Dashboard
                     </a>
                   </Link>
                 </div>

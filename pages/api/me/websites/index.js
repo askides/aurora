@@ -1,4 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
+
 const generateSeed = require("../../../../utils/generate-seed");
 const withAuth = require("../../../../utils/with-auth");
 
@@ -24,6 +25,7 @@ const handlePost = async (req, res) => {
   const user = req.accessTokenBody.data;
 
   const { name, url } = req.body;
+
   const seed = generateSeed();
 
   // Create Event
