@@ -16,7 +16,7 @@ const handleGet = async (req, res) => {
     },
   });
 
-  // Boolean to Number
+  // Boolean to int
   ws.shared = +ws.shared;
 
   await prisma.$disconnect();
