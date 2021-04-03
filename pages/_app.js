@@ -17,7 +17,7 @@ function MyApp({ Component, pageProps }) {
   }
 
   return (
-    <MainLayout>
+    <MainLayout sideNarrow={!router.pathname.startsWith("/s")}>
       <Component {...pageProps} />
     </MainLayout>
   );
