@@ -1,39 +1,15 @@
-const { PrismaClient } = require("@prisma/client");
-
-const withAuth = require("../../../../../utils/with-auth");
 const percentage = require("../../../../../utils/percentage");
-
-const prisma = new PrismaClient();
-
-const browserViews = async (range, seed) =>
-  await prisma.$queryRaw(`
-    SELECT
-      browsers.name as element,
-      COUNT(events.id) as views,
-      COUNT(DISTINCT events.hash) as unique
-    FROM
-      events
-      JOIN browsers ON events.browser_id = browsers.id
-      JOIN websites ON events.website_id = websites.id
-    WHERE
-      events.created_at >= DATE_TRUNC('${range}', now())
-      AND websites.seed = '${seed}'
-    GROUP BY
-      browsers.name
-    ORDER BY
-      views DESC
-  `);
+const { viewsByBrowser } = require("../../../../../lib/queries");
+const { isAuthorized, isWebsitePublic } = require("../../../../../utils/authorization");
 
 const handleGet = async (req, res) => {
   const { range, seed } = req.query;
 
-  const rows = await browserViews(range, seed)
-    .catch((e) => {
-      throw e;
-    })
-    .finally(async () => {
-      await prisma.$disconnect();
-    });
+  if (!isAuthorized(req) && !(await isWebsitePublic(seed))) {
+    return { status: 401, data: { message: "Unauthorized" } };
+  }
+
+  const rows = await viewsByBrowser(range, seed);
 
   const totalViews = rows.reduce((acc, el) => acc + el.views, 0);
 
@@ -48,7 +24,7 @@ const handleGet = async (req, res) => {
     };
   });
 
-  return { status: 200, data: data };
+  return { status: 200, data };
 };
 
 const handle = async function (req, res) {
@@ -62,7 +38,7 @@ const handle = async function (req, res) {
       return res.status(405).json({ message: "Method not allowed." });
   }
 
-  return res.status(status).json({ data: data });
+  return res.status(status).json({ data });
 };
 
-module.exports = withAuth(handle);
+module.exports = handle;
