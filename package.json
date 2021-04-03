@@ -12,7 +12,7 @@
     "export": "next build && next export"
   },
   "dependencies": {
-    "@prisma/client": "^2.19.0",
+    "@prisma/client": "^2.20.1",
     "@tailwindcss/forms": "^0.2.1",
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
@@ -44,7 +44,7 @@
     "autoprefixer": "^10.2.5",
     "babel-loader": "^8.2.2",
     "postcss": "^8.2.8",
-    "prisma": "^2.19.0",
+    "prisma": "^2.20.1",
     "tailwindcss": "^2.0.4",
     "webpack": "^5.28.0",
     "webpack-cli": "^4.6.0"

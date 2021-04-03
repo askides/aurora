@@ -89,6 +89,7 @@ model Website {
   name       String
   url        String   @unique
   seed       String   @unique
+  shared     Boolean  @default(false)
   owner      User     @relation(fields: [user_id], references: [id])
   user_id    Int
   events     Event[]
