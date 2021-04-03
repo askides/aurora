@@ -3,8 +3,9 @@ import { Formik, Form } from "formik";
 import { useEffect, useState } from "react";
 
 import { TextField, Button } from "../../../components/AuroraForm";
-import { Panel } from "../../../components/Primitives";
+import { Panel, LoadingPanel } from "../../../components/Primitives";
 import { withAuth } from "../../../components/utils/withAuth";
+import { useWebsite } from "../../../components/utils/useWebsite";
 
 export async function getServerSideProps(context) {
   const { seed } = context.query;
@@ -15,30 +16,17 @@ export async function getServerSideProps(context) {
 }
 
 const Websites = ({ seed }) => {
-  const [initialValues, setInitialValues] = useState({ url: "" });
-
-  useEffect(() => {
-    init();
-
-    // Set Script
-    document.getElementById(
-      "aurora_script"
-    ).innerText = `<script async defer src="${window.location.protocol}//${window.location.hostname}/aurora.js" aurora-id="${seed}"></script>`;
-  }, []);
-
-  const init = () =>
-    axios
-      .get(`/api/me/websites/${seed}`)
-      .then((res) => res.data.data)
-      .then((res) => setInitialValues(res))
-      .catch((err) => console.log(err));
-
   const handleSubmit = (values, { setSubmitting }) =>
     axios
       .put(`/api/me/websites/${seed}`, values)
       .then((res) => res.data.data)
       .catch((err) => console.log(err))
       .finally(() => setSubmitting(false));
+
+  const { website, isLoading, isError } = useWebsite({ seed });
+
+  if (isLoading) return <LoadingPanel />;
+  if (isError) return <div>failed to load</div>;
 
   return (
     <div className="h-full rounded-lg space-y-4 bg-gray-900">
@@ -53,17 +41,17 @@ const Websites = ({ seed }) => {
             </p>
           </div>
         }>
-        <Formik enableReinitialize initialValues={initialValues} onSubmit={handleSubmit}>
+        <Formik enableReinitialize initialValues={website} onSubmit={handleSubmit}>
           {({ isSubmitting }) => (
             <Form>
               <div className="space-y-6">
-                <div className="space-y-1">
+                <div className="space-y-4">
                   <TextField label="Name" name="name" type="text" autocomplete="none" />
                   <TextField label="Website URL" name="url" type="text" autocomplete="none" />
                 </div>
 
                 <div className="flex items-center justify-end space-x-4">
-                  <Button type="submit" isLoading={isSubmitting} label="Create" />
+                  <Button type="submit" isLoading={isSubmitting} label="Update" />
                 </div>
               </div>
             </Form>
@@ -82,7 +70,9 @@ const Websites = ({ seed }) => {
             </p>
           </div>
         }>
-        <div className="text-white" id="aurora_script"></div>
+        <div className="text-white">
+          {`<script async defer src="${window.location.protocol}//${window.location.hostname}/aurora.js" aurora-id="${seed}"></script>`}
+        </div>
       </Panel>
     </div>
   );
