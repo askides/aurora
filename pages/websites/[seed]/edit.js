@@ -2,7 +2,7 @@ import axios from "axios";
 import { Formik, Form } from "formik";
 import { useEffect, useState } from "react";
 
-import { TextField, Button } from "../../../components/AuroraForm";
+import { TextField, Select, Button } from "../../../components/AuroraForm";
 import { Panel, LoadingPanel } from "../../../components/Primitives";
 import { withAuth } from "../../../components/utils/withAuth";
 import { useWebsite } from "../../../components/utils/useWebsite";
@@ -48,6 +48,16 @@ const Websites = ({ seed }) => {
                 <div className="space-y-4">
                   <TextField label="Name" name="name" type="text" autocomplete="none" />
                   <TextField label="Website URL" name="url" type="text" autocomplete="none" />
+                  <Select
+                    label="Share Analytics"
+                    name="shared"
+                    as="select"
+                    allowEmpty={false}
+                    options={[
+                      { id: false, value: "No" },
+                      { id: true, value: "Yes" },
+                    ]}
+                  />
                 </div>
 
                 <div className="flex items-center justify-end space-x-4">
