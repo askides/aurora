@@ -1,10 +1,6 @@
-const { PrismaClient } = require("@prisma/client");
 const db = require("../../../../lib/db_connect");
-
-const generateSeed = require("../../../../utils/generate-seed");
+const generateSeed = require("../../../../utils/generate-seed"); // XXX To object module
 const { withAuth } = require("../../../../utils/hof/withAuth");
-
-const prisma = new PrismaClient();
 
 const handleGet = async (req, res) => {
   const user = req.accessTokenBody.data;
@@ -25,12 +21,10 @@ const handlePost = async (req, res) => {
 
   const website = await db("websites").insert({
     url: url,
-    name: name || "nOnAME",
+    name: name || "nOnAME", // XXX
     seed: seed,
     user_id: user.id,
   });
-
-  console.log("website", website);
 
   return { status: 200, data: website };
 };
