@@ -19,6 +19,7 @@ const attempt = async ({ email, password }) => {
 
   if (user && verify(password, user.password)) {
     return {
+      id: user.id,
       email: user.email,
     };
   }

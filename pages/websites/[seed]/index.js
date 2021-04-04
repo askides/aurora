@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Chart from "../../../components/charts/Chart";
 import Performance from "../../../components/charts/Performance";
-import { withAuth } from "../../../components/utils/withAuth";
+import { withAuth } from "../../../components/hoc/withAuth";
 import BrowserViews from "../../../components/charts/BrowserViews";
 import OsViews from "../../../components/charts/OsViews";
 import PageViews from "../../../components/charts/PageViews";

@@ -1,22 +1,17 @@
 const { PrismaClient } = require("@prisma/client");
+const db = require("../../../../lib/db_connect");
 
 const generateSeed = require("../../../../utils/generate-seed");
-const withAuth = require("../../../../utils/with-auth");
+const { withAuth } = require("../../../../utils/hof/withAuth");
 
 const prisma = new PrismaClient();
 
 const handleGet = async (req, res) => {
   const user = req.accessTokenBody.data;
 
-  const websites = await prisma.website.findMany({
-    where: {
-      owner: {
-        email: user.email,
-      },
-    },
-  });
-
-  await prisma.$disconnect();
+  const websites = await db("websites")
+    .join("users", "websites.user_id", "users.id")
+    .where("users.email", user.email);
 
   return { status: 200, data: websites };
 };
@@ -28,21 +23,16 @@ const handlePost = async (req, res) => {
 
   const seed = generateSeed();
 
-  // Create Event
-  const createdWebsite = await prisma.website.create({
-    data: {
-      url: url,
-      name: name,
-      seed: seed,
-      owner: {
-        connect: {
-          email: user.email,
-        },
-      },
-    },
+  const website = await db("websites").insert({
+    url: url,
+    name: name || "nOnAME",
+    seed: seed,
+    user_id: user.id,
   });
 
-  return { status: 200, data: createdWebsite };
+  console.log("website", website);
+
+  return { status: 200, data: website };
 };
 
 const handler = async (req, res) => {
