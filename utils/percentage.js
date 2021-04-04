@@ -1,3 +1,3 @@
-const percentage = (n, t) => ((Number(n) / Number(t)) * 100).toFixed();
+const percentage = (n, t) => (n / t) * 100;
 
 module.exports = percentage;
