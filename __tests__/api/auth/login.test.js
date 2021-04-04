@@ -1,6 +1,10 @@
 import { createMocks } from "node-mocks-http";
 import handler from "../../../pages/api/auth/login";
 
+beforeEach(() => {
+  // Seed the Database \w Fake Users Data.
+});
+
 describe("/api/auth/login", () => {
   test("testing non working get method", async () => {
     const { req, res } = createMocks({
