@@ -1,5 +1,5 @@
 exports.up = function (knex) {
-  return knex.schema.createTable("_devices", function (table) {
+  return knex.schema.createTable("devices", function (table) {
     table.increments("id");
     table.string("vendor", 255).notNullable();
     table.string("model", 255).notNullable();
@@ -10,5 +10,5 @@ exports.up = function (knex) {
 };
 
 exports.down = function (knex) {
-  return knex.schema.dropTable("_devices");
+  return knex.schema.dropTable("devices");
 };
