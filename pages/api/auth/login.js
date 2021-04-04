@@ -1,10 +1,9 @@
 const jwt = require("jsonwebtoken");
 const { serialize } = require("cookie");
-const { PrismaClient } = require("@prisma/client");
+
 const { AUTH_COOKIE, AUTH_COOKIE_LIFETIME } = require("../../../utils/constants");
 const { verify } = require("../../../utils/hash");
-
-const prisma = new PrismaClient();
+const prisma = require("../../../lib/prisma");
 
 const makeJwt = ({ data }) =>
   jwt.sign({ data: data }, process.env.JWT_SECRET, { expiresIn: AUTH_COOKIE_LIFETIME });
