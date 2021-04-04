@@ -1,5 +1,5 @@
 exports.up = function (knex) {
-  return knex.schema.createTable("_engines", function (table) {
+  return knex.schema.createTable("engines", function (table) {
     table.increments("id");
     table.string("name", 255).notNullable();
     table.string("version", 255).notNullable();
@@ -9,5 +9,5 @@ exports.up = function (knex) {
 };
 
 exports.down = function (knex) {
-  return knex.schema.dropTable("_engines");
+  return knex.schema.dropTable("engines");
 };
