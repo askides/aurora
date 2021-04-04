@@ -1,5 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
-const withAuth = require("../../../utils/with-auth");
+const { withAuth } = require("../../../utils/hof/withAuth");
 const { hash } = require("../../../utils/hash");
 
 const prisma = new PrismaClient();

@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { parse } = require("cookie");
-const { AUTH_COOKIE } = require("./constants");
+const { AUTH_COOKIE } = require("../constants");
 
 const verifyJwt = ({ accessToken }) => {
   try {
@@ -31,4 +31,4 @@ const withAuth = (fn) => (req, res) => {
   return fn(enhancedReq, res);
 };
 
-module.exports = withAuth;
+module.exports = { withAuth };
