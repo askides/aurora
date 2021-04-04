@@ -8,15 +8,6 @@ const handlePut = async (req, res) => {
   const user = req.accessTokenBody.data;
   const { password } = req.body;
 
-  await prisma.user.update({
-    where: {
-      email: user.email,
-    },
-    data: {
-      password: hash(password),
-    },
-  });
-
   await db("users")
     .where("email", user.email)
     .where("id", user.id)
