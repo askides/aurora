@@ -9,7 +9,7 @@
     "build:aurora": "webpack --config tracker.config.js --mode production",
     "build:prisma": "prisma migrate deploy",
     "start": "next start",
-    "export": "next build && next export"
+    "test": "jest"
   },
   "dependencies": {
     "@prisma/client": "^2.20.1",
@@ -43,6 +43,7 @@
     "@babel/preset-env": "^7.13.12",
     "autoprefixer": "^10.2.5",
     "babel-loader": "^8.2.2",
+    "jest": "^26.6.3",
     "postcss": "^8.2.8",
     "prisma": "^2.20.1",
     "tailwindcss": "^2.0.4",
