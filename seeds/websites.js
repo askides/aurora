@@ -10,6 +10,7 @@ exports.seed = (knex) => {
           name: "Renato Pozzi Website.",
           url: "https://renatopozzi.me",
           seed: generateSeed(),
+          user_id: 1,
         },
       ]);
     });

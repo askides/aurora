@@ -5,7 +5,7 @@ exports.up = function (knex) {
     table.string("url", 255).notNullable().unique();
     table.string("seed", 255).notNullable().unique();
     table.boolean("shared").defaultTo(false);
-    table.integer("user_id").references("id").inTable("users");
+    table.integer("user_id").notNullable().references("id").inTable("users");
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.timestamp("updated_at").defaultTo(knex.fn.now());
   });
