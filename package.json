@@ -9,8 +9,9 @@
     "build:aurora": "webpack --config tracker.config.js --mode production",
     "build:knex": "knex migrate:latest --env production",
     "start": "next start",
-    "test": "jest",
-    "cypress:open": "cypress open"
+    "test": "npm run cypress:run",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
   },
   "dependencies": {
     "@tailwindcss/forms": "^0.2.1",
