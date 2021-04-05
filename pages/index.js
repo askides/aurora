@@ -2,8 +2,8 @@ import Link from "next/link";
 import PageTitle from "../components/layout/PageTitle";
 import { Button } from "../components/AuroraForm";
 import { LoadingPanel, Panel, StackedList, StackedListItem } from "../components/Primitives";
-import { withAuth } from "../components/utils/withAuth";
-import { useWebsites } from "../components/utils/useWebsites";
+import { withAuth } from "../components/hoc/withAuth";
+import { useWebsites } from "../components/hooks/useWebsites";
 
 const Websites = () => {
   const { websites, isLoading, isError } = useWebsites();

@@ -1,5 +1,5 @@
 import { ProgressList, LoadingPanel } from "../Primitives";
-import { useGraph } from "../utils/useGraph";
+import { useGraph } from "../hooks/useGraph";
 
 const applyConfiguration = (data) => ({
   header: {
