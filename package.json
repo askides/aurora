@@ -20,6 +20,7 @@
     "chart.js": "^2.9.4",
     "cookie": "^0.4.1",
     "deepdash": "^5.3.5",
+    "dotenv": "^8.2.0",
     "formik": "^2.2.6",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.95.4",
