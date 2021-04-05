@@ -1,15 +1,19 @@
 const percentage = require("../../../../../utils/percentage");
-const { viewsByBrowser } = require("../../../../../lib/queries");
-const { isAuthorized, isWebsitePublic } = require("../../../../../utils/authorization");
+const db = require("../../../../../lib/db_connect");
 
 const handleGet = async (req, res) => {
   const { range, seed } = req.query;
 
-  if (!isAuthorized(req) && !(await isWebsitePublic(seed))) {
-    return { status: 401, data: { message: "Unauthorized" } };
-  }
-
-  const rows = await viewsByBrowser(range, seed);
+  const rows = await db("events")
+    .select("browsers.name as element")
+    .count("events.id as views")
+    .countDistinct("events.hash as unique")
+    .join("browsers", "events.browser_id", "browsers.id")
+    .join("websites", "events.website_id", "websites.id")
+    .whereRaw(`events.created_at >= DATE_TRUNC('${range}', now())`)
+    .where("websites.seed", seed)
+    .groupBy("browsers.name")
+    .orderBy("views", "desc");
 
   const totalViews = rows.reduce((acc, el) => acc + el.views, 0);
 
@@ -41,4 +45,4 @@ const handle = async function (req, res) {
   return res.status(status).json({ data });
 };
 
-module.exports = handle;
+module.exports = handle; // TODO withSharedAuth
