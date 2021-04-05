@@ -1,9 +1,8 @@
-const { PrismaClient } = require("@prisma/client");
-
-const prisma = new PrismaClient();
+const { withSharedAuth } = require("../../../../../utils/hof/withSharedAuth");
+const db = require("../../../../../lib/db_connect");
 
 const thisRangeViews = async (range = "month", seed) => {
-  return await prisma.$queryRaw(`
+  return await db.raw(`
     SELECT
       range.generate_series as range,
       COALESCE(e.views, 0) AS views
@@ -34,7 +33,7 @@ const thisRangeViews = async (range = "month", seed) => {
 };
 
 const thisDayViews = async (seed) =>
-  await prisma.$queryRaw(`
+  await db.raw(`
     SELECT
       range.generate_series::timestamp::time as range,
       COALESCE(e.views, 0) AS views
@@ -63,7 +62,7 @@ const thisDayViews = async (seed) =>
   `);
 
 const thisYearViews = async (seed) =>
-  await prisma.$queryRaw(`
+  await db.raw(`
     SELECT
       to_char(
         to_timestamp (range :: text, 'MM'),
@@ -86,55 +85,41 @@ const thisYearViews = async (seed) =>
       ) AS e ON range = e.month
   `);
 
-module.exports = async (req, res) => {
-  // Only GET Available
-  if (req.method !== "GET") {
-    return res.status(405).json({ message: "Method not allowed." });
-  }
-
+const handleGet = async (req, res) => {
   const { seed, range } = req.query;
 
   let data = {};
 
-  if (range === "day") {
-    data = await thisDayViews(seed)
-      .catch((e) => {
-        throw e;
-      })
-      .finally(async () => {
-        await prisma.$disconnect();
-      });
-  } else if (range === "year") {
-    data = await thisYearViews(seed)
-      .catch((e) => {
-        throw e;
-      })
-      .finally(async () => {
-        await prisma.$disconnect();
-      });
-  } else if (range === "month") {
-    data = await thisRangeViews("month", seed)
-      .catch((e) => {
-        throw e;
-      })
-      .finally(async () => {
-        await prisma.$disconnect();
-      });
-  } else if (range === "week") {
-    data = await thisRangeViews("week", seed)
-      .catch((e) => {
-        throw e;
-      })
-      .finally(async () => {
-        await prisma.$disconnect();
-      });
-  } else {
-    data = [];
+  switch (range) {
+    case "day":
+      data = await thisDayViews(seed);
+    case "year":
+      data = await thisYearViews(seed);
+    case "month":
+      data = await thisRangeViews("month", seed);
+    case "week":
+      data = await thisRangeViews("week", seed);
+    default:
+      data = [];
   }
 
-  const x = data.map((dv) => [dv.range, dv.views]);
+  const series = data.rows.map((dv) => [dv.range, dv.views]);
 
-  return res.json({
-    data: x,
-  });
+  return { status: 200, data: series };
 };
+
+const handle = async function (req, res) {
+  let { status, data } = {};
+
+  switch (req.method) {
+    case "GET":
+      ({ status, data } = await handleGet(req, res));
+      break;
+    default:
+      return res.status(405).json({ message: "Method not allowed." });
+  }
+
+  return res.status(status).json({ data: data });
+};
+
+module.exports = withSharedAuth(handle);
