@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 
 import { Button, TextField } from "../../components/AuroraForm";
 import { Panel } from "../../components/Primitives";
-import { withAuth } from "../../components/utils/withAuth";
+import { withAuth } from "../../components/hoc/withAuth";
 
 const Create = () => {
   const router = useRouter();

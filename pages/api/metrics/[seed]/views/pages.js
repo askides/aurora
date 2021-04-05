@@ -1,38 +1,19 @@
-const { PrismaClient } = require("@prisma/client");
-
-const withAuth = require("../../../../../utils/with-auth");
+const { withSharedAuth } = require("../../../../../utils/hof/withSharedAuth");
 const percentage = require("../../../../../utils/percentage");
-
-const prisma = new PrismaClient();
-
-const pageViews = async (range, seed) =>
-  await prisma.$queryRaw(`
-    SELECT
-      element,
-      COUNT(events.id) as views,
-      COUNT(DISTINCT events.hash) as unique
-    FROM
-      events
-      JOIN websites ON events.website_id = websites.id
-    WHERE
-      events.created_at >= DATE_TRUNC('${range}', now())
-      AND websites.seed = '${seed}'
-    GROUP BY
-      element
-    ORDER BY
-      views DESC
-  `);
+const db = require("../../../../../lib/db_connect");
 
 const handleGet = async (req, res) => {
   const { range, seed } = req.query;
 
-  const rows = await pageViews(range, seed)
-    .catch((e) => {
-      throw e;
-    })
-    .finally(async () => {
-      await prisma.$disconnect();
-    });
+  const rows = await db("events")
+    .select("element")
+    .count("events.id as views")
+    .countDistinct("hash as unique")
+    .join("websites", "events.website_id", "websites.id")
+    .whereRaw(`events.created_at >= DATE_TRUNC('${range}', now())`)
+    .where("websites.seed", seed)
+    .groupBy("element")
+    .orderBy("views", "desc");
 
   const totalViews = rows.reduce((acc, el) => acc + el.views, 0);
 
@@ -64,4 +45,4 @@ const handle = async function (req, res) {
   return res.status(status).json({ data: data });
 };
 
-module.exports = withAuth(handle);
+module.exports = withSharedAuth(handle);

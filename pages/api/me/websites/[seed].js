@@ -1,43 +1,30 @@
-const { PrismaClient } = require("@prisma/client");
-const withAuth = require("../../../../utils/with-auth");
-
-const prisma = new PrismaClient();
+const db = require("../../../../lib/db_connect");
+const { withAuth } = require("../../../../utils/hof/withAuth");
 
 const handleGet = async (req, res) => {
   const user = req.accessTokenBody.data;
   const { seed } = req.query;
 
-  const ws = await prisma.website.findFirst({
-    where: {
-      seed: seed,
-      owner: {
-        email: user.email,
-      },
-    },
-  });
+  const website = await db("websites")
+    .where("websites.seed", seed)
+    .where("user_id", user.id)
+    .first();
 
   // Boolean to int
-  ws.shared = +ws.shared;
+  website.shared = +website.shared;
 
-  await prisma.$disconnect();
-
-  return { status: 200, data: ws };
+  return { status: 200, data: website };
 };
 
 const handlePut = async (req, res) => {
+  const user = req.accessTokenBody.data;
   const { seed } = req.query;
   const { shared } = req.body;
 
-  const updateWebsite = await prisma.website.update({
-    where: {
-      seed: seed,
-    },
-    data: {
-      shared: Boolean(Number(shared)),
-    },
-  });
-
-  await prisma.$disconnect();
+  await db("websites")
+    .where("websites.seed", seed)
+    .where("user_id", user.id)
+    .update({ shared: Boolean(Number(shared)) });
 
   return { status: 200, data: { message: "Updated." } };
 };
@@ -46,16 +33,9 @@ const handleDelete = async (req, res) => {
   const user = req.accessTokenBody.data;
   const { seed } = req.query;
 
-  // Delete Website XXX CHECK OWNERSHIP
-  await prisma.website.delete({
-    where: {
-      seed: seed,
-    },
-  });
+  await db("websites").where("websites.seed", seed).where("user_id", user.id).del();
 
-  await prisma.$disconnect();
-
-  return { status: 200, data: null };
+  return { status: 200, data: { message: "Deleted." } };
 };
 
 const handler = async (req, res) => {

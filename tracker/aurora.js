@@ -19,6 +19,7 @@ const { default: axios } = require("axios");
   if (!script) return false;
 
   const analyticsUrl = script.getAttribute("src").replace("/aurora.js", "/api/collect");
+  const websiteSeed = script.getAttribute("aurora-id");
 
   // console.log("Screen", screen);
   // console.log("Navigator", navigator);
@@ -32,6 +33,7 @@ const { default: axios } = require("axios");
       type: "pageView",
       element: location.pathname,
       locale: navigator.language,
+      seed: websiteSeed,
     })
     .catch((err) => console.log(err));
   // const rawResponse = await fetch("http://localhost:3000/api/collect", {
