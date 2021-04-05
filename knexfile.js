@@ -3,10 +3,9 @@ require("dotenv").config();
 module.exports = {
   production: {
     client: "pg",
-    connection: process.env.DB_URL,
-    pool: {
-      min: 2,
-      max: 10,
+    connection: {
+      connectionString: process.env.DB_URL,
+      ssl: { rejectUnauthorized: false },
     },
     migrations: {
       tableName: "knex_migrations",
