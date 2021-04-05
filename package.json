@@ -1,19 +1,18 @@
 {
-  "name": "aurora-node",
+  "name": "aurora",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "npm run build:aurora && npm run build:prisma",
+    "prebuild": "npm run build:aurora && npm run build:knex",
     "build": "next build",
     "build:aurora": "webpack --config tracker.config.js --mode production",
-    "build:prisma": "prisma migrate deploy",
+    "build:knex": "knex migrate:latest --env production",
     "start": "next start",
     "test": "jest",
     "cypress:open": "cypress open"
   },
   "dependencies": {
-    "@prisma/client": "^2.20.1",
     "@tailwindcss/forms": "^0.2.1",
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
@@ -50,7 +49,6 @@
     "jest": "^26.6.3",
     "node-mocks-http": "^1.10.1",
     "postcss": "^8.2.8",
-    "prisma": "^2.20.1",
     "tailwindcss": "^2.0.4",
     "webpack": "^5.28.0",
     "webpack-cli": "^4.6.0"
