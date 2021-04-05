@@ -1,6 +1,6 @@
 const locale = require("locale-codes");
 const db = require("../../../../../lib/db_connect");
-const { withAuth } = require("../../../../../utils/hof/withAuth");
+const { withSharedAuth } = require("../../../../../utils/hof/withSharedAuth");
 const percentage = require("../../../../../utils/percentage");
 
 const handleGet = async (req, res) => {
@@ -47,4 +47,4 @@ const handle = async function (req, res) {
   return res.status(status).json({ data: data });
 };
 
-module.exports = withAuth(handle);
+module.exports = withSharedAuth(handle);

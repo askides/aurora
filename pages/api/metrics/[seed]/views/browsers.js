@@ -1,3 +1,4 @@
+const { withSharedAuth } = require("../../../../../utils/hof/withSharedAuth");
 const percentage = require("../../../../../utils/percentage");
 const db = require("../../../../../lib/db_connect");
 
@@ -45,4 +46,4 @@ const handle = async function (req, res) {
   return res.status(status).json({ data });
 };
 
-module.exports = handle; // TODO withSharedAuth
+module.exports = withSharedAuth(handle);
