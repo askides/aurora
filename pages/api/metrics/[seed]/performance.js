@@ -1,45 +1,9 @@
-const { PrismaClient } = require("@prisma/client");
-
-const { withAuth } = require("../../../../utils/hof/withAuth");
+const { withSharedAuth } = require("../../../../utils/hof/withSharedAuth");
 const percentage = require("../../../../utils/percentage");
-
-const prisma = new PrismaClient();
-
-// const pageViewsPerformance = async (range, seed) => {
-//   return await prisma.$queryRaw(`
-//     SELECT
-//       *
-//     from
-//       (
-//         SELECT
-//           COUNT(events.created_at) as cp_views,
-//           COUNT(DISTINCT events.hash) as cp_unique
-//         FROM
-//           events
-//           JOIN websites ON events.website_id = websites.id
-//         WHERE
-//           events.created_at >= DATE_TRUNC('${range}', now())
-//           AND websites.seed = '${seed}'
-//       ) as cp CROSS
-//       JOIN (
-//         SELECT
-//           COUNT(events.created_at) as lp_views,
-//           COUNT(DISTINCT events.hash) as lp_unique
-//         FROM
-//           events
-//           JOIN websites ON events.website_id = websites.id
-//         WHERE
-//           events.created_at BETWEEN (
-//             DATE_TRUNC('${range}', now()) - '1 ${range}' :: interval
-//           )
-//           and DATE_TRUNC('${range}', now())
-//           AND websites.seed = '${seed}'
-//       ) as lp
-//   `);
-// };
+const db = require("../../../../lib/db_connect");
 
 const performance = async (range, seed) => {
-  return await prisma.$queryRaw(`
+  return await db.raw(`
     SELECT
       *
     from
@@ -115,13 +79,8 @@ const performance = async (range, seed) => {
 const handleGet = async (req, res) => {
   const { range, seed } = req.query;
 
-  const rows = await performance(range, seed)
-    .catch((e) => {
-      throw e;
-    })
-    .finally(async () => {
-      await prisma.$disconnect();
-    });
+  const r = await performance(range, seed);
+  const rows = r.rows;
 
   const perf = await rows.reduce((acc, el) => el, {});
 
@@ -162,4 +121,4 @@ const handle = async function (req, res) {
   return res.status(status).json({ data: data });
 };
 
-module.exports = withAuth(handle);
+module.exports = withSharedAuth(handle);
