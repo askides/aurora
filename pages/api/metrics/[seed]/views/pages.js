@@ -1,5 +1,6 @@
-const { withAuth } = require("../../../../../utils/hof/withAuth");
+const { withSharedAuth } = require("../../../../../utils/hof/withSharedAuth");
 const percentage = require("../../../../../utils/percentage");
+const db = require("../../../../../lib/db_connect");
 
 const handleGet = async (req, res) => {
   const { range, seed } = req.query;
@@ -44,4 +45,4 @@ const handle = async function (req, res) {
   return res.status(status).json({ data: data });
 };
 
-module.exports = withAuth(handle); // XXX Todo withSharedAuth
+module.exports = withSharedAuth(handle);
