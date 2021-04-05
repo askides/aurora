@@ -93,14 +93,18 @@ const handleGet = async (req, res) => {
   switch (range) {
     case "day":
       data = await thisDayViews(seed);
+      break;
     case "year":
       data = await thisYearViews(seed);
+      break;
     case "month":
       data = await thisRangeViews("month", seed);
+      break;
     case "week":
       data = await thisRangeViews("week", seed);
+      break;
     default:
-      data = [];
+      data = []; // To be fixed
   }
 
   const series = data.rows.map((dv) => [dv.range, dv.views]);
