@@ -81,7 +81,9 @@ const Websites = ({ seed }) => {
           </div>
         }>
         <div className="text-white">
-          {`<script async defer src="${window.location.protocol}//${window.location.hostname}/aurora.js" aurora-id="${seed}"></script>`}
+          {`<script async defer src="${window.location.protocol}//${window.location.hostname}${
+            location.port ? ":" + location.port : ""
+          }/aurora.js" aurora-id="${seed}"></script>`}
         </div>
       </Panel>
     </div>

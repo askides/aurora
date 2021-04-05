@@ -1,37 +1,14 @@
 const crypto = require("crypto");
 const UAParser = require("ua-parser-js");
 const mapValuesDeep = require("deepdash/mapValuesDeep");
-const { PrismaClient } = require("@prisma/client");
+const { withCors } = require("../../utils/hof/withCors");
+const db = require("../../lib/db_connect");
 
-const prisma = new PrismaClient();
-
-const allowCors = (fn) => async (req, res) => {
-  res.setHeader("Access-Control-Allow-Credentials", true);
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  // another common pattern
-  // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
-  res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS,PATCH,DELETE,POST,PUT");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
-  );
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
-  return await fn(req, res);
-};
-
-const handler = async (req, res) => {
-  // Only POST Available
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method not allowed." });
-  }
-
+const handlePost = async (req, res) => {
   const uaResults = new UAParser(req.headers["user-agent"]).getResult();
   const ua = mapValuesDeep({ ...uaResults }, (v) => (v ? v : "#ND"), {});
 
-  const { type, element, locale } = req.body;
+  const { type, element, locale, seed } = req.body;
 
   // const ip = req.headers["x-real-ip"];
 
@@ -45,52 +22,63 @@ const handler = async (req, res) => {
     )
     .digest("hex");
 
+  // Get Website by seed
+  const website = await db("websites").where("websites.seed", seed).first();
+
+  // Create Browser
+  const browser = await db("browsers").insert({
+    name: ua.browser.name,
+    version: ua.browser.version,
+    major: ua.browser.major,
+  });
+
+  // Create Engine
+  const engine = await db("engines").insert({
+    name: ua.engine.name,
+    version: ua.engine.version,
+  });
+
+  // Create Os
+  const os = await db("oses").insert({
+    name: ua.os.name,
+    version: ua.os.version,
+  });
+
+  // Create Device
+  const device = await db("devices").insert({
+    vendor: ua.device.vendor,
+    model: ua.device.model,
+    type: ua.device.type,
+  });
+
   // Create Event
-  const createdEvent = await prisma.event.create({
-    data: {
-      type: type,
-      element: element,
-      locale: locale,
-      hash: eventHash,
-      website: {
-        connect: {
-          id: 1,
-        },
-      },
-      browser: {
-        create: {
-          name: ua.browser.name,
-          version: ua.browser.version,
-          major: ua.browser.major,
-        },
-      },
-      engine: {
-        create: {
-          name: ua.engine.name,
-          version: ua.engine.version,
-        },
-      },
-      os: {
-        create: {
-          name: ua.os.name,
-          version: ua.os.version,
-        },
-      },
-      device: {
-        create: {
-          vendor: ua.device.vendor,
-          model: ua.device.model,
-          type: ua.device.type,
-        },
-      },
-    },
+  const event = await db("events").insert({
+    type: type,
+    element: element,
+    locale: locale,
+    hash: eventHash,
+    website_id: website.id,
+    browser_id: browser.id,
+    engine_id: engine.id,
+    os_id: os.id,
+    device_id: device.id,
   });
 
-  await prisma.$disconnect();
-
-  return res.json({
-    data: createdEvent,
-  });
+  return { status: 200, data: { message: "Request successful." } };
 };
 
-module.exports = allowCors(handler);
+const handle = async function (req, res) {
+  let { status, data } = {};
+
+  switch (req.method) {
+    case "POST":
+      ({ status, data } = await handlePost(req, res));
+      break;
+    default:
+      return res.status(405).json({ message: "Method not allowed." });
+  }
+
+  return res.status(status).json({ data });
+};
+
+module.exports = withCors(handle);
