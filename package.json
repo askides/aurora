@@ -8,6 +8,7 @@
     "build": "next build",
     "build:aurora": "webpack --config tracker.config.js --mode production",
     "build:knex": "knex migrate:latest --env production",
+    "knex:seed": "knex seed:run --env production",
     "start": "next start",
     "test": "npm run cypress:run",
     "cypress:open": "cypress open",
