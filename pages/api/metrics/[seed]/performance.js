@@ -1,5 +1,4 @@
 const { withSharedAuth } = require("../../../../utils/hof/withSharedAuth");
-const percentage = require("../../../../utils/percentage");
 const db = require("../../../../lib/db_connect");
 
 const performance = async (range, seed) => {
@@ -101,8 +100,6 @@ const handleGet = async (req, res) => {
       inc: perf.cp_bounces - perf.lp_bounces,
     },
   };
-
-  //   const perc = percentage(el.views, totalViews);
 
   return { status: 200, data: data };
 };
