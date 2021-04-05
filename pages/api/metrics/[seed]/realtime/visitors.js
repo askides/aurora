@@ -1,30 +1,32 @@
-const { PrismaClient } = require("@prisma/client"); // XXX TODO
+const { withSharedAuth } = require("../../../../../utils/hof/withSharedAuth");
+const db = require("../../../../../lib/db_connect");
 
-const prisma = new PrismaClient();
-
-module.exports = async (req, res) => {
-  // Only GET Available
-  if (req.method !== "GET") {
-    return res.status(405).json({ message: "Method not allowed." });
-  }
-
+const handleGet = async (req, res) => {
   const { seed } = req.query;
 
-  // All the pages viewed
-  const lastNSecondsVisitors = await prisma.$queryRaw(`
-    SELECT
-      count(DISTINCT hash) as visitors
-    from
-      events
-      JOIN websites ON events.website_id = websites.id
-    where
-      events.created_at >= (now() - '30 second' :: interval)
-      AND websites.seed = '${seed}'
-  `);
+  const rows = await db("events")
+    .countDistinct("events.hash as visitors")
+    .join("websites", "events.website_id", "websites.id")
+    .whereRaw(`events.created_at >= (now() - '30 second' :: interval)`)
+    .where("websites.seed", seed);
 
-  await prisma.$disconnect();
+  const lastNSecondsVisitors = await rows.reduce((acc, el) => el, {});
 
-  return res.json({
-    data: lastNSecondsVisitors[0], // XXX TODO:
-  });
+  return { status: 200, data: lastNSecondsVisitors };
 };
+
+const handle = async function (req, res) {
+  let { status, data } = {};
+
+  switch (req.method) {
+    case "GET":
+      ({ status, data } = await handleGet(req, res));
+      break;
+    default:
+      return res.status(405).json({ message: "Method not allowed." });
+  }
+
+  return res.status(status).json({ data });
+};
+
+module.exports = withSharedAuth(handle);
