@@ -19,14 +19,16 @@ const handlePost = async (req, res) => {
 
   const seed = generateSeed();
 
-  const website = await db("websites").insert({
-    url: url,
-    name: name || "nOnAME", // XXX
-    seed: seed,
-    user_id: user.id,
-  });
+  const website = await db("websites")
+    .returning("seed")
+    .insert({
+      url: url,
+      name: name || "nOnAME", // XXX
+      seed: seed,
+      user_id: user.id,
+    });
 
-  return { status: 200, data: website };
+  return { status: 200, data: { seed: website[0] } };
 };
 
 const handler = async (req, res) => {
