@@ -15,7 +15,7 @@ const handleGet = async (req, res) => {
     .groupBy("element")
     .orderBy("views", "desc");
 
-  const totalViews = rows.reduce((acc, el) => acc + el.views, 0);
+  const totalViews = rows.reduce((acc, el) => acc + Number(el.views), 0);
 
   const data = rows.map((el) => {
     const perc = percentage(el.views, totalViews);
