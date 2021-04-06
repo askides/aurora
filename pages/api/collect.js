@@ -25,27 +25,31 @@ const handlePost = async (req, res) => {
   // Get Website by seed
   const website = await db("websites").where("websites.seed", seed).first();
 
+  if (!website) {
+    return { status: 422, data: { message: "Aurora ID not defined.." } };
+  }
+
   // Create Browser
-  const browser = await db("browsers").insert({
+  const browser = await db("browsers").returning("id").insert({
     name: ua.browser.name,
     version: ua.browser.version,
     major: ua.browser.major,
   });
 
   // Create Engine
-  const engine = await db("engines").insert({
+  const engine = await db("engines").returning("id").insert({
     name: ua.engine.name,
     version: ua.engine.version,
   });
 
   // Create Os
-  const os = await db("oses").insert({
+  const os = await db("oses").returning("id").insert({
     name: ua.os.name,
     version: ua.os.version,
   });
 
   // Create Device
-  const device = await db("devices").insert({
+  const device = await db("devices").returning("id").insert({
     vendor: ua.device.vendor,
     model: ua.device.model,
     type: ua.device.type,
@@ -58,10 +62,10 @@ const handlePost = async (req, res) => {
     locale: locale,
     hash: eventHash,
     website_id: website.id,
-    browser_id: browser.id,
-    engine_id: engine.id,
-    os_id: os.id,
-    device_id: device.id,
+    browser_id: browser[0],
+    engine_id: engine[0],
+    os_id: os[0],
+    device_id: device[0],
   });
 
   return { status: 200, data: { message: "Request successful." } };
