@@ -1,5 +1,3 @@
-const generateSeed = require("../utils/generate-seed");
-
 exports.seed = (knex) => {
   return knex("websites")
     .del()
@@ -9,7 +7,7 @@ exports.seed = (knex) => {
           id: 1,
           name: "Renato Pozzi Website.",
           url: "https://renatopozzi.me",
-          seed: generateSeed(),
+          seed: "40551333ba09839f5287a7a6aa2f73fe",
           user_id: 1,
         },
       ]);
