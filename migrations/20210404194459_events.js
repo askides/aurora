@@ -5,11 +5,11 @@ exports.up = function (knex) {
     table.text("element").notNullable();
     table.string("locale", 255).notNullable();
     table.string("hash", 255).notNullable();
-    table.integer("website_id").references("id").inTable("websites");
-    table.integer("browser_id").references("id").inTable("browsers");
-    table.integer("engine_id").references("id").inTable("engines");
-    table.integer("os_id").references("id").inTable("oses");
-    table.integer("device_id").references("id").inTable("devices");
+    table.integer("website_id").notNullable(); //.references("id").inTable("websites");
+    table.integer("browser_id").notNullable(); //.references("id").inTable("browsers");
+    table.integer("engine_id").notNullable(); //.references("id").inTable("engines");
+    table.integer("os_id").notNullable(); //.references("id").inTable("oses");
+    table.integer("device_id").notNullable(); //.references("id").inTable("devices");
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.timestamp("updated_at").defaultTo(knex.fn.now());
   });
