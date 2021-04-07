@@ -15,4 +15,19 @@ describe("Views API", () => {
       expect(resp.body).to.eql({ message: "Unauthorized" });
     });
   });
+
+  it("Authenticated Range Day.", () => {
+    cy.login("info@renatopozzi.me", "password");
+
+    cy.request({
+      method: "GET",
+      url: `/api/metrics/${seed}/views/pages?range=day`,
+      failOnStatusCode: false,
+    }).then((resp) => {
+      expect(resp.status).to.eq(200);
+      expect(resp.body).to.eql({
+        data: [{ element: "/", views: 22, unique: 6, percentage: 100 }],
+      });
+    });
+  });
 });

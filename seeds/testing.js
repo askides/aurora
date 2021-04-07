@@ -1,182 +1,33 @@
-const users = [
-  {
-    firstname: "Renato",
-    lastname: "Pozzi",
-    email: "info@renatopozzi.me",
-    password: "$2a$10$QbwulVrqqmS3rzwA41ArdOM7al6bQo2eLaQGaDGcjF4MrT58scoKa",
-  },
-];
-
-const websites = [
-  {
-    name: "Renato Pozzi Website.",
-    url: "https://renatopozzi.me",
-    seed: "40551333ba09839f5287a7a6aa2f73fe",
-    user_id: 1,
-  },
-];
-
-const browsers = [
-  {
-    name: "Chrome",
-    version: "89.0.4389.105",
-    major: "89",
-  },
-  {
-    name: "Chrome",
-    version: "89.0.4389.105",
-    major: "89",
-  },
-  {
-    name: "Chrome",
-    version: "89.0.4389.105",
-    major: "89",
-  },
-  {
-    name: "Chrome",
-    version: "89.0.4389.105",
-    major: "89",
-  },
-  {
-    name: "Firefox",
-    version: "87.0",
-    major: "87",
-  },
-];
-
-const engines = [
-  {
-    name: "Blink",
-    version: "89.0.4389.105",
-  },
-  {
-    name: "Blink",
-    version: "89.0.4389.105",
-  },
-  {
-    name: "Blink",
-    version: "89.0.4389.105",
-  },
-  {
-    name: "Blink",
-    version: "89.0.4389.105",
-  },
-  {
-    name: "Gecko",
-    version: "87.0",
-  },
-];
-
-const oses = [
-  {
-    name: "Linux",
-    version: "x86_64",
-  },
-  {
-    name: "Linux",
-    version: "x86_64",
-  },
-  {
-    name: "Linux",
-    version: "x86_64",
-  },
-  {
-    name: "Linux",
-    version: "x86_64",
-  },
-  {
-    name: "Ubuntu",
-    version: "#ND",
-  },
-];
-
-const devices = [
-  {
-    vendor: "#ND",
-    model: "#ND",
-    type: "#ND",
-  },
-  {
-    vendor: "#ND",
-    model: "#ND",
-    type: "#ND",
-  },
-  {
-    vendor: "#ND",
-    model: "#ND",
-    type: "#ND",
-  },
-  {
-    vendor: "#ND",
-    model: "#ND",
-    type: "#ND",
-  },
-  {
-    vendor: "#ND",
-    model: "#ND",
-    type: "#ND",
-  },
-];
-
-const events = [
-  {
-    type: "pageView",
-    element: "/",
-    locale: "it-IT",
-    hash: "arandomhashforuniquevisits",
-    website_id: 1,
-    browser_id: 1,
-    engine_id: 1,
-    os_id: 1,
-    device_id: 1,
-  },
-  {
-    type: "pageView",
-    element: "/cross",
-    locale: "it-IT",
-    hash: "arandomhashforuniquevisits",
-    website_id: 1,
-    browser_id: 2,
-    engine_id: 2,
-    os_id: 2,
-    device_id: 2,
-  },
-  {
-    type: "pageView",
-    element: "/fresh",
-    locale: "it-IT",
-    hash: "arandomhashforuniquevisits",
-    website_id: 1,
-    browser_id: 3,
-    engine_id: 3,
-    os_id: 3,
-    device_id: 3,
-  },
-  {
-    type: "pageView",
-    element: "/fresh",
-    locale: "it-IT",
-    hash: "arandomhashforuniquevisits",
-    website_id: 1,
-    browser_id: 4,
-    engine_id: 4,
-    os_id: 4,
-    device_id: 4,
-  },
-  {
-    type: "pageView",
-    element: "/fresh",
-    locale: "en-GB",
-    hash: "anotherrandomhashforuniquevisits",
-    website_id: 1,
-    browser_id: 5,
-    engine_id: 5,
-    os_id: 5,
-    device_id: 5,
-  },
-];
+const users = require("../cypress/fixtures/users.json");
+const websites = require("../cypress/fixtures/websites.json");
+const browsers = require("../cypress/fixtures/browsers.json");
+const engines = require("../cypress/fixtures/engines.json");
+const oses = require("../cypress/fixtures/oses.json");
+const devices = require("../cypress/fixtures/devices.json");
+const events = require("../cypress/fixtures/events.json");
 
 exports.seed = async (knex) => {
+  // Setup created_at value for statistics calculations
+  const now = new Date();
+  const last2Days = new Date(new Date().setDate(new Date().getDate() - 2));
+  const last14Days = new Date(new Date().setDate(new Date().getDate() - 14));
+  const last2Months = new Date(new Date().setMonth(new Date().getMonth() - 2));
+  const eventsMap = events.map((event) => {
+    if (event.hash === "d95a6713a1b218918008263c1f825e547c22ee95e1124e8651c831396385b6b3") {
+      return { ...event, created_at: last2Days }; // 14 Elements
+    }
+
+    if (event.hash === "9fe2b9426f057c5f41663b9e97092ffe9424db8f9a6ef9cfb307efa1783b9448") {
+      return { ...event, created_at: last14Days }; // 5 Elements
+    }
+
+    if (event.hash === "432f3bb22d83c3f8804fca15a2737a9b7606014a253e5b3184c67f0c27ca0e49") {
+      return { ...event, created_at: last2Months }; // 9 Elements
+    }
+
+    return { ...event, created_at: now }; // 22 Elements
+  });
+
   await knex("users")
     .del()
     .then(() => {
@@ -214,6 +65,6 @@ exports.seed = async (knex) => {
   await knex("events")
     .del()
     .then(() => {
-      return knex("events").insert(events);
+      return knex("events").insert(eventsMap);
     });
 };
