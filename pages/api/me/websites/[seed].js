@@ -19,12 +19,16 @@ const handleGet = async (req, res) => {
 const handlePut = async (req, res) => {
   const user = req.accessTokenBody.data;
   const { seed } = req.query;
-  const { shared } = req.body;
+  const { name, url, shared } = req.body;
 
   await db("websites")
     .where("websites.seed", seed)
     .where("user_id", user.id)
-    .update({ shared: Boolean(Number(shared)) });
+    .update({
+      name: name,
+      url: url,
+      shared: Boolean(Number(shared)),
+    });
 
   return { status: 200, data: { message: "Updated." } };
 };
