@@ -48,16 +48,27 @@ const Websites = ({ seed }) => {
                 <div className="space-y-4">
                   <TextField label="Name" name="name" type="text" autocomplete="none" />
                   <TextField label="Website URL" name="url" type="text" autocomplete="none" />
-                  <Select
-                    label="Share Analytics"
-                    name="shared"
-                    as="select"
-                    allowEmpty={false}
-                    options={[
-                      { id: 0, value: "No" },
-                      { id: 1, value: "Yes" },
-                    ]}
-                  />
+                  <div className="space-y-2">
+                    <Select
+                      label="Share Analytics"
+                      name="shared"
+                      as="select"
+                      allowEmpty={false}
+                      options={[
+                        { id: 0, value: "No" },
+                        { id: 1, value: "Yes" },
+                      ]}
+                    />
+                    <div className="text-white text-sm">
+                      Share Link:{" "}
+                      <a
+                        href={`${window.location.protocol}//${window.location.hostname}${
+                          location.port ? ":" + location.port : ""
+                        }/s/${seed}`}>{`${window.location.protocol}//${window.location.hostname}${
+                        location.port ? ":" + location.port : ""
+                      }/s/${seed}`}</a>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-end space-x-4">
