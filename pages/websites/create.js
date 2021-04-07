@@ -8,7 +8,7 @@ import { withAuth } from "../../components/hoc/withAuth";
 
 const Create = () => {
   const router = useRouter();
-  const initialValues = { url: "" };
+  const initialValues = { name: "", url: "" };
 
   const handleSubmit = (values, { setSubmitting }) =>
     axios
@@ -35,7 +35,8 @@ const Create = () => {
           {({ isSubmitting }) => (
             <Form>
               <div className="space-y-6">
-                <div className="space-y-1">
+                <div className="space-y-4">
+                  <TextField label="Website Name" name="name" type="text" autocomplete="none" />
                   <TextField label="Website URL" name="url" type="text" autocomplete="none" />
                 </div>
 
