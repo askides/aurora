@@ -24,8 +24,8 @@ const handleGet = async (req, res) => {
 
     return {
       element: location,
-      views: el.views,
-      unique: el.unique,
+      views: Number(el.views),
+      unique: Number(el.unique),
       percentage: perc,
     };
   });
