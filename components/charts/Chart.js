@@ -10,7 +10,7 @@ const Components = {
   lineChart: LineChart,
 };
 
-const Chart = ({ url, timeRange, title = "Chart", type = "columnChart" }) => {
+const Chart = ({ url, timeRange, type = "columnChart" }) => {
   const { graph, isLoading, isError } = useGraph(url, timeRange);
 
   if (isLoading) return <LoadingPanel />;
@@ -25,7 +25,6 @@ const Chart = ({ url, timeRange, title = "Chart", type = "columnChart" }) => {
             backgroundColor: "rgba(147, 197, 253, 0.1)",
             borderWidth: 3,
             lineTension: 0.2,
-            // borderDash: [5, 5],
             fill: true,
           },
           curve: false,
