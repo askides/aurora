@@ -6,12 +6,17 @@ const handleGet = (req, res) => ({ status: 200, data: req.accessTokenBody.data }
 
 const handlePut = async (req, res) => {
   const user = req.accessTokenBody.data;
-  const { password } = req.body;
+  const { firstname, lastname, email, password } = req.body;
 
   await db("users")
     .where("email", user.email)
     .where("id", user.id)
-    .update({ password: hash(password) });
+    .update({
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
+      password: hash(password),
+    });
 
   return { status: 200, data: { message: "User info updated." } };
 };
