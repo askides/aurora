@@ -1,4 +1,3 @@
-import Wave from "react-wavify";
 import CountUp from "react-countup";
 import { ArrowDown, ArrowUp } from "./Icons";
 
