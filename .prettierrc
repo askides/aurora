@@ -2,7 +2,7 @@
   "printWidth": 100,
   "tabWidth": 2,
   "singleQuote": false,
-  "jsxBracketSameLine": true,
+  "jsxBracketSameLine": false,
   "trailingComma": "es5",
   "arrowParens": "always",
   "embeddedLanguageFormatting": "auto",
