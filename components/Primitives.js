@@ -95,7 +95,8 @@ export const StatsItem = ({ title, currentValue, previousValue, increment }) => 
           increment < 0
             ? "bg-red-100 dark:bg-gray-700 text-red-800 dark:text-red-500"
             : "bg-green-100 dark:bg-gray-700 text-green-800 dark:text-green-500"
-        }`}>
+        }`}
+      >
         {increment < 0 ? <ArrowDown /> : <ArrowUp />}
         <CountUp end={increment || 0} />
       </div>
