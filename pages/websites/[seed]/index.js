@@ -36,13 +36,7 @@ const Website = ({ seed }) => {
 
       <div>
         <Performance url={`/api/metrics/${seed}/performance`} timeRange={timeRange} />
-
-        <Chart
-          url={`/api/metrics/${seed}/views/series`}
-          timeRange={timeRange}
-          title="Page Views"
-          type="lineChart"
-        />
+        <Chart url={`/api/metrics/${seed}/views/series`} timeRange={timeRange} title="Page Views" type="lineChart" />
       </div>
 
       <PageViews url={`/api/metrics/${seed}/views/pages`} timeRange={timeRange} />
