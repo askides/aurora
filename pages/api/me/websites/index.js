@@ -1,13 +1,11 @@
 const db = require("../../../../lib/db_connect");
-const generateSeed = require("../../../../utils/generate-seed"); // XXX To object module
+const { generate } = require("../../../../utils/seeds");
 const { withAuth } = require("../../../../utils/hof/withAuth");
 
 const handleGet = async (req, res) => {
   const user = req.accessTokenBody.data;
 
-  const websites = await db("websites")
-    .join("users", "websites.user_id", "users.id")
-    .where("users.email", user.email);
+  const websites = await db("websites").join("users", "websites.user_id", "users.id").where("users.email", user.email);
 
   return { status: 200, data: websites };
 };
@@ -17,7 +15,7 @@ const handlePost = async (req, res) => {
 
   const { name, url } = req.body;
 
-  const seed = generateSeed();
+  const seed = generate();
 
   const website = await db("websites")
     .returning("seed")
