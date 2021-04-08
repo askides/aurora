@@ -15,6 +15,8 @@ const attempt = async ({ email, password }) => {
     return {
       id: user.id,
       email: user.email,
+      firstname: user.firstname,
+      lastname: user.lastname,
     };
   }
 
