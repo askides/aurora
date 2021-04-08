@@ -107,7 +107,7 @@ export const StatsItem = ({ title, currentValue, previousValue, increment }) => 
 export const LoadingPanel = () => (
   <Panel>
     <div className="flex justify-center items-center">
-      <img className="h-32" src="http://samherbert.net/svg-loaders/svg-loaders/rings.svg" />
+      <img className="h-32" src="/icons/rings.svg" />
     </div>
   </Panel>
 );
