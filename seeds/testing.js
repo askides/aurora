@@ -12,6 +12,7 @@ exports.seed = async (knex) => {
   const last2Days = new Date(new Date().setDate(new Date().getDate() - 2));
   const last14Days = new Date(new Date().setDate(new Date().getDate() - 14));
   const last2Months = new Date(new Date().setMonth(new Date().getMonth() - 2));
+
   const eventsMap = events.map((event) => {
     if (event.hash === "d95a6713a1b218918008263c1f825e547c22ee95e1124e8651c831396385b6b3") {
       return { ...event, created_at: last2Days }; // 14 Elements
