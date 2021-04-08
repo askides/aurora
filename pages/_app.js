@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import { ToastProvider } from "react-toast-notifications";
 import MainLayout from "../components/layout/MainLayout";
 import AuthLayout from "../components/layout/AuthLayout";
 
@@ -17,9 +18,11 @@ function MyApp({ Component, pageProps }) {
   }
 
   return (
-    <MainLayout sideNarrow={!router.pathname.startsWith("/s")}>
-      <Component {...pageProps} />
-    </MainLayout>
+    <ToastProvider autoDismiss autoDismissTimeout={6000}>
+      <MainLayout sideNarrow={!router.pathname.startsWith("/s")}>
+        <Component {...pageProps} />
+      </MainLayout>
+    </ToastProvider>
   );
 }
 
