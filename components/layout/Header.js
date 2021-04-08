@@ -7,7 +7,8 @@ const Header = () => (
             type="button"
             className="inline-flex items-center justify-center p-2 rounded-md bg-gray-800 text-gray-400 hover:text-gray-500 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
             aria-controls="mobile-menu"
-            aria-expanded="false">
+            aria-expanded="false"
+          >
             <span className="sr-only">Open main menu</span>
             <svg
               className="h-6 w-6 block"
@@ -15,12 +16,14 @@ const Header = () => (
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
-              aria-hidden="true">
+              aria-hidden="true"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
-                d="M4 6h16M4 12h16M4 18h16"></path>
+                d="M4 6h16M4 12h16M4 18h16"
+              ></path>
             </svg>
             <svg
               className="h-6 w-6 hidden"
@@ -28,12 +31,14 @@ const Header = () => (
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
-              aria-hidden="true">
+              aria-hidden="true"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
-                d="M6 18L18 6M6 6l12 12"></path>
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
             </svg>
           </button>
         </div>
@@ -46,33 +51,6 @@ const Header = () => (
           <img className="block lg:hidden h-7 w-auto" src="/logos/aurora.svg" alt="Aurora Logo" />
         </div>
       </div>
-
-      {/*
-      <div className="sm:hidden">
-        <div className="pt-2 pb-4 space-y-1">
-          <a
-            href="#"
-            className="bg-indigo-50 border-indigo-500 text-indigo-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
-            Dashboard
-          </a>
-          <a
-            href="#"
-            className="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
-            Team
-          </a>
-          <a
-            href="#"
-            className="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
-            Projects
-          </a>
-          <a
-            href="#"
-            className="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
-            Calendar
-          </a>
-        </div>
-      </div>
-      */}
     </nav>
   </header>
 );
