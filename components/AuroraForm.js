@@ -38,9 +38,7 @@ export const TextField = ({ label, type, ...props }) => {
           className="appearance-none block w-full px-3 py-2 dark:text-white border ring-1 ring-gray-600 border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 dark:focus:ring-blue-500 focus:border-indigo-500 dark:focus:border-blue-500 sm:text-sm"
         />
       </div>
-      {meta.error && meta.touched ? (
-        <div className="mt-2 text-sm text-red-600">{meta.error}</div>
-      ) : null}
+      {meta.error && meta.touched ? <div className="mt-2 text-sm text-red-600">{meta.error}</div> : null}
     </div>
   );
 };
@@ -65,9 +63,7 @@ export const Select = ({ label, allowEmpty = true, options = [], ...props }) => 
         ))}
       </select>
 
-      {meta.touched && meta.error ? (
-        <div className="mt-2 text-sm text-red-600">{meta.error}</div>
-      ) : null}
+      {meta.touched && meta.error ? <div className="mt-2 text-sm text-red-600">{meta.error}</div> : null}
     </div>
   );
 };
