@@ -4,7 +4,7 @@ import { dropProtocol } from "../utils/urls";
 const WebsiteName = ({ seed }) => {
   const { website, isLoading, isError } = useWebsite({ seed });
 
-  if (isLoading) return <LoadingPanel />;
+  if (isLoading) return <div>Loading..</div>;
   if (isError) return <div>failed to load</div>;
 
   return (
