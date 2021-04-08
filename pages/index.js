@@ -20,7 +20,7 @@ const Websites = () => {
           {websites.map((el, key) => (
             <StackedListItem
               key={key}
-              avatar={`https://avatars.dicebear.com/api/jdenticon/${el.url}.svg`}
+              avatar={`https://avatars.dicebear.com/api/jdenticon/${el.url}.svg`} /** XXX TODO */
               title={el.name}
               subtitle={el.url}
               actions={
