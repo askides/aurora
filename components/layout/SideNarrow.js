@@ -17,7 +17,8 @@ export const SideNarrowItem = ({ href, children }) => {
 const SideNarrow = () => (
   <nav
     aria-label="Sidebar"
-    className="hidden md:block md:flex-shrink-0 md:bg-gray-800 md:overflow-y-auto">
+    className="hidden md:block md:flex-shrink-0 md:bg-gray-800 md:overflow-y-auto"
+  >
     <div className="relative w-20 flex flex-col p-3 space-y-3">
       <SideNarrowItem href="/">
         <a className="text-gray-400 hover:bg-gray-700 flex-shrink-0 inline-flex items-center justify-center h-14 w-14 rounded-lg">
@@ -29,7 +30,8 @@ const SideNarrow = () => (
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
-            aria-hidden="true">
+            aria-hidden="true"
+          >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -50,7 +52,8 @@ const SideNarrow = () => (
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
-            aria-hidden="true">
+            aria-hidden="true"
+          >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
