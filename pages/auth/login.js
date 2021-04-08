@@ -45,6 +45,7 @@ const Login = () => {
                   autocomplete="current-password"
                 />
 
+                {/*
                 <div className="flex items-center justify-between">
                   <div className="text-sm">
                     <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
@@ -52,6 +53,7 @@ const Login = () => {
                     </a>
                   </div>
                 </div>
+                */}
 
                 <div>
                   <Button type="submit" isLoading={isSubmitting} label="Sign In" />

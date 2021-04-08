@@ -3,20 +3,10 @@ const AuthLayout = ({ children }) => (
     <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24 dark:bg-gray-900">
       <div className="mx-auto w-full max-w-sm lg:w-96">
         <div>
-          <img
-            className="h-12 w-auto"
-            src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-            alt="Workflow"
-          />
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white">
+          <img className="h-12 w-auto" src="/logos/aurora.svg" alt="Aurora Logo" />
+          <h2 className="mt-6 text-2xl font-extrabold text-gray-900 dark:text-white">
             Sign in to your account
           </h2>
-          <p className="mt-2 text-sm text-gray-600 max-w">
-            Or
-            <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
-              start your 14-day free trial
-            </a>
-          </p>
         </div>
 
         <div className="mt-8">{children}</div>
