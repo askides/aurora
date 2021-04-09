@@ -7,7 +7,14 @@ module.exports = {
     migrations: {
       tableName: "knex_migrations",
     },
-    pool: { min: 1, max: 1 },
+    pool: {
+      min: 0,
+      max: 10,
+      acquireTimeoutMillis: 30000,
+      createTimeoutMillis: 1500,
+      createRetryIntervalMillis: 500,
+      propagateCreateError: false,
+    },
     // debug: true,
     // asyncStackTraces: true,
   },
@@ -20,7 +27,14 @@ module.exports = {
     migrations: {
       tableName: "knex_migrations",
     },
-    pool: { min: 1, max: 1 },
+    pool: {
+      min: 0,
+      max: 10,
+      acquireTimeoutMillis: 30000,
+      createTimeoutMillis: 1500,
+      createRetryIntervalMillis: 500,
+      propagateCreateError: false,
+    },
     debug: false,
     asyncStackTraces: false,
   },
