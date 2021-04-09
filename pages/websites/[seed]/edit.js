@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { TextField, Select, Button } from "../../../components/AuroraForm";
 import { Panel, LoadingPanel } from "../../../components/Primitives";
 import { withAuth } from "../../../components/hoc/withAuth";
-import { useWebsite } from "../../../components/hooks/useWebsite";
+import { useMeWebsite } from "../../../components/hooks/useMeWebsite";
 
 export async function getServerSideProps(context) {
   const { seed } = context.query;
@@ -23,7 +23,7 @@ const Websites = ({ seed }) => {
       .catch((err) => console.log(err))
       .finally(() => setSubmitting(false));
 
-  const { website, isLoading, isError } = useWebsite({ seed });
+  const { website, isLoading, isError } = useMeWebsite({ seed });
 
   if (isLoading) return <LoadingPanel />;
   if (isError) return <div>failed to load</div>;
@@ -33,14 +33,13 @@ const Websites = ({ seed }) => {
       <Panel
         header={
           <div className="space-y-1">
-            <h1 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">
-              Edit Website
-            </h1>
+            <h1 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">Edit Website</h1>
             <p className="text-sm leading-5 text-gray-500 dark:text-white">
               Insert the Website information by filling in the form below.
             </p>
           </div>
-        }>
+        }
+      >
         <Formik enableReinitialize initialValues={website} onSubmit={handleSubmit}>
           {({ isSubmitting }) => (
             <Form>
@@ -64,7 +63,8 @@ const Websites = ({ seed }) => {
                       <a
                         href={`${window.location.protocol}//${window.location.hostname}${
                           location.port ? ":" + location.port : ""
-                        }/s/${seed}`}>{`${window.location.protocol}//${window.location.hostname}${
+                        }/s/${seed}`}
+                      >{`${window.location.protocol}//${window.location.hostname}${
                         location.port ? ":" + location.port : ""
                       }/s/${seed}`}</a>
                     </div>
@@ -83,14 +83,13 @@ const Websites = ({ seed }) => {
       <Panel
         header={
           <div className="space-y-1">
-            <h1 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">
-              Connect Your Website
-            </h1>
+            <h1 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">Connect Your Website</h1>
             <p className="text-sm leading-5 text-gray-500 dark:text-white">
               Copy this line of code in the HEAD of your page.
             </p>
           </div>
-        }>
+        }
+      >
         <div className="text-white">
           {`<script async defer src="${window.location.protocol}//${window.location.hostname}${
             location.port ? ":" + location.port : ""
