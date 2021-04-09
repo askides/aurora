@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { withAuth } from "../../../components/hoc/withAuth";
+import { TimeRanges } from "../../../utils/enums";
 import Chart from "../../../components/charts/Chart";
 import Performance from "../../../components/charts/Performance";
-import { withAuth } from "../../../components/hoc/withAuth";
 import BrowserViews from "../../../components/charts/BrowserViews";
 import OsViews from "../../../components/charts/OsViews";
 import PageViews from "../../../components/charts/PageViews";
@@ -19,7 +20,7 @@ export async function getServerSideProps(context) {
 }
 
 const Website = ({ seed }) => {
-  const [timeRange, setTimeRange] = useState("day");
+  const [timeRange, setTimeRange] = useState(TimeRanges.DAY);
 
   return (
     <div className="h-full rounded-lg space-y-4 bg-gray-900">
@@ -29,19 +30,13 @@ const Website = ({ seed }) => {
           <WebsiteCurrentVisitors seed={seed} />
         </div>
         <div className="mt-4 flex-shrink-0 flex md:mt-0 md:ml-4">
-          <RangeSelector onTimeRangeChange={(value) => setTimeRange(value)} />
+          <RangeSelector onSelected={(value) => setTimeRange(value)} />
         </div>
       </div>
 
       <div>
         <Performance url={`/api/metrics/${seed}/performance`} timeRange={timeRange} />
-
-        <Chart
-          url={`/api/metrics/${seed}/views/series`}
-          timeRange={timeRange}
-          title="Page Views"
-          type="lineChart"
-        />
+        <Chart url={`/api/metrics/${seed}/views/series`} timeRange={timeRange} title="Page Views" type="lineChart" />
       </div>
 
       <PageViews url={`/api/metrics/${seed}/views/pages`} timeRange={timeRange} />
