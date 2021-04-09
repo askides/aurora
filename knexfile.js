@@ -7,16 +7,9 @@ module.exports = {
     migrations: {
       tableName: "knex_migrations",
     },
-    pool: {
-      min: 0, // very important!!!
-      max: 10,
-      createTimeoutMillis: 30000,
-      acquireTimeoutMillis: 30000,
-      idleTimeoutMillis: 1000, //since no share, set this to a small number
-      reapIntervalMillis: 1000,
-      createRetryIntervalMillis: 100,
-      propagateCreateError: true,
-    },
+    pool: { min: 1, max: 1 },
+    // debug: true,
+    // asyncStackTraces: true,
   },
   production: {
     client: "pg",
@@ -27,15 +20,8 @@ module.exports = {
     migrations: {
       tableName: "knex_migrations",
     },
-    pool: {
-      min: 0, // very important!!!
-      max: 10,
-      createTimeoutMillis: 30000,
-      acquireTimeoutMillis: 30000,
-      idleTimeoutMillis: 1000, //since no share, set this to a small number
-      reapIntervalMillis: 1000,
-      createRetryIntervalMillis: 100,
-      propagateCreateError: true,
-    },
+    pool: { min: 1, max: 1 },
+    debug: false,
+    asyncStackTraces: false,
   },
 };
