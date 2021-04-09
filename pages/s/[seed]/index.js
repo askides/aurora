@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { withAuth } from "../../../components/hoc/withAuth";
 import { TimeRanges } from "../../../utils/enums";
 import Chart from "../../../components/charts/Chart";
 import Performance from "../../../components/charts/Performance";
