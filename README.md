@@ -8,6 +8,10 @@ This is a public beta! Please star and watch the repository for big news :heart:
 
 Clone the repository
 
+`git clone https://github.com/itsrennyman/aurora.git`
+
+Install the dependencies
+
 `npm install`
 
 Copy & Fill the *.env.example*
