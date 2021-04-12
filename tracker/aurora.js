@@ -1,5 +1,3 @@
-// Hello
-
 const { default: axios } = require("axios");
 
 (async (window) => {
@@ -21,14 +19,7 @@ const { default: axios } = require("axios");
   const analyticsUrl = script.getAttribute("src").replace("/aurora.js", "/api/collect");
   const websiteSeed = script.getAttribute("aurora-id");
 
-  // console.log("Screen", screen);
-  // console.log("Navigator", navigator);
-  // console.log("Location", location);
-  // console.log("document", document);
-  // console.log("history", history);
-  // console.log("SessionStorage", sessionStorage);
-
-  const rawResponse = await axios
+  axios
     .post(analyticsUrl, {
       type: "pageView",
       element: location.pathname,
@@ -36,16 +27,4 @@ const { default: axios } = require("axios");
       seed: websiteSeed,
     })
     .catch((err) => console.log(err));
-  // const rawResponse = await fetch("http://localhost:3000/api/collect", {
-  //   method: "POST",
-  //   headers: {
-  //     Accept: "application/json",
-  //     "Content-Type": "application/json",
-  //   },
-  //   mode: "no-cors",
-  //   body: JSON.stringify({
-  //     type: "pageView",
-  //     element: location.pathname,
-  //   }),
-  // });
 })(window);
