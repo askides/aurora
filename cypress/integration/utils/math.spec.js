@@ -1,4 +1,4 @@
-const percentage = require("../../../utils/percentage");
+const { percentage } = require("../../../utils/math");
 
 describe("Testing Percentage Calculation Works", () => {
   it("two integers works", () => {
