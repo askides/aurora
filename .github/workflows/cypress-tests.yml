@@ -8,6 +8,7 @@ on:
 
 jobs:
   cypress-run:
+    name: Cypress Testing
     # Containers must run in Linux based operating systems
     runs-on: ubuntu-latest
 
@@ -42,5 +43,5 @@ jobs:
           build: npm run build
           start: npm start
         env:
-          DB_URL: postgres://root:password@postgres:5432/aurora
-          JWT_SECRET: asupersecret
+          DB_URL: "postgres://root:password@postgres:5432/aurora"
+          JWT_SECRET: "asupersecret"
