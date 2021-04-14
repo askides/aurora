@@ -34,7 +34,7 @@ Start the server
 
 ## Deployment
 
-Add additional notes about how to deploy this on a live system
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Fitsrennyman%2Faurora&env=DB_URL,JWT_SECRET&project-name=aurora)
 
 ## Built With
 
