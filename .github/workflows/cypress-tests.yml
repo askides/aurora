@@ -22,6 +22,8 @@ jobs:
           POSTGRES_USER: root
           POSTGRES_PASSWORD: password
           POSTGRES_DB: aurora
+        ports:
+          - 5432/tcp
         # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
@@ -40,5 +42,5 @@ jobs:
           build: npm run build
           start: npm start
         env:
-          DB_URL: postgres://root:password@localhost:5432/aurora
+          DB_URL: postgres://root:password@postgres:5432/aurora
           JWT_SECRET: asupersecret
