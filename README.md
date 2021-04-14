@@ -1,4 +1,4 @@
-# Aurora
+# Aurora [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Check%20out%20Aurora%21%20An%20awesome%20Open%20Source%20Analytics%20Project%21&url=https://github.com/itsrennyman/aurora&hashtags=aurora,analytics)
 
 Open Source Analytics Platform - Designed for Humans & Developers :sunglasses:
 
