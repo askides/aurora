@@ -7,11 +7,11 @@ on:
     branches: [main]
 
 jobs:
-  pg:
+  cypress-run:
     # Containers must run in Linux based operating systems
     runs-on: ubuntu-latest
     # Docker Hub image that `container-job` executes in
-    container: node:10.18-jessie
+    container: node:12
 
     # Service containers to run with `container-job`
     services:
@@ -31,8 +31,6 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
-  cypress-run:
-    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
