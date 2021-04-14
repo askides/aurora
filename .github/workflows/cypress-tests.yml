@@ -8,23 +8,17 @@ on:
 
 jobs:
   cypress-run:
-    name: Cypress Testing
-    # Containers must run in Linux based operating systems
+    name: Run Tests
     runs-on: ubuntu-latest
 
-    # Service containers to run with `container-job`
     services:
-      # Label used to access the service container
       postgres:
-        # Docker Hub image
-        image: postgres
-        # Provide the password for postgres
+        image: postgres:12
         env:
           POSTGRES_PASSWORD: password
           POSTGRES_DB: aurora
         ports:
           - 5432:5432
-        # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -34,13 +28,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      # Install NPM dependencies, cache them correctly
-      # and run all Cypress tests
+
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
           build: npm run build
           start: npm start
         env:
-          DB_URL: "postgres://postgres:password@127.0.0.1:5432/aurora"
-          JWT_SECRET: "asupersecret"
+          DB_URL: postgres://postgres:password@127.0.0.1:5432/aurora
+          JWT_SECRET: asupersecret
