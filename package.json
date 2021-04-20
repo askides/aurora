@@ -12,9 +12,9 @@
     "db:test-seed": "npm run migrate:refresh && knex seed:run --specific=testing.js",
     "migrate:refresh": "knex migrate:rollback --all && knex migrate:latest",
     "start": "next start",
-    "test": "npm run cypress:run",
     "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
+    "cypress:run": "cypress run",
+    "test": "jest"
   },
   "dependencies": {
     "@headlessui/react": "^1.0.0",
@@ -49,7 +49,10 @@
     "@babel/core": "^7.13.13",
     "@babel/plugin-transform-runtime": "^7.13.10",
     "@babel/preset-env": "^7.13.12",
+    "@testing-library/jest-dom": "^5.11.10",
+    "@testing-library/react": "^11.2.6",
     "autoprefixer": "^10.2.5",
+    "babel-jest": "^26.6.3",
     "babel-loader": "^8.2.2",
     "cypress": "^6.8.0",
     "jest": "^26.6.3",
