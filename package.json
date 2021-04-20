@@ -17,6 +17,7 @@
     "cypress:run": "cypress run"
   },
   "dependencies": {
+    "@headlessui/react": "^1.0.0",
     "@tailwindcss/forms": "^0.2.1",
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
