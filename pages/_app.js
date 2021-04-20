@@ -1,7 +1,8 @@
 import { useRouter } from "next/router";
 import { ToastProvider } from "react-toast-notifications";
-import MainLayout from "../components/layout/MainLayout";
-import AuthLayout from "../components/layout/AuthLayout";
+import { Main } from "../components/layouts/Main";
+import MainLayout from "../components/layouts/MainLayout";
+import AuthLayout from "../components/layouts/AuthLayout";
 
 import "tailwindcss/tailwind.css";
 import "../assets/css/scrollbar.css";
@@ -19,9 +20,9 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <ToastProvider autoDismiss autoDismissTimeout={6000}>
-      <MainLayout sideNarrow={!router.pathname.startsWith("/s")}>
+      <Main>
         <Component {...pageProps} />
-      </MainLayout>
+      </Main>
     </ToastProvider>
   );
 }
