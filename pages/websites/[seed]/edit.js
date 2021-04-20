@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 
 import { TextField, Select, Button } from "../../../components/AuroraForm";
 import { Panel, LoadingPanel } from "../../../components/Primitives";
-import { withAuth } from "../../../components/hoc/withAuth";
-import { useMeWebsite } from "../../../components/hooks/useMeWebsite";
+import { withAuth } from "../../../hoc/withAuth";
+import { useMeWebsite } from "../../../hooks/useMeWebsite";
 
 export async function getServerSideProps(context) {
   const { seed } = context.query;
