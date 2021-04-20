@@ -1,6 +1,7 @@
 import useSWR from "swr";
 
 export const useWebsites = () => {
+  // TODO RENAME TO useMeWebsites
   const fetcher = (...args) =>
     fetch(...args)
       .then((res) => res.json())
