@@ -59,6 +59,7 @@ const Edit = ({ seed }) => {
                         of the Aurora Dashboard. You can disable it later.
                       </p>
                     </div>
+
                     <div className="mt-6">
                       <fieldset>
                         <div className="space-y-4">
