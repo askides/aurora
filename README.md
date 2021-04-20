@@ -6,7 +6,7 @@ Open Source Analytics Platform - Designed for Humans & Developers :sunglasses:
 
 ## Getting Started 🤩
 
-This is a public beta! Please star and watch the repository for big news :heart:
+This is a public beta! Please star and watch the repository for big news :heart: we have also a simple [roadmap](https://trello.com/b/df17oLMm/aurora-roadmap) in order to track some good ideas.
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
