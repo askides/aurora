@@ -8,7 +8,7 @@ const user = {
 };
 
 const navigation = [
-  { name: "Home", href: "#", icon: HomeIcon },
+  { name: "Home", href: "/", icon: HomeIcon },
   { name: "Trending", href: "#", icon: FireIcon },
   { name: "Bookmarks", href: "#", icon: BookmarkAltIcon },
   { name: "Messages", href: "#", icon: InboxIcon },
