@@ -18,15 +18,15 @@ export async function getServerSideProps(context) {
 }
 
 const Edit = ({ seed }) => {
-  const { website, isLoading, isError } = useMeWebsite({ seed });
+  const { website, isLoading, isError, mutate } = useMeWebsite({ seed });
 
   const breadcumbs = ["Websites", "Edit"];
 
   const handleSubmit = (values, { setSubmitting }) =>
     axios
       .put(`/api/me/websites/${seed}`, values)
-      .then((res) => res.data.data)
-      .catch((err) => console.log(err)) // TODO: Error Management & Shared Value
+      .then(mutate)
+      .catch(console.log) // TODO: Error Management
       .finally(() => setSubmitting(false));
 
   if (isLoading) return <div>Loading..</div>;
