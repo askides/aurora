@@ -12,7 +12,7 @@ const navigation = [
   { name: "Trending", href: "#", icon: FireIcon },
   { name: "Bookmarks", href: "#", icon: BookmarkAltIcon },
   { name: "Messages", href: "#", icon: InboxIcon },
-  { name: "Profile", href: "#", icon: UserIcon },
+  { name: "Profile", href: "/user/profile", icon: UserIcon },
 ];
 
 export const Main = ({ children }) => {
