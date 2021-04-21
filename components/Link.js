@@ -1,4 +1,4 @@
-import { Link as NextLink } from "next/link";
+import { default as NextLink } from "next/link";
 
 export const Link = ({ href, value }) => (
   <NextLink href={href}>
