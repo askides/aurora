@@ -12,9 +12,7 @@ const columns = [
       <div className="flex items-center justify-between space-x-3">
         <div className="flex items-center truncate space-x-3">
           <div className="flex-shrink-0 w-2.5 h-2.5 rounded-full bg-pink-600"></div>
-          <a href={`/websites/${cell.row.original.seed}/edit`} className="">
-            {value}
-          </a>
+          <a href={`/websites/${cell.row.original.seed}/edit`}>{value}</a>
         </div>
 
         <svg
