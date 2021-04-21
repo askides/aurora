@@ -6,11 +6,12 @@ export const useMeWebsite = ({ seed }) => {
       .then((res) => res.json())
       .then((res) => res.data);
 
-  const { data, error } = useSWR(`/api/me/websites/${seed}`, fetcher);
+  const { data, error, mutate } = useSWR(`/api/me/websites/${seed}`, fetcher);
 
   return {
     website: data,
     isLoading: !error && !data,
     isError: error,
+    mutate,
   };
 };
