@@ -1,4 +1,4 @@
-import { useWebsite } from "./hooks/useWebsite";
+import { useWebsite } from "../hooks/useWebsite";
 import { dropProtocol } from "../utils/urls";
 
 const WebsiteName = ({ seed }) => {

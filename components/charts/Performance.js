@@ -1,5 +1,5 @@
 import { Stats, StatsItem, LoadingPanel } from "../Primitives";
-import { useGraph } from "../hooks/useGraph";
+import { useGraph } from "../../hooks/useGraph";
 
 const Performance = ({ url, timeRange }) => {
   const { graph, isLoading, isError } = useGraph(url, timeRange);

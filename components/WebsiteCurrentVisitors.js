@@ -1,4 +1,4 @@
-import { useRealtime } from "./hooks/useRealtime";
+import { useRealtime } from "../hooks/useRealtime";
 
 const WebsiteCurrentVisitors = ({ seed }) => {
   const { visitors, isLoading, isError } = useRealtime({ seed });

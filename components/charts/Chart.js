@@ -1,7 +1,7 @@
 import React from "react";
 import { ColumnChart, AreaChart, LineChart } from "react-chartkick";
 import { LoadingPanel } from "../Primitives";
-import { useGraph } from "../hooks/useGraph";
+import { useGraph } from "../../hooks/useGraph";
 import "chart.js";
 
 const Components = {
