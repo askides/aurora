@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 export const SharedLink = ({ seed }) => {
   const [location, setLocation] = useState({});
 
-  useEffect(() => setLocation(window.location), window);
+  useEffect(() => setLocation(window.location), [window]); // HELP: is this correct?
 
   const urify = (location) =>
     `${location.protocol}//${window.location.hostname}${location.port ? ":" + location.port : ""}/s/${seed}`;
