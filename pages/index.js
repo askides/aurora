@@ -1,6 +1,6 @@
 import { HeadlessTable } from "../components/HeadlessTable";
 import { PageHeading } from "../components/PageHeading";
-import { Button } from "../components/Button";
+import { Link } from "../components/Link";
 import { useWebsites } from "../hooks/useWebsites";
 import { withAuth } from "../hoc/withAuth";
 
@@ -49,7 +49,7 @@ const Websites = () => {
       <PageHeading
         title={"Websites"}
         breadcumbs={breadcumbs}
-        actions={<Button value="Create New" onClick={() => alert("Click")} />}
+        actions={<Link value="Create New" href="/websites/create" />}
       />
 
       <div className="mt-8">
