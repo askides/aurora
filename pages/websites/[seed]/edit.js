@@ -67,8 +67,8 @@ const Edit = ({ seed }) => {
                       <div className="mt-6 space-y-8">
                         <fieldset>
                           <div className="space-y-4">
-                            <Radio value={"yes"} label="Yes, make it public." name="share" />
-                            <Radio value={"no"} label="Nope, i wanna keep it private." name="share" />
+                            <Radio value="1" label="Yes, make it public." name="shared" />
+                            <Radio value="0" label="Nope, i wanna keep it private." name="shared" />
                           </div>
                         </fieldset>
 
