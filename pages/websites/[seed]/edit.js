@@ -4,8 +4,10 @@ import { PageHeading } from "../../../components/PageHeading";
 import { TextField } from "../../../components/TextField";
 import { Radio } from "../../../components/Radio";
 import { Button } from "../../../components/Button";
+import { Show } from "../../../components/Show";
 import { withAuth } from "../../../hoc/withAuth";
 import { useMeWebsite } from "../../../hooks/useMeWebsite";
+import { SharedLink } from "../../../components/ShareLink";
 
 export async function getServerSideProps(context) {
   const { seed } = context.query;
@@ -62,13 +64,19 @@ const Edit = ({ seed }) => {
                         </p>
                       </div>
 
-                      <div className="mt-6">
+                      <div className="mt-6 space-y-8">
                         <fieldset>
                           <div className="space-y-4">
                             <Radio value={"yes"} label="Yes, make it public." name="share" />
                             <Radio value={"no"} label="Nope, i wanna keep it private." name="share" />
                           </div>
                         </fieldset>
+
+                        <Show when={website.shared}>
+                          <div className="block text-sm font-medium text-gray-700">
+                            Share Link: <SharedLink seed={seed} />
+                          </div>
+                        </Show>
                       </div>
                     </div>
                   </div>
