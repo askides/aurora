@@ -80,6 +80,19 @@ const Edit = ({ seed }) => {
                           </Show>
                         </div>
                       </div>
+
+                      <div className="pt-8">
+                        <div>
+                          <h3 className="text-lg leading-6 font-medium text-gray-900">Connect Your Website</h3>
+                          <p className="mt-1 text-sm text-gray-500">Copy this line of code in the HEAD of your page.</p>
+                        </div>
+
+                        <div className="mt-6 text-sm font-medium text-gray-700">
+                          {`<script async defer src="${window.location.protocol}//${window.location.hostname}${
+                            location.port ? ":" + location.port : ""
+                          }/aurora.js" aurora-id="${seed}"></script>`}
+                        </div>
+                      </div>
                     </div>
 
                     <div className="pt-5">
