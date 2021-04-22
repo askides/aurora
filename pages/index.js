@@ -1,7 +1,7 @@
 import { HeadlessTable } from "../components/HeadlessTable";
 import { PageHeading } from "../components/PageHeading";
 import { Link } from "../components/Link";
-import { useWebsites } from "../hooks/useWebsites";
+import { useMeWebsites } from "../hooks/useMeWebsites";
 import { withAuth } from "../hoc/withAuth";
 
 const columns = [
@@ -36,7 +36,7 @@ const columns = [
 ];
 
 const Websites = () => {
-  const { websites, isLoading, isError } = useWebsites();
+  const { websites, isLoading, isError } = useMeWebsites();
 
   const breadcumbs = ["Websites", "List"];
 
