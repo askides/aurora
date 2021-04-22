@@ -44,7 +44,7 @@ const Websites = () => {
   if (isError) return <div>failed to load</div>;
 
   return (
-    <div>
+    <div className="p-6 h-full">
       <PageHeading
         title={"Websites"}
         breadcumbs={breadcumbs}

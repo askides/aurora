@@ -185,7 +185,7 @@ export const Main = ({ children }) => {
               aria-labelledby="primary-heading"
               className="min-w-0 flex-1 h-full flex flex-col overflow-hidden lg:order-last"
             >
-              <div className="p-6 h-full">{children}</div>
+              {children}
             </section>
 
             {/* Secondary column (hidden on smaller screens) */}

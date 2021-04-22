@@ -22,7 +22,7 @@ const Website = ({ seed }) => {
   const [timeRange, setTimeRange] = useState(TimeRanges.DAY);
 
   return (
-    <div className="h-full rounded-lg space-y-4 bg-gray-900">
+    <div className="h-full p-6 space-y-4 bg-gray-900">
       <div className="mt-2 md:flex md:items-center md:justify-between">
         <div className="flex-1 min-w-0 space-y-2">
           <WebsiteName seed={seed} />

@@ -20,56 +20,58 @@ const Create = () => {
       .finally(setSubmitting(false));
 
   return (
-    <div className="flex justify-center">
-      <div>
-        <PageHeading title={"Create Website"} breadcumbs={breadcumbs} />
+    <div className="p-6 h-full">
+      <div className="flex justify-center">
+        <div>
+          <PageHeading title={"Create Website"} breadcumbs={breadcumbs} />
 
-        <div className="mt-8">
-          <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-            {({ isSubmitting }) => (
-              <Form>
-                <div className="space-y-8 divide-y divide-gray-200">
+          <div className="mt-8">
+            <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+              {({ isSubmitting }) => (
+                <Form>
                   <div className="space-y-8 divide-y divide-gray-200">
-                    <div>
-                      <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                        <div className="sm:col-span-6">
-                          <TextField label="Website Name" name="name" type="text" autocomplete="none" />
-                        </div>
-
-                        <div className="sm:col-span-6">
-                          <TextField label="Website URL" name="url" type="text" autocomplete="none" />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="pt-8">
+                    <div className="space-y-8 divide-y divide-gray-200">
                       <div>
-                        <h3 className="text-lg leading-6 font-medium text-gray-900">Share Statistics</h3>
-                        <p className="mt-1 text-sm text-gray-500">
-                          If you select to share statistics, a public URL will be available presenting a read-only
-                          version of the Aurora Dashboard. You can disable it later.
-                        </p>
-                      </div>
-                      <div className="mt-6">
-                        <fieldset>
-                          <div className="space-y-4">
-                            <Radio value="1" label="Yes, make it public." name="shared" />
-                            <Radio value="0" label="Nope, i wanna keep it private." name="shared" />
+                        <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                          <div className="sm:col-span-6">
+                            <TextField label="Website Name" name="name" type="text" autocomplete="none" />
                           </div>
-                        </fieldset>
+
+                          <div className="sm:col-span-6">
+                            <TextField label="Website URL" name="url" type="text" autocomplete="none" />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="pt-8">
+                        <div>
+                          <h3 className="text-lg leading-6 font-medium text-gray-900">Share Statistics</h3>
+                          <p className="mt-1 text-sm text-gray-500">
+                            If you select to share statistics, a public URL will be available presenting a read-only
+                            version of the Aurora Dashboard. You can disable it later.
+                          </p>
+                        </div>
+                        <div className="mt-6">
+                          <fieldset>
+                            <div className="space-y-4">
+                              <Radio value="1" label="Yes, make it public." name="shared" />
+                              <Radio value="0" label="Nope, i wanna keep it private." name="shared" />
+                            </div>
+                          </fieldset>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="pt-5">
+                      <div className="flex justify-end">
+                        <Button type="submit" value="Save" isLoading={isSubmitting} />
                       </div>
                     </div>
                   </div>
-
-                  <div className="pt-5">
-                    <div className="flex justify-end">
-                      <Button type="submit" value="Save" isLoading={isSubmitting} />
-                    </div>
-                  </div>
-                </div>
-              </Form>
-            )}
-          </Formik>
+                </Form>
+              )}
+            </Formik>
+          </div>
         </div>
       </div>
     </div>
