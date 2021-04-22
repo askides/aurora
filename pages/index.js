@@ -32,7 +32,14 @@ const columns = [
   },
   { Header: "Url", accessor: "url" },
   { Header: "Shared", accessor: (row) => (row.shared ? "Yes" : "No") },
-  { Header: "Last Updated", accessor: "updated_at", disableFilters: false },
+  {
+    id: "actions",
+    Cell: ({ cell }) => (
+      <div className="flex items-center justify-end space-x-3 font-medium text-blue-600 text-right">
+        <a href={`/websites/${cell.row.original.seed}`}>View Dashboard</a>
+      </div>
+    ),
+  },
 ];
 
 const Websites = () => {
