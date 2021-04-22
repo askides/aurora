@@ -31,6 +31,7 @@ const columns = [
     ),
   },
   { Header: "Url", accessor: "url" },
+  { Header: "Shared", accessor: (row) => (row.shared ? "Yes" : "No") },
   { Header: "Last Updated", accessor: "updated_at", disableFilters: false },
 ];
 
