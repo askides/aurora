@@ -6,9 +6,9 @@ import { BrowserViews } from "../../../components/charts/BrowserViews";
 import { OsViews } from "../../../components/charts/OsViews";
 import { PageViews } from "../../../components/charts/PageViews";
 import { CountryViews } from "../../../components/charts/CountryViews";
-import WebsiteName from "../../../components/WebsiteName";
-import WebsiteCurrentVisitors from "../../../components/WebsiteCurrentVisitors";
-import RangeSelector from "../../../components/RangeSelector";
+import { PageHeading } from "../../../components/PageHeading";
+import { RealtimeVisitors } from "../../../components/RealtimeVisitors";
+import { RangeSelector } from "../../../components/RangeSelector";
 
 export async function getServerSideProps(context) {
   const { seed } = context.query;
@@ -23,25 +23,23 @@ const Website = ({ seed }) => {
 
   return (
     <div className="h-full p-6 space-y-4 bg-gray-900">
-      <div className="mt-2 md:flex md:items-center md:justify-between">
-        <div className="flex-1 min-w-0 space-y-2">
-          <WebsiteName seed={seed} />
-          <WebsiteCurrentVisitors seed={seed} />
-        </div>
-        <div className="mt-4 flex-shrink-0 flex md:mt-0 md:ml-4">
-          <RangeSelector onSelected={(value) => setTimeRange(value)} />
-        </div>
-      </div>
+      <PageHeading
+        title={"renatopozzi.me"}
+        breadcumbs={["Websites", "Dashboard"]}
+        subtitle={<RealtimeVisitors seed={seed} />}
+        actions={<RangeSelector onSelected={(value) => setTimeRange(value)} />}
+        EXPERIMENTAL_IS_DARK={true}
+      />
 
-      <div>
-        <Performance url={`/api/metrics/${seed}/performance`} timeRange={timeRange} />
-        <Chart url={`/api/metrics/${seed}/views/series`} timeRange={timeRange} title="Page Views" type="lineChart" />
-      </div>
+      <Performance url={`/api/metrics/${seed}/performance`} timeRange={timeRange} />
+      <Chart url={`/api/metrics/${seed}/views/series`} timeRange={timeRange} title="Page Views" type="lineChart" />
 
-      <PageViews url={`/api/metrics/${seed}/views/pages`} timeRange={timeRange} />
-      <OsViews url={`/api/metrics/${seed}/views/oses`} timeRange={timeRange} />
-      <BrowserViews url={`/api/metrics/${seed}/views/browsers`} timeRange={timeRange} />
-      <CountryViews url={`/api/metrics/${seed}/views/countries`} timeRange={timeRange} />
+      <div className="grid md:grid-cols-2 gap-4">
+        <PageViews url={`/api/metrics/${seed}/views/pages`} timeRange={timeRange} />
+        <OsViews url={`/api/metrics/${seed}/views/oses`} timeRange={timeRange} />
+        <BrowserViews url={`/api/metrics/${seed}/views/browsers`} timeRange={timeRange} />
+        <CountryViews url={`/api/metrics/${seed}/views/countries`} timeRange={timeRange} />
+      </div>
     </div>
   );
 };

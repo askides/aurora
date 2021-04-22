@@ -1,7 +1,7 @@
 import { useWebsite } from "../hooks/useWebsite";
 import { dropProtocol } from "../utils/urls";
 
-const WebsiteName = ({ seed }) => {
+export const WebsiteName = ({ seed }) => {
   const { website, isLoading, isError } = useWebsite({ seed });
 
   if (isLoading) return <div>Loading..</div>;
@@ -13,5 +13,3 @@ const WebsiteName = ({ seed }) => {
     </h2>
   );
 };
-
-export default WebsiteName;

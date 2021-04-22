@@ -1,6 +1,6 @@
 import { useRealtime } from "../hooks/useRealtime";
 
-const WebsiteCurrentVisitors = ({ seed }) => {
+export const RealtimeVisitors = ({ seed }) => {
   const { visitors, isLoading, isError } = useRealtime({ seed });
 
   if (isLoading) return <div>Loading..</div>;
@@ -16,5 +16,3 @@ const WebsiteCurrentVisitors = ({ seed }) => {
     </div>
   );
 };
-
-export default WebsiteCurrentVisitors;
