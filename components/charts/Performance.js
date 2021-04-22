@@ -1,36 +1,37 @@
-import { Stats, StatsItem, LoadingPanel } from "../Primitives";
+import { Stats } from "../Stats";
 import { useGraph } from "../../hooks/useGraph";
 
-const Performance = ({ url, timeRange }) => {
+export const Performance = ({ url, timeRange }) => {
   const { graph, isLoading, isError } = useGraph(url, timeRange);
 
-  if (isLoading) return <LoadingPanel />;
+  if (isLoading) return <div>Loading ...</div>;
   if (isError) return <div>failed to load</div>;
 
   return (
-    <Stats>
-      <StatsItem
-        title="Total Views"
-        currentValue={graph.pageViews.cp}
-        previousValue={graph.pageViews.lp}
-        increment={graph.pageViews.inc}
-      />
-
-      <StatsItem
-        title="Unique Visitors"
-        currentValue={graph.uniqueVisitors.cp}
-        previousValue={graph.uniqueVisitors.lp}
-        increment={graph.uniqueVisitors.inc}
-      />
-
-      <StatsItem
-        title="Bounces"
-        currentValue={graph.bounceRate.cp}
-        previousValue={graph.bounceRate.lp}
-        increment={graph.bounceRate.inc}
-      />
-    </Stats>
+    <Stats
+      stats={[
+        {
+          name: "Total Views",
+          stat: graph.pageViews.cp,
+          previousStat: graph.pageViews.lp,
+          change: graph.pageViews.inc,
+          changeType: graph.pageViews.inc >= 0 ? "increase" : "decrease",
+        },
+        {
+          name: "Unique Visitors",
+          stat: graph.uniqueVisitors.cp,
+          previousStat: graph.uniqueVisitors.lp,
+          change: graph.uniqueVisitors.inc,
+          changeType: graph.uniqueVisitors.inc >= 0 ? "increase" : "decrease",
+        },
+        {
+          name: "Bounces",
+          stat: graph.bounceRate.cp,
+          previousStat: graph.bounceRate.lp,
+          change: graph.bounceRate.inc,
+          changeType: graph.bounceRate.inc >= 0 ? "increase" : "decrease",
+        },
+      ]}
+    />
   );
 };
-
-export default Performance;

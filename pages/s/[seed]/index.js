@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { TimeRanges } from "../../../utils/enums";
-import Chart from "../../../components/charts/Chart";
-import Performance from "../../../components/charts/Performance";
-import BrowserViews from "../../../components/charts/BrowserViews";
-import OsViews from "../../../components/charts/OsViews";
-import PageViews from "../../../components/charts/PageViews";
-import CountryViews from "../../../components/charts/CountryViews";
+import { Chart } from "../../../components/charts/Chart";
+import { Performance } from "../../../components/charts/Performance";
+import { BrowserViews } from "../../../components/charts/BrowserViews";
+import { OsViews } from "../../../components/charts/OsViews";
+import { PageViews } from "../../../components/charts/PageViews";
+import { CountryViews } from "../../../components/charts/CountryViews";
 import WebsiteName from "../../../components/WebsiteName";
 import WebsiteCurrentVisitors from "../../../components/WebsiteCurrentVisitors";
 import RangeSelector from "../../../components/RangeSelector";
