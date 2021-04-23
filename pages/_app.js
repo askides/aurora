@@ -5,18 +5,19 @@ import { Main } from "../components/layouts/Main";
 import "tailwindcss/tailwind.css";
 import "../assets/css/scrollbar.css";
 
-const isAuthPath = (path) => path.startsWith("/auth");
-
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
 
-  if (isAuthPath(router.pathname)) {
+  const isAuthPath = () => router.pathname.startsWith("/auth");
+  const isShareablePath = () => router.pathname.startsWith("/s");
+
+  if (isAuthPath()) {
     return <Component {...pageProps} />;
   }
 
   return (
     <ToastProvider autoDismiss autoDismissTimeout={6000}>
-      <Main>
+      <Main needsSidebar={isShareablePath() ? false : true}>
         <Component {...pageProps} />
       </Main>
     </ToastProvider>

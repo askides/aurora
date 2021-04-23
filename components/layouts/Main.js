@@ -1,21 +1,22 @@
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { BookmarkAltIcon, FireIcon, HomeIcon, InboxIcon, MenuIcon, UserIcon, XIcon } from "@heroicons/react/outline";
+import { Show } from "../Show";
 
 const user = {
-  name: "Emily Selman",
+  name: "User",
   imageUrl: "https://avatars.dicebear.com/api/jdenticon/mynameisgiovannigiorgiobut.svg",
 };
 
 const navigation = [
   { name: "Home", href: "/", icon: HomeIcon },
-  { name: "Trending", href: "#", icon: FireIcon },
-  { name: "Bookmarks", href: "#", icon: BookmarkAltIcon },
-  { name: "Messages", href: "#", icon: InboxIcon },
+  // { name: "Trending", href: "#", icon: FireIcon },
+  // { name: "Bookmarks", href: "#", icon: BookmarkAltIcon },
+  // { name: "Messages", href: "#", icon: InboxIcon },
   { name: "Profile", href: "/user/profile", icon: UserIcon },
 ];
 
-export const Main = ({ children }) => {
+export const Main = ({ needsSidebar, children }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -117,42 +118,44 @@ export const Main = ({ children }) => {
       </Transition.Root>
 
       {/* Static sidebar for desktop */}
-      <div className="hidden lg:flex lg:flex-shrink-0">
-        <div className="flex flex-col w-20">
-          <div className="flex flex-col h-0 flex-1 overflow-y-auto bg-indigo-600">
-            <div className="flex-1 flex flex-col">
-              <div className="flex-shrink-0 bg-indigo-700 py-4 flex items-center justify-center">
-                <img
-                  className="h-8 w-auto"
-                  src="https://tailwindui.com/img/logos/workflow-mark.svg?color=white"
-                  alt="Workflow"
-                />
-              </div>
-              <nav aria-label="Sidebar" className="py-6 flex flex-col items-center space-y-3">
-                {navigation.map((item) => (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    className="flex items-center p-4 rounded-lg text-indigo-200 hover:bg-indigo-700"
-                  >
-                    <item.icon className="h-6 w-6" aria-hidden="true" />
-                    <span className="sr-only">{item.name}</span>
-                  </a>
-                ))}
-              </nav>
-            </div>
-            <div className="flex-shrink-0 flex pb-5">
-              <a href="#" className="flex-shrink-0 w-full">
-                <img className="block mx-auto h-10 w-10 rounded-full" src={user.imageUrl} alt="" />
-                <div className="sr-only">
-                  <p>{user.name}</p>
-                  <p>Account settings</p>
+      <Show when={needsSidebar}>
+        <div className="hidden lg:flex lg:flex-shrink-0">
+          <div className="flex flex-col w-20">
+            <div className="flex flex-col h-0 flex-1 overflow-y-auto bg-indigo-600">
+              <div className="flex-1 flex flex-col">
+                <div className="flex-shrink-0 bg-indigo-700 py-4 flex items-center justify-center">
+                  <img
+                    className="h-8 w-auto"
+                    src="https://tailwindui.com/img/logos/workflow-mark.svg?color=white"
+                    alt="Workflow"
+                  />
                 </div>
-              </a>
+                <nav aria-label="Sidebar" className="py-6 flex flex-col items-center space-y-3">
+                  {navigation.map((item) => (
+                    <a
+                      key={item.name}
+                      href={item.href}
+                      className="flex items-center p-4 rounded-lg text-indigo-200 hover:bg-indigo-700"
+                    >
+                      <item.icon className="h-6 w-6" aria-hidden="true" />
+                      <span className="sr-only">{item.name}</span>
+                    </a>
+                  ))}
+                </nav>
+              </div>
+              <div className="flex-shrink-0 flex pb-5">
+                <a href="#" className="flex-shrink-0 w-full">
+                  <img className="block mx-auto h-10 w-10 rounded-full" src={user.imageUrl} alt="" />
+                  <div className="sr-only">
+                    <p>{user.name}</p>
+                    <p>Account settings</p>
+                  </div>
+                </a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </Show>
 
       <div className="flex-1 min-w-0 flex flex-col overflow-auto">
         {/* Mobile top navigation */}
@@ -166,14 +169,16 @@ export const Main = ({ children }) => {
               />
             </div>
             <div>
-              <button
-                type="button"
-                className="-mr-3 h-12 w-12 inline-flex items-center justify-center bg-indigo-600 rounded-md text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
-                onClick={() => setMobileMenuOpen(true)}
-              >
-                <span className="sr-only">Open sidebar</span>
-                <MenuIcon className="h-6 w-6" aria-hidden="true" />
-              </button>
+              <Show when={needsSidebar}>
+                <button
+                  type="button"
+                  className="-mr-3 h-12 w-12 inline-flex items-center justify-center bg-indigo-600 rounded-md text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                  onClick={() => setMobileMenuOpen(true)}
+                >
+                  <span className="sr-only">Open sidebar</span>
+                  <MenuIcon className="h-6 w-6" aria-hidden="true" />
+                </button>
+              </Show>
             </div>
           </div>
         </div>
@@ -201,4 +206,8 @@ export const Main = ({ children }) => {
       </div>
     </div>
   );
+};
+
+Main.defaultProps = {
+  needsSidebar: true,
 };
