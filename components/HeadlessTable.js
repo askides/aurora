@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useTable, useFilters, useAsyncDebounce, usePagination } from "react-table";
 
-const HeadlessTable = ({ data = [], columns = [], onFetchData }) => {
+export const HeadlessTable = ({ data = [], columns = [], onFetchData }) => {
   const isOdd = (num) => num % 2;
 
   const defaultColumn = React.useMemo(
@@ -73,7 +73,8 @@ const HeadlessTable = ({ data = [], columns = [], onFetchData }) => {
                   scope="col"
                   className={`px-4 py-4 sm:px-5 sm:py-3 text-xs font-medium text-gray-500 uppercase tracking-wider ${
                     column.id == "delete" ? "text-right" : "text-left"
-                  }`}>
+                  }`}
+                >
                   {column.render("Header")}
                   <div>{column.canFilter ? column.render("Filter") : null}</div>
                 </th>
@@ -92,7 +93,8 @@ const HeadlessTable = ({ data = [], columns = [], onFetchData }) => {
                       {...cell.getCellProps()}
                       className={`px-4 py-4 sm:px-6 sm:py-3 whitespace-nowrap text-sm ${
                         index < 1 ? "font-medium text-gray-900" : "text-gray-500"
-                      } ${cell.column.id == "delete" ? "text-right" : ""}`}>
+                      } ${cell.column.id == "delete" ? "text-right" : ""}`}
+                    >
                       {cell.render("Cell")}
                     </td>
                   );
@@ -104,7 +106,8 @@ const HeadlessTable = ({ data = [], columns = [], onFetchData }) => {
       </table>
       <nav
         className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6"
-        aria-label="Pagination">
+        aria-label="Pagination"
+      >
         <div className="hidden sm:block">
           <p className="text-sm text-gray-700">
             Page
@@ -117,13 +120,15 @@ const HeadlessTable = ({ data = [], columns = [], onFetchData }) => {
           <button
             onClick={() => previousPage()}
             disabled={!canPreviousPage}
-            className="relative inline-flex items-center px-2 py-1 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            className="relative inline-flex items-center px-2 py-1 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
             Previous
           </button>
           <button
             onClick={() => nextPage()}
             disabled={!canNextPage}
-            className="ml-3 relative inline-flex items-center px-2 py-1 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            className="ml-3 relative inline-flex items-center px-2 py-1 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
             Next
           </button>
         </div>
@@ -131,5 +136,3 @@ const HeadlessTable = ({ data = [], columns = [], onFetchData }) => {
     </div>
   );
 };
-
-export default HeadlessTable;

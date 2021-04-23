@@ -1,6 +1,6 @@
 import useSWR from "swr";
 
-export const useWebsites = () => {
+export const useMeWebsites = () => {
   const fetcher = (...args) =>
     fetch(...args)
       .then((res) => res.json())

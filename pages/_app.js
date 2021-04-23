@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import { ToastProvider } from "react-toast-notifications";
-import MainLayout from "../components/layout/MainLayout";
-import AuthLayout from "../components/layout/AuthLayout";
+import { Main } from "../components/layouts/Main";
 
 import "tailwindcss/tailwind.css";
 import "../assets/css/scrollbar.css";
@@ -9,19 +8,18 @@ import "../assets/css/scrollbar.css";
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
 
-  if (router.pathname.startsWith("/auth")) {
-    return (
-      <AuthLayout>
-        <Component {...pageProps} />
-      </AuthLayout>
-    );
+  const isAuthPath = () => router.pathname.startsWith("/auth");
+  const isShareablePath = () => router.pathname.startsWith("/s");
+
+  if (isAuthPath()) {
+    return <Component {...pageProps} />;
   }
 
   return (
     <ToastProvider autoDismiss autoDismissTimeout={6000}>
-      <MainLayout sideNarrow={!router.pathname.startsWith("/s")}>
+      <Main needsSidebar={isShareablePath() ? false : true}>
         <Component {...pageProps} />
-      </MainLayout>
+      </Main>
     </ToastProvider>
   );
 }
