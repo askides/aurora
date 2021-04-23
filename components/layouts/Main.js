@@ -162,11 +162,7 @@ export const Main = ({ needsSidebar, children }) => {
         <div className="lg:hidden">
           <div className="bg-indigo-600 py-2 px-4 flex items-center justify-between sm:px-6 lg:px-8">
             <div>
-              <img
-                className="h-8 w-auto"
-                src="https://tailwindui.com/img/logos/workflow-mark.svg?color=white"
-                alt="Workflow"
-              />
+              <img className="h-8 w-auto" src="/logos/aurora.svg" alt="Workflow" />
             </div>
             <div>
               <Show when={needsSidebar}>
