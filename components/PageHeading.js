@@ -1,19 +1,22 @@
+import { useRouter } from "next/router";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 
 export const PageHeading = ({ title, subtitle, breadcumbs, actions, EXPERIMENTAL_IS_DARK }) => {
+  const router = useRouter();
+
   return (
     <div>
       <div>
         <nav className="sm:hidden" aria-label="Back">
-          <a
-            href="#"
+          <button
+            onClick={() => router.back()}
             className={`flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 ${
               EXPERIMENTAL_IS_DARK ? "dark:text-white" : ""
             }`}
           >
             <ChevronLeftIcon className="flex-shrink-0 -ml-1 mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
             Back
-          </a>
+          </button>
         </nav>
         <nav className="hidden sm:flex" aria-label="Breadcrumb">
           <ol className="flex items-center space-x-4">

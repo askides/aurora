@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { useWebsite } from "../../../hooks/useWebsite";
 import { TimeRanges } from "../../../utils/enums";
+import { dropProtocol } from "../../../utils/urls";
 import { Chart } from "../../../components/charts/Chart";
 import { Performance } from "../../../components/charts/Performance";
 import { BrowserViews } from "../../../components/charts/BrowserViews";
@@ -19,12 +21,14 @@ export async function getServerSideProps(context) {
 }
 
 const Website = ({ seed }) => {
+  const { website, isLoading, isError } = useWebsite({ seed });
+
   const [timeRange, setTimeRange] = useState(TimeRanges.DAY);
 
   return (
     <div className="h-full p-6 space-y-4 bg-gray-900">
       <PageHeading
-        title={"renatopozzi.me"}
+        title={isLoading ? "" : dropProtocol(website.url)}
         breadcumbs={["Websites", "Dashboard"]}
         subtitle={<RealtimeVisitors seed={seed} />}
         actions={<RangeSelector onSelected={(value) => setTimeRange(value)} />}
@@ -32,7 +36,7 @@ const Website = ({ seed }) => {
       />
 
       <Performance url={`/api/metrics/${seed}/performance`} timeRange={timeRange} />
-      <Chart url={`/api/metrics/${seed}/views/series`} timeRange={timeRange} title="Page Views" type="lineChart" />
+      <Chart url={`/api/metrics/${seed}/views/series`} timeRange={timeRange} type="lineChart" />
 
       <div className="grid md:grid-cols-2 gap-4">
         <PageViews url={`/api/metrics/${seed}/views/pages`} timeRange={timeRange} />
