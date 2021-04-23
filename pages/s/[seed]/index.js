@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useWebsite } from "../../../hooks/useWebsite";
 import { TimeRanges } from "../../../utils/enums";
+import { dropProtocol } from "../../../utils/urls";
 import { Chart } from "../../../components/charts/Chart";
 import { Performance } from "../../../components/charts/Performance";
 import { BrowserViews } from "../../../components/charts/BrowserViews";
@@ -27,7 +28,7 @@ const Website = ({ seed }) => {
   return (
     <div className="h-full p-6 space-y-4 bg-gray-900">
       <PageHeading
-        title={isLoading ? "" : website.url}
+        title={isLoading ? "" : dropProtocol(website.url)}
         breadcumbs={["Websites", "Dashboard"]}
         subtitle={<RealtimeVisitors seed={seed} />}
         actions={<RangeSelector onSelected={(value) => setTimeRange(value)} />}
