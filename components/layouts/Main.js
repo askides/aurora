@@ -20,7 +20,7 @@ export const Main = ({ needsSidebar, children }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="h-screen flex bg-gray-50 overflow-hidden">
+    <div className="sm:h-screen flex bg-gray-50 overflow-hidden">
       <Transition.Root show={mobileMenuOpen} as={Fragment}>
         <Dialog
           as="div"
