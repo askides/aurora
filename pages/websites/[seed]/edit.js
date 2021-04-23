@@ -74,7 +74,7 @@ const Edit = ({ seed }) => {
                           </fieldset>
 
                           <Show when={website.shared}>
-                            <div className="block text-sm font-medium text-gray-700">
+                            <div className="text-sm font-medium text-gray-700">
                               Share Link: <SharedLink seed={seed} />
                             </div>
                           </Show>
