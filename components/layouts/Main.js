@@ -1,19 +1,33 @@
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { BookmarkAltIcon, FireIcon, HomeIcon, InboxIcon, MenuIcon, UserIcon, XIcon } from "@heroicons/react/outline";
+import {
+  BookmarkAltIcon,
+  FireIcon,
+  HomeIcon,
+  InboxIcon,
+  MenuIcon,
+  UserIcon,
+  XIcon,
+  SparklesIcon,
+  GlobeIcon,
+} from "@heroicons/react/outline";
 import { Show } from "../Show";
 
 const user = {
-  name: "User",
+  name: "Demo User",
   imageUrl: "https://avatars.dicebear.com/api/jdenticon/mynameisgiovannigiorgiobut.svg",
 };
 
 const navigation = [
-  { name: "Home", href: "/", icon: HomeIcon },
+  { name: "Home", href: "/", icon: HomeIcon, isDemo: false },
   // { name: "Trending", href: "#", icon: FireIcon },
   // { name: "Bookmarks", href: "#", icon: BookmarkAltIcon },
   // { name: "Messages", href: "#", icon: InboxIcon },
-  { name: "Profile", href: "/user/profile", icon: UserIcon },
+  { name: "Profile", href: "/user/profile", icon: UserIcon, isDemo: false },
+
+  // Demo
+  { name: "Aurora's Website", href: "https://useaurora.app", icon: GlobeIcon, isDemo: true },
+  { name: "Give me a Star!", href: "https://github.com/itsrennyman/aurora", icon: SparklesIcon, isDemo: true },
 ];
 
 export const Main = ({ needsSidebar, children }) => {
@@ -80,19 +94,21 @@ export const Main = ({ needsSidebar, children }) => {
                 </div>
                 <nav aria-label="Sidebar" className="mt-5">
                   <div className="px-2 space-y-1">
-                    {navigation.map((item) => (
-                      <a
-                        key={item.name}
-                        href={item.href}
-                        className="group p-2 rounded-md flex items-center text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                      >
-                        <item.icon
-                          className="mr-4 h-6 w-6 text-gray-400 group-hover:text-gray-500"
-                          aria-hidden="true"
-                        />
-                        {item.name}
-                      </a>
-                    ))}
+                    {navigation
+                      .filter((el) => (needsSidebar ? el.isDemo === false : el.isDemo === true))
+                      .map((item) => (
+                        <a
+                          key={item.name}
+                          href={item.href}
+                          className="group p-2 rounded-md flex items-center text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                        >
+                          <item.icon
+                            className="mr-4 h-6 w-6 text-gray-400 group-hover:text-gray-500"
+                            aria-hidden="true"
+                          />
+                          {item.name}
+                        </a>
+                      ))}
                   </div>
                 </nav>
               </div>
@@ -104,7 +120,9 @@ export const Main = ({ needsSidebar, children }) => {
                     </div>
                     <div className="ml-3">
                       <p className="text-base font-medium text-gray-700 group-hover:text-gray-900">{user.name}</p>
-                      <p className="text-sm font-medium text-gray-500 group-hover:text-gray-700">Account Settings</p>
+                      <p className="text-sm font-medium text-gray-500 group-hover:text-gray-700">
+                        Nothing Special Here.. (For Now)
+                      </p>
                     </div>
                   </div>
                 </a>
@@ -157,7 +175,7 @@ export const Main = ({ needsSidebar, children }) => {
         </div>
       </Show>
 
-      <div className="flex-1 min-w-0 flex flex-col overflow-auto">
+      <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
         {/* Mobile top navigation */}
         <div className="lg:hidden">
           <div className="bg-indigo-600 py-2 px-4 flex items-center justify-between sm:px-6 lg:px-8">
@@ -165,16 +183,14 @@ export const Main = ({ needsSidebar, children }) => {
               <img className="h-8 w-auto" src="/logos/aurora.svg" alt="Workflow" />
             </div>
             <div>
-              <Show when={needsSidebar}>
-                <button
-                  type="button"
-                  className="-mr-3 h-12 w-12 inline-flex items-center justify-center bg-indigo-600 rounded-md text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
-                  onClick={() => setMobileMenuOpen(true)}
-                >
-                  <span className="sr-only">Open sidebar</span>
-                  <MenuIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
-              </Show>
+              <button
+                type="button"
+                className="-mr-3 h-12 w-12 inline-flex items-center justify-center bg-indigo-600 rounded-md text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                onClick={() => setMobileMenuOpen(true)}
+              >
+                <span className="sr-only">Open sidebar</span>
+                <MenuIcon className="h-6 w-6" aria-hidden="true" />
+              </button>
             </div>
           </div>
         </div>
