@@ -5,6 +5,6 @@ export const Website = bookshelf.model("Website", {
   tableName: "websites",
 
   user() {
-    return this.hasOne(User);
+    return this.belongsTo(User);
   },
 });
