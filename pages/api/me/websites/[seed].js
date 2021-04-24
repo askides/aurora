@@ -1,4 +1,4 @@
-const db = require("../../../../lib/db_connect");
+const { db } = require("../../../../lib/db_connect");
 const { withAuth } = require("../../../../utils/hof/withAuth");
 
 const handleGet = async (req, res) => {

@@ -1,4 +1,4 @@
-const db = require("../../lib/db_connect");
+const { db } = require("../../lib/db_connect");
 const { withAuth } = require("./withAuth");
 
 const withSharedAuth = (fn) => async (req, res) => {
