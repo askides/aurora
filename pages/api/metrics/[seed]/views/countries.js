@@ -1,4 +1,3 @@
-const locale = require("locale-codes");
 const { db } = require("../../../../../lib/db_connect");
 const { withSharedAuth } = require("../../../../../utils/hof/withSharedAuth");
 const { percentage } = require("../../../../../utils/math");
@@ -7,23 +6,23 @@ const handleGet = async (req, res) => {
   const { range, seed } = req.query;
 
   const rows = await db("events")
-    .select("locale as element")
+    .select("locales.location as element")
     .count("element as views")
     .countDistinct("hash as unique")
+    .join("locales", "events.locale_id", "locales.id")
     .join("websites", "events.website_id", "websites.id")
     .whereRaw(`events.created_at >= DATE_TRUNC('${range}', now())`)
     .where("websites.seed", seed)
-    .groupBy("locale")
+    .groupBy("locales.location")
     .orderBy("views", "desc");
 
   const totalViews = rows.reduce((acc, el) => acc + Number(el.views), 0);
 
   const data = rows.map((el) => {
     const perc = percentage(el.views, totalViews);
-    const location = locale.getByTag(el.element)?.location || "#ND";
 
     return {
-      element: location,
+      element: el.element,
       views: Number(el.views),
       unique: Number(el.unique),
       percentage: perc,
