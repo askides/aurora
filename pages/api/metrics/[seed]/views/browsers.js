@@ -1,6 +1,6 @@
 const { withSharedAuth } = require("../../../../../utils/hof/withSharedAuth");
 const { percentage } = require("../../../../../utils/math");
-const db = require("../../../../../lib/db_connect");
+const { db } = require("../../../../../lib/db_connect");
 
 const handleGet = async (req, res) => {
   const { range, seed } = req.query;

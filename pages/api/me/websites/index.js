@@ -1,11 +1,13 @@
-const db = require("../../../../lib/db_connect");
+const { db } = require("../../../../lib/db_connect");
 const { generate } = require("../../../../utils/seeds");
 const { withAuth } = require("../../../../utils/hof/withAuth");
 
 const handleGet = async (req, res) => {
   const user = req.accessTokenBody.data;
 
-  const websites = await db("websites").join("users", "websites.user_id", "users.id").where("users.email", user.email);
+  const websites = await db("websites")
+    .join("users", "websites.user_id", "users.id")
+    .where("users.email", user.email);
 
   return { status: 200, data: websites };
 };

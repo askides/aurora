@@ -1,5 +1,5 @@
 const locale = require("locale-codes");
-const db = require("../../../../../lib/db_connect");
+const { db } = require("../../../../../lib/db_connect");
 const { withSharedAuth } = require("../../../../../utils/hof/withSharedAuth");
 const { percentage } = require("../../../../../utils/math");
 

@@ -2,7 +2,7 @@ const crypto = require("crypto");
 const UAParser = require("ua-parser-js");
 const mapValuesDeep = require("deepdash/mapValuesDeep");
 const { withCors } = require("../../utils/hof/withCors");
-const db = require("../../lib/db_connect");
+const { db } = require("../../lib/db_connect");
 
 const handlePost = async (req, res) => {
   const uaResults = new UAParser(req.headers["user-agent"]).getResult();

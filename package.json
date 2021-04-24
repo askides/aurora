@@ -22,6 +22,7 @@
     "@tailwindcss/forms": "^0.2.1",
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
+    "bookshelf": "^1.2.0",
     "chart.js": "^2.9.4",
     "cookie": "^0.4.1",
     "deepdash": "^5.3.5",

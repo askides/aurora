@@ -3,7 +3,7 @@ const { serialize } = require("cookie");
 
 const { AUTH_COOKIE, AUTH_COOKIE_LIFETIME } = require("../../../utils/constants");
 const { verify } = require("../../../utils/hash");
-const db = require("../../../lib/db_connect");
+const { db } = require("../../../lib/db_connect");
 
 const makeJwt = ({ data }) =>
   jwt.sign({ data: data }, process.env.JWT_SECRET, { expiresIn: AUTH_COOKIE_LIFETIME });

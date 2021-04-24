@@ -1,5 +1,5 @@
 const { withSharedAuth } = require("../../../../utils/hof/withSharedAuth");
-const db = require("../../../../lib/db_connect");
+const { db } = require("../../../../lib/db_connect");
 
 const performance = async (range, seed) => {
   return await db.raw(`
