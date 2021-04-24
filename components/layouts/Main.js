@@ -27,7 +27,12 @@ const navigation = [
 
   // Demo
   { name: "Aurora's Website", href: "https://useaurora.app", icon: GlobeIcon, isDemo: true },
-  { name: "Give me a Star!", href: "https://github.com/itsrennyman/aurora", icon: SparklesIcon, isDemo: true },
+  {
+    name: "Give me a Star!",
+    href: "https://github.com/itsrennyman/aurora",
+    icon: SparklesIcon,
+    isDemo: true,
+  },
 ];
 
 export const Main = ({ needsSidebar, children }) => {
@@ -116,10 +121,16 @@ export const Main = ({ needsSidebar, children }) => {
                 <a href="#" className="flex-shrink-0 group block">
                   <div className="flex items-center">
                     <div>
-                      <img className="inline-block h-10 w-10 rounded-full" src={user.imageUrl} alt="" />
+                      <img
+                        className="inline-block h-10 w-10 rounded-full"
+                        src={user.imageUrl}
+                        alt=""
+                      />
                     </div>
                     <div className="ml-3">
-                      <p className="text-base font-medium text-gray-700 group-hover:text-gray-900">{user.name}</p>
+                      <p className="text-base font-medium text-gray-700 group-hover:text-gray-900">
+                        {user.name}
+                      </p>
                       <p className="text-sm font-medium text-gray-500 group-hover:text-gray-700">
                         Nothing Special Here.. (For Now)
                       </p>
@@ -163,7 +174,11 @@ export const Main = ({ needsSidebar, children }) => {
               </div>
               <div className="flex-shrink-0 flex pb-5">
                 <a href="#" className="flex-shrink-0 w-full">
-                  <img className="block mx-auto h-10 w-10 rounded-full" src={user.imageUrl} alt="" />
+                  <img
+                    className="block mx-auto h-10 w-10 rounded-full"
+                    src={user.imageUrl}
+                    alt=""
+                  />
                   <div className="sr-only">
                     <p>{user.name}</p>
                     <p>Account settings</p>
@@ -175,7 +190,7 @@ export const Main = ({ needsSidebar, children }) => {
         </div>
       </Show>
 
-      <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
+      <div className="flex-1 min-w-0 flex flex-col overflow-hidden sm:overflow-y-auto">
         {/* Mobile top navigation */}
         <div className="lg:hidden">
           <div className="bg-indigo-600 py-2 px-4 flex items-center justify-between sm:px-6 lg:px-8">
