@@ -31,7 +31,7 @@ const handle = async function (req, res) {
       return res.status(405).json({ message: "Method not allowed." });
   }
 
-  return res.status(status);
+  return res.status(status).json({});
 };
 
 module.exports = withCors(handle);
