@@ -1,3 +1,5 @@
+const { sum } = require("../utils/math");
+
 (async (window) => {
   const {
     screen: { width, height },
@@ -29,57 +31,37 @@
       element: pathname,
       locale: language,
       seed: websiteSeed,
-      referrer: document.referrer, // TODO:
+      referrer: document.referrer,
     }),
   })
     .then((res) => res.json())
     .then((res) => res.data)
     .then((res) => (lastPageViewID = res.id))
-    .then((res) => console.log("Hash", lastPageViewID))
-    .catch((error) => {
-      console.error("Error:", error);
-    });
-
-  // On Unload
-  // window.addEventListener("unload", function () {
-  //   navigator.sendBeacon(
-  //     `${analyticsUrl}/${hash}`,
-  //     JSON.stringify({
-  //       seed: websiteSeed,
-  //       duration: performance.now() - initTime, // TODO
-  //     })
-  //   );
-  // });
+    .catch((error) => console.log(error));
 
   // Listerer Cycle
-  let initTime = performance.now();
-  const timings = [];
+  const initializeTimings = (timings = []) => {
+    let start = performance.now();
 
-  const getVisitDuration = () => performance.now() - initTime;
+    return () => {
+      if (document.visibilityState === "hidden") {
+        // Push current duration in timings
+        timings.push(performance.now() - start);
 
-  const sum = (args) => args.reduce((acc, el) => acc + el, 0);
-
-  const sendTiming = () => {
-    if (document.visibilityState === "hidden") {
-      // Push current duration in timings
-      const vd = getVisitDuration();
-
-      timings.push(vd);
-
-      console.log("SUM", sum(timings));
-
-      navigator.sendBeacon(
-        `${analyticsUrl}/${lastPageViewID}`,
-        JSON.stringify({
-          seed: websiteSeed,
-          duration: sum(timings), // TODO
-        })
-      );
-    } else {
-      console.log("Ciccio");
-      initTime = performance.now();
-    }
+        navigator.sendBeacon(
+          `${analyticsUrl}/${lastPageViewID}`,
+          JSON.stringify({
+            seed: websiteSeed,
+            duration: sum(timings),
+          })
+        );
+      } else {
+        start = performance.now();
+      }
+    };
   };
+
+  const sendTiming = initializeTimings();
 
   document.addEventListener("visibilitychange", sendTiming);
 })(window);
