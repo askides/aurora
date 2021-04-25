@@ -1,5 +1,3 @@
-const { default: axios } = require("axios");
-
 (async (window) => {
   const {
     screen: { width, height },
@@ -19,12 +17,18 @@ const { default: axios } = require("axios");
   const analyticsUrl = script.getAttribute("src").replace("/aurora.js", "/api/collect");
   const websiteSeed = script.getAttribute("aurora-id");
 
-  axios
-    .post(analyticsUrl, {
+  fetch(analyticsUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
       type: "pageView",
-      element: location.pathname,
-      locale: navigator.language,
+      element: pathname,
+      locale: language,
       seed: websiteSeed,
-    })
-    .catch((err) => console.log(err));
+    }),
+  }).catch((error) => {
+    console.error("Error:", error);
+  });
 })(window);
