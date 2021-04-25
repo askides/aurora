@@ -3,7 +3,9 @@ exports.up = function (knex) {
     table.increments("id");
     table.string("type", 255).notNullable();
     table.text("element").notNullable();
+    table.string("referrer", 255);
     table.string("hash", 255).notNullable();
+    table.decimal("duration", 8, 2);
     table.integer("website_id").notNullable(); //.references("id").inTable("websites");
     table.integer("browser_id").notNullable(); //.references("id").inTable("browsers");
     table.integer("engine_id").notNullable(); //.references("id").inTable("engines");
