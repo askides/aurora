@@ -1,5 +1,19 @@
 module.exports = {
-  purge: ["./pages/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}"],
+  purge: {
+    content: ["./pages/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}"],
+    options: {
+      safelist: [
+        "text-yellow-400",
+        "text-red-400",
+        "text-yellow-700",
+        "text-red-700",
+        "text-yellow-800",
+        "text-red-800",
+        "bg-yellow-50",
+        "bg-red-50",
+      ],
+    },
+  },
   darkMode: "class", // or 'media' or 'class'
   theme: {
     extend: {},
