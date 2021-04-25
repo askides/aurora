@@ -11,6 +11,7 @@ import { CountryViews } from "../../../components/charts/CountryViews";
 import { PageHeading } from "../../../components/PageHeading";
 import { RealtimeVisitors } from "../../../components/RealtimeVisitors";
 import { RangeSelector } from "../../../components/RangeSelector";
+import { Alert } from "../../../components/Alert";
 
 export async function getServerSideProps(context) {
   const { seed } = context.query;
@@ -33,6 +34,11 @@ const Website = ({ seed }) => {
         subtitle={<RealtimeVisitors seed={seed} />}
         actions={<RangeSelector onSelected={(value) => setTimeRange(value)} />}
         EXPERIMENTAL_IS_DARK={true}
+      />
+
+      <Alert
+        style="alert"
+        title="Please note that as this is a demo, the data is refreshed frequently."
       />
 
       <Performance url={`/api/metrics/${seed}/performance`} timeRange={timeRange} />

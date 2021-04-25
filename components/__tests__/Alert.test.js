@@ -10,9 +10,9 @@ describe("Alert", () => {
     expect(screen.getByText("title")).toBeInTheDocument();
   });
 
-  it("should render an unordered list", () => {
+  it("should not have an unordered list", () => {
     const { container } = render(<Alert />);
-    expect(container.querySelector("ul")).toBeInTheDocument();
+    expect(container.querySelector("ul")).toBeNull();
   });
 
   it("should have zero messages", () => {
