@@ -3,15 +3,15 @@ const { serialize } = require("cookie");
 
 const { AUTH_COOKIE, AUTH_COOKIE_LIFETIME } = require("../../../utils/constants");
 const { verify } = require("../../../utils/hash");
-const { db } = require("../../../lib/db_connect");
+const { User } = require("../../../models/User");
 
 const makeJwt = ({ data }) =>
   jwt.sign({ data: data }, process.env.JWT_SECRET, { expiresIn: AUTH_COOKIE_LIFETIME });
 
 const attempt = async ({ email, password }) => {
-  const user = await db("users").where("email", email).first();
+  const user = await new User().where("email", email).fetch();
 
-  if (user && verify(password, user.password)) {
+  if (user && verify(password, user.get("password"))) {
     return {
       id: user.id,
       email: user.email,

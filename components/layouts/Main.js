@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import {
@@ -102,17 +103,15 @@ export const Main = ({ needsSidebar, children }) => {
                     {navigation
                       .filter((el) => (needsSidebar ? el.isDemo === false : el.isDemo === true))
                       .map((item) => (
-                        <a
-                          key={item.name}
-                          href={item.href}
-                          className="group p-2 rounded-md flex items-center text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                        >
-                          <item.icon
-                            className="mr-4 h-6 w-6 text-gray-400 group-hover:text-gray-500"
-                            aria-hidden="true"
-                          />
-                          {item.name}
-                        </a>
+                        <Link href={item.href} key={item.name}>
+                          <a className="group p-2 rounded-md flex items-center text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+                            <item.icon
+                              className="mr-4 h-6 w-6 text-gray-400 group-hover:text-gray-500"
+                              aria-hidden="true"
+                            />
+                            {item.name}
+                          </a>
+                        </Link>
                       ))}
                   </div>
                 </nav>
@@ -146,8 +145,8 @@ export const Main = ({ needsSidebar, children }) => {
         </Dialog>
       </Transition.Root>
 
-      {/* Static sidebar for desktop */}
-      <Show when={needsSidebar}>
+      {/* Static sidebar for desktop  TODO: Add a special isDemo case */}
+      <Show when={true}>
         <div className="hidden lg:flex lg:flex-shrink-0">
           <div className="flex flex-col w-20">
             <div className="flex flex-col h-0 flex-1 overflow-y-auto bg-indigo-600">
@@ -160,22 +159,22 @@ export const Main = ({ needsSidebar, children }) => {
                   />
                 </div>
                 <nav aria-label="Sidebar" className="py-6 flex flex-col items-center space-y-3">
-                  {navigation.map((item) => (
-                    <a
-                      key={item.name}
-                      href={item.href}
-                      className="flex items-center p-4 rounded-lg text-indigo-200 hover:bg-indigo-700"
-                    >
-                      <item.icon className="h-6 w-6" aria-hidden="true" />
-                      <span className="sr-only">{item.name}</span>
-                    </a>
-                  ))}
+                  {navigation
+                    .filter((el) => (needsSidebar ? el.isDemo === false : el.isDemo === true))
+                    .map((item) => (
+                      <Link href={item.href} key={item.name}>
+                        <a className="flex items-center p-4 rounded-lg text-indigo-200 hover:bg-indigo-700">
+                          <item.icon className="h-6 w-6" aria-hidden="true" />
+                          <span className="sr-only">{item.name}</span>
+                        </a>
+                      </Link>
+                    ))}
                 </nav>
               </div>
               <div className="flex-shrink-0 flex pb-5">
                 <a href="#" className="flex-shrink-0 w-full">
                   <img
-                    className="block mx-auto h-10 w-10 rounded-full"
+                    className="block mx-auto h-10 w-10 rounded-full bg-white border-2 border-white"
                     src={user.imageUrl}
                     alt=""
                   />

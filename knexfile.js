@@ -15,8 +15,6 @@ module.exports = {
       createRetryIntervalMillis: 500,
       propagateCreateError: false,
     },
-    // debug: true,
-    // asyncStackTraces: true,
   },
   production: {
     client: "pg",
@@ -35,7 +33,5 @@ module.exports = {
       createRetryIntervalMillis: 500,
       propagateCreateError: false,
     },
-    debug: false,
-    asyncStackTraces: false,
   },
 };

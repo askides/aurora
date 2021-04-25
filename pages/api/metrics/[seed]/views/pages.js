@@ -11,6 +11,7 @@ const handleGet = async (req, res) => {
     .countDistinct("hash as unique")
     .join("websites", "events.website_id", "websites.id")
     .whereRaw(`events.created_at >= DATE_TRUNC('${range}', now())`)
+    .where("events.type", "pageView")
     .where("websites.seed", seed)
     .groupBy("element")
     .orderBy("views", "desc");
