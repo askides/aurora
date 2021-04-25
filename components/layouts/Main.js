@@ -145,7 +145,7 @@ export const Main = ({ needsSidebar, children }) => {
         </Dialog>
       </Transition.Root>
 
-      {/* Static sidebar for desktop */}
+      {/* Static sidebar for desktop  TODO: Add a special isDemo case */}
       <Show when={true}>
         <div className="hidden lg:flex lg:flex-shrink-0">
           <div className="flex flex-col w-20">
