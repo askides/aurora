@@ -9,6 +9,8 @@
     history,
   } = window;
 
+  let lastPageViewID = null;
+
   // Check Script Exists
   const script = document.querySelector("script[aurora-id]");
 
@@ -27,8 +29,57 @@
       element: pathname,
       locale: language,
       seed: websiteSeed,
+      referrer: document.referrer, // TODO:
     }),
-  }).catch((error) => {
-    console.error("Error:", error);
-  });
+  })
+    .then((res) => res.json())
+    .then((res) => res.data)
+    .then((res) => (lastPageViewID = res.id))
+    .then((res) => console.log("Hash", lastPageViewID))
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+
+  // On Unload
+  // window.addEventListener("unload", function () {
+  //   navigator.sendBeacon(
+  //     `${analyticsUrl}/${hash}`,
+  //     JSON.stringify({
+  //       seed: websiteSeed,
+  //       duration: performance.now() - initTime, // TODO
+  //     })
+  //   );
+  // });
+
+  // Listerer Cycle
+  let initTime = performance.now();
+  const timings = [];
+
+  const getVisitDuration = () => performance.now() - initTime;
+
+  const sum = (args) => args.reduce((acc, el) => acc + el, 0);
+
+  const sendTiming = () => {
+    if (document.visibilityState === "hidden") {
+      // Push current duration in timings
+      const vd = getVisitDuration();
+
+      timings.push(vd);
+
+      console.log("SUM", sum(timings));
+
+      navigator.sendBeacon(
+        `${analyticsUrl}/${lastPageViewID}`,
+        JSON.stringify({
+          seed: websiteSeed,
+          duration: sum(timings), // TODO
+        })
+      );
+    } else {
+      console.log("Ciccio");
+      initTime = performance.now();
+    }
+  };
+
+  document.addEventListener("visibilitychange", sendTiming);
 })(window);
