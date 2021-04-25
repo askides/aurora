@@ -1,4 +1,5 @@
 const crypto = require("crypto");
+const requestIp = require("request-ip");
 const localeCodes = require("locale-codes");
 const UAParser = require("ua-parser-js");
 const mapValuesDeep = require("deepdash/mapValuesDeep");
@@ -28,14 +29,14 @@ const handlePost = async (req, res) => {
 
   const { type, element, locale: _locale, seed } = req.body;
 
-  // const ip = req.headers["x-real-ip"];
+  const clientIp = requestIp.getClientIp(req);
 
   const eventHash = crypto
     .createHash("sha256")
     .update(
       JSON.stringify({
         ua: ua.ua, // Full user-agent for now.
-        ip: "127.0.0.1", // XXX TODO IP
+        ip: clientIp,
       })
     )
     .digest("hex");
