@@ -1,19 +1,16 @@
 {
   "name": "aurora",
-  "version": "0.2.0",
-  "private": true,
+  "version": "0.3.0",
+  "private": false,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "npm run build:aurora && npm run build:knex",
+    "prebuild": "npm run build:tracker",
     "build": "next build",
-    "build:aurora": "webpack --config tracker.config.js --mode production",
-    "build:knex": "knex migrate:latest --env production",
+    "build:tracker": "webpack --config tracker.config.js --mode production",
     "db:seed": "knex seed:run",
-    "db:test-seed": "npm run migrate:refresh && knex seed:run --specific=testing.js",
+    "migrate": "knex migrate:latest --env production",
     "migrate:refresh": "knex migrate:rollback --all && knex migrate:latest",
     "start": "next start",
-    "cypress:open": "cypress open",
-    "cypress:run": "cypress run",
     "test": "jest"
   },
   "dependencies": {
