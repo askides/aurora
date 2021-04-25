@@ -1,46 +1,66 @@
-import Link from "next/link";
-import PageTitle from "../components/layout/PageTitle";
-import { Button } from "../components/AuroraForm";
-import { LoadingPanel, Panel, StackedList, StackedListItem } from "../components/Primitives";
-import { withAuth } from "../components/hoc/withAuth";
-import { useWebsites } from "../components/hooks/useWebsites";
+import { HeadlessTable } from "../components/HeadlessTable";
+import { PageHeading } from "../components/PageHeading";
+import { Link } from "../components/Link";
+import { useMeWebsites } from "../hooks/useMeWebsites";
+import { withAuth } from "../hoc/withAuth";
+
+const columns = [
+  {
+    Header: "Name",
+    accessor: "name",
+    Cell: ({ cell, value }) => (
+      <div className="flex items-center justify-between space-x-3">
+        <div className="flex items-center truncate space-x-3">
+          <div className="flex-shrink-0 w-2.5 h-2.5 rounded-full bg-pink-600"></div>
+          <a href={`/websites/${cell.row.original.seed}/edit`}>{value}</a>
+        </div>
+
+        <svg
+          className="block sm:hidden ml-4 h-5 w-5 text-gray-400 group-hover:text-gray-500 group-focus:text-gray-600 transition ease-in-out duration-150"
+          xmlns="https://www.w3.org/2000/svg"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fillRule="evenodd"
+            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+            clipRule="evenodd"
+          ></path>
+        </svg>
+      </div>
+    ),
+  },
+  { Header: "Url", accessor: "url" },
+  { Header: "Shared", accessor: (row) => (row.shared ? "Yes" : "No") },
+  {
+    id: "actions",
+    Cell: ({ cell }) => (
+      <div className="flex items-center justify-end space-x-3 font-medium text-blue-600 text-right">
+        <a href={`/websites/${cell.row.original.seed}`}>View Dashboard</a>
+      </div>
+    ),
+  },
+];
 
 const Websites = () => {
-  const { websites, isLoading, isError } = useWebsites();
+  const { websites, isLoading, isError } = useMeWebsites();
 
-  if (isLoading) return <LoadingPanel />;
+  const breadcumbs = ["Websites", "List"];
+
+  if (isLoading) return <div>Loading..</div>;
   if (isError) return <div>failed to load</div>;
 
   return (
-    <div className="h-full rounded-lg space-y-4 bg-gray-900">
-      <PageTitle text="Websites" actions={<Button href="/websites/create" label="Create New" />} />
+    <div className="p-6 h-full">
+      <PageHeading
+        title={"Websites"}
+        breadcumbs={breadcumbs}
+        actions={<Link value="Create New" href="/websites/create" />}
+      />
 
-      <Panel>
-        <StackedList>
-          {websites.map((el, key) => (
-            <StackedListItem
-              key={key}
-              avatar={`https://avatars.dicebear.com/api/jdenticon/${el.url}.svg`} /** XXX TODO */
-              title={el.name}
-              subtitle={el.url}
-              actions={
-                <div className="space-x-2 divide-y-1 divide-gray-700">
-                  <Link href={`/websites/${el.seed}/edit`}>
-                    <a className="inline-flex items-center shadow-sm px-2.5 py-0.5 text-sm leading-5 font-medium rounded-full text-gray-700 dark:text-blue-500">
-                      Edit
-                    </a>
-                  </Link>
-                  <Link href={`/websites/${el.seed}`}>
-                    <a className="inline-flex items-center shadow-sm px-2.5 py-0.5 text-sm leading-5 font-medium rounded-full text-gray-700 dark:text-blue-500">
-                      View Dashboard
-                    </a>
-                  </Link>
-                </div>
-              }
-            />
-          ))}
-        </StackedList>
-      </Panel>
+      <div className="mt-8">
+        <HeadlessTable data={websites} columns={columns} onFetchData={() => {}} />
+      </div>
     </div>
   );
 };

@@ -1,19 +1,12 @@
-const db = require("../../../lib/db_connect");
+const { Website } = require("../../../models/Website");
 const { withSharedAuth } = require("../../../utils/hof/withSharedAuth");
 
-const handleGet = async (req, res) => {
+const handleGet = async (req) => {
   const { seed } = req.query;
 
-  const website = await db("websites").where("websites.seed", seed).first();
+  const website = await new Website().where("seed", seed).fetch();
 
-  return {
-    status: 200,
-    data: {
-      name: website.name,
-      url: website.url,
-      seed: website.seed,
-    },
-  };
+  return { status: 200, data: website };
 };
 
 const handler = async (req, res) => {
@@ -21,7 +14,7 @@ const handler = async (req, res) => {
 
   switch (req.method) {
     case "GET":
-      ({ status, data } = await handleGet(req, res));
+      ({ status, data } = await handleGet(req));
       break;
     default:
       return res.status(405).json({ message: "Method not allowed." });

@@ -1,53 +1,79 @@
 import axios from "axios";
 import { Formik, Form } from "formik";
 import { useRouter } from "next/router";
-
-import { Button, TextField } from "../../components/AuroraForm";
-import { Panel } from "../../components/Primitives";
-import { withAuth } from "../../components/hoc/withAuth";
+import { PageHeading } from "../../components/PageHeading";
+import { TextField } from "../../components/TextField";
+import { Radio } from "../../components/Radio";
+import { withAuth } from "../../hoc/withAuth";
+import { Button } from "../../components/Button";
 
 const Create = () => {
   const router = useRouter();
-  const initialValues = { name: "", url: "" };
+  const breadcumbs = ["Websites", "Create"];
+  const initialValues = { name: "", url: "", share: "no" };
 
   const handleSubmit = (values, { setSubmitting }) =>
     axios
       .post("/api/me/websites", values)
       .then((res) => res.data.data)
       .then((res) => router.push(`/websites/${res.seed}/edit`))
-      .catch((err) => console.log(err))
-      .finally(() => setSubmitting(false));
+      .finally(setSubmitting(false));
 
   return (
-    <div className="h-full rounded-lg space-y-4 bg-gray-900">
-      <Panel
-        header={
-          <div className="space-y-1">
-            <h1 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">
-              Create Website
-            </h1>
-            <p className="text-sm leading-5 text-gray-500 dark:text-white">
-              Insert the Website information by filling in the form below.
-            </p>
-          </div>
-        }>
-        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-          {({ isSubmitting }) => (
-            <Form>
-              <div className="space-y-6">
-                <div className="space-y-4">
-                  <TextField label="Website Name" name="name" type="text" autocomplete="none" />
-                  <TextField label="Website URL" name="url" type="text" autocomplete="none" />
-                </div>
+    <div className="p-6 h-full">
+      <div className="flex justify-center">
+        <div>
+          <PageHeading title={"Create Website"} breadcumbs={breadcumbs} />
 
-                <div className="flex items-center justify-end space-x-4">
-                  <Button type="submit" isLoading={isSubmitting} label="Create" />
-                </div>
-              </div>
-            </Form>
-          )}
-        </Formik>
-      </Panel>
+          <div className="mt-8">
+            <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+              {({ isSubmitting }) => (
+                <Form>
+                  <div className="space-y-8 divide-y divide-gray-200">
+                    <div className="space-y-8 divide-y divide-gray-200">
+                      <div>
+                        <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                          <div className="sm:col-span-6">
+                            <TextField label="Website Name" name="name" type="text" autocomplete="none" />
+                          </div>
+
+                          <div className="sm:col-span-6">
+                            <TextField label="Website URL" name="url" type="text" autocomplete="none" />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="pt-8">
+                        <div>
+                          <h3 className="text-lg leading-6 font-medium text-gray-900">Share Statistics</h3>
+                          <p className="mt-1 text-sm text-gray-500">
+                            If you select to share statistics, a public URL will be available presenting a read-only
+                            version of the Aurora Dashboard. You can disable it later.
+                          </p>
+                        </div>
+                        <div className="mt-6">
+                          <fieldset>
+                            <div className="space-y-4">
+                              <Radio value="1" label="Yes, make it public." name="shared" />
+                              <Radio value="0" label="Nope, i wanna keep it private." name="shared" />
+                            </div>
+                          </fieldset>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="pt-5">
+                      <div className="flex justify-end">
+                        <Button type="submit" value="Save" isLoading={isSubmitting} />
+                      </div>
+                    </div>
+                  </div>
+                </Form>
+              )}
+            </Formik>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

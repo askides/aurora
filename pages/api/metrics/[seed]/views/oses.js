@@ -1,6 +1,6 @@
 const { withSharedAuth } = require("../../../../../utils/hof/withSharedAuth");
 const { percentage } = require("../../../../../utils/math");
-const db = require("../../../../../lib/db_connect");
+const { db } = require("../../../../../lib/db_connect");
 
 const handleGet = async (req, res) => {
   const { range, seed } = req.query;
@@ -12,6 +12,7 @@ const handleGet = async (req, res) => {
     .join("oses", "events.os_id", "oses.id")
     .join("websites", "events.website_id", "websites.id")
     .whereRaw(`events.created_at >= DATE_TRUNC('${range}', now())`)
+    .where("events.type", "pageView")
     .where("websites.seed", seed)
     .groupBy("oses.name")
     .orderBy("views", "desc");

@@ -1,14 +1,11 @@
-const db = require("../../../../lib/db_connect");
+const { Website } = require("../../../../models/Website");
 const { withAuth } = require("../../../../utils/hof/withAuth");
 
-const handleGet = async (req, res) => {
+const handleGet = async (req) => {
   const user = req.accessTokenBody.data;
   const { seed } = req.query;
 
-  const website = await db("websites")
-    .where("websites.seed", seed)
-    .where("user_id", user.id)
-    .first();
+  const website = await new Website({ seed: seed, user_id: user.id }).fetch();
 
   // Boolean to int
   website.shared = +website.shared;
@@ -16,28 +13,28 @@ const handleGet = async (req, res) => {
   return { status: 200, data: website };
 };
 
-const handlePut = async (req, res) => {
+const handlePut = async (req) => {
   const user = req.accessTokenBody.data;
   const { seed } = req.query;
   const { name, url, shared } = req.body;
 
-  await db("websites")
-    .where("websites.seed", seed)
-    .where("user_id", user.id)
-    .update({
+  await new Website().where({ seed: seed, user_id: user.id }).save(
+    {
       name: name,
       url: url,
       shared: Boolean(Number(shared)),
-    });
+    },
+    { patch: true }
+  );
 
   return { status: 200, data: { message: "Updated." } };
 };
 
-const handleDelete = async (req, res) => {
+const handleDelete = async (req) => {
   const user = req.accessTokenBody.data;
   const { seed } = req.query;
 
-  await db("websites").where("websites.seed", seed).where("user_id", user.id).del();
+  await new Website().where("websites.seed", seed).where("user_id", user.id).destroy();
 
   return { status: 200, data: { message: "Deleted." } };
 };
@@ -47,14 +44,14 @@ const handler = async (req, res) => {
 
   switch (req.method) {
     case "GET":
-      ({ status, data } = await handleGet(req, res));
+      ({ status, data } = await handleGet(req));
       break;
     case "PUT":
       ({ status, data } = await handlePut(req, res));
       break;
-    case "DELETE":
-      ({ status, data } = await handleDelete(req, res));
-      break;
+    // case "DELETE":
+    //  ({ status, data } = await handleDelete(req, res));
+    // break;
     default:
       return res.status(405).json({ message: "Method not allowed." });
   }
