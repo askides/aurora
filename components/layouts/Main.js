@@ -145,8 +145,8 @@ export const Main = ({ needsSidebar, children }) => {
         </Dialog>
       </Transition.Root>
 
-      {/* Static sidebar for desktop */}
-      <Show when={needsSidebar}>
+      {/* Static sidebar for desktop  TODO: Add a special isDemo case */}
+      <Show when={true}>
         <div className="hidden lg:flex lg:flex-shrink-0">
           <div className="flex flex-col w-20">
             <div className="flex flex-col h-0 flex-1 overflow-y-auto bg-indigo-600">
@@ -159,14 +159,16 @@ export const Main = ({ needsSidebar, children }) => {
                   />
                 </div>
                 <nav aria-label="Sidebar" className="py-6 flex flex-col items-center space-y-3">
-                  {navigation.map((item) => (
-                    <Link href={item.href} key={item.name}>
-                      <a className="flex items-center p-4 rounded-lg text-indigo-200 hover:bg-indigo-700">
-                        <item.icon className="h-6 w-6" aria-hidden="true" />
-                        <span className="sr-only">{item.name}</span>
-                      </a>
-                    </Link>
-                  ))}
+                  {navigation
+                    .filter((el) => (needsSidebar ? el.isDemo === false : el.isDemo === true))
+                    .map((item) => (
+                      <Link href={item.href} key={item.name}>
+                        <a className="flex items-center p-4 rounded-lg text-indigo-200 hover:bg-indigo-700">
+                          <item.icon className="h-6 w-6" aria-hidden="true" />
+                          <span className="sr-only">{item.name}</span>
+                        </a>
+                      </Link>
+                    ))}
                 </nav>
               </div>
               <div className="flex-shrink-0 flex pb-5">
