@@ -8,7 +8,7 @@
     "build": "next build",
     "build:tracker": "webpack --config tracker.config.js --mode production",
     "db:seed": "knex seed:run",
-    "migrate": "knex migrate:latest --env production",
+    "migrate": "knex migrate:latest",
     "migrate:refresh": "knex migrate:rollback --all && knex migrate:latest",
     "start": "next start",
     "test": "jest"
