@@ -1,3 +1,4 @@
+import { default as NextLink } from "next/link";
 import { HeadlessTable } from "../components/HeadlessTable";
 import { PageHeading } from "../components/PageHeading";
 import { Link } from "../components/Link";
@@ -12,7 +13,9 @@ const columns = [
       <div className="flex items-center justify-between space-x-3">
         <div className="flex items-center truncate space-x-3">
           <div className="flex-shrink-0 w-2.5 h-2.5 rounded-full bg-pink-600"></div>
-          <a href={`/websites/${cell.row.original.seed}/edit`}>{value}</a>
+          <NextLink href={`/websites/${cell.row.original.seed}/edit`}>
+            <a>{value}</a>
+          </NextLink>
         </div>
 
         <svg
@@ -36,7 +39,9 @@ const columns = [
     id: "actions",
     Cell: ({ cell }) => (
       <div className="flex items-center justify-end space-x-3 font-medium text-blue-600 text-right">
-        <a href={`/websites/${cell.row.original.seed}`}>View Dashboard</a>
+        <NextLink href={`/websites/${cell.row.original.seed}`}>
+          <a>View Dashboard</a>
+        </NextLink>
       </div>
     ),
   },
