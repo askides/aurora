@@ -1,6 +1,7 @@
 const { withSharedAuth } = require("../../../../utils/hof/withSharedAuth");
 const { db } = require("../../../../lib/db_connect");
 
+// TODO: only pageView event & Fix range
 const performance = async (range, seed) => {
   return await db.raw(`
     SELECT

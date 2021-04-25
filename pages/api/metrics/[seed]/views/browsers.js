@@ -12,6 +12,7 @@ const handleGet = async (req, res) => {
     .join("browsers", "events.browser_id", "browsers.id")
     .join("websites", "events.website_id", "websites.id")
     .whereRaw(`events.created_at >= DATE_TRUNC('${range}', now())`)
+    .where("events.type", "pageView")
     .where("websites.seed", seed)
     .groupBy("browsers.name")
     .orderBy("views", "desc");

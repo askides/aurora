@@ -8,6 +8,7 @@ const handleGet = async (req, res) => {
     .countDistinct("events.hash as visitors")
     .join("websites", "events.website_id", "websites.id")
     .whereRaw(`events.created_at >= (now() - '30 second' :: interval)`)
+    .where("events.type", "pageView")
     .where("websites.seed", seed);
 
   const lastNSecondsVisitors = await rows.reduce((acc, el) => el, {});
