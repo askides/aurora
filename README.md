@@ -16,47 +16,25 @@ Open source means the the code is open for anyone to read, comment on and sugges
 
 This is a public beta! Please star and watch the repository for big news :heart: we have also a simple [roadmap](https://trello.com/b/df17oLMm/aurora-roadmap) in order to track some good ideas.
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
-
-### Prerequisites
-
-- A PostgreSQL Instance
-
-### Installing 
-
-Clone the repository
-
-`git clone https://github.com/itsrennyman/aurora.git`
-
-Install the dependencies
-
-`npm install`
-
-Copy & Fill the *.env.example*
-
-`cp .env.example .env`
-
-Start the server
-
-`npm run dev`
+You can go up and running with Aurora by following the [Official Docs](https://docs.useaurora.app/). These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
 ## Deployment 🛫
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Fitsrennyman%2Faurora&env=DB_URL,JWT_SECRET&project-name=aurora)
+Currently Writing
 
 ## Built With 🏗️
 
-* [NextJS](https://nextjs.org/) - NextJS
-* [TailwindCSS](https://tailwindcss.com/) - TailwindCSS
-* [KnexJS](https://knexjs.org/) - Database ORM
+- [NextJS](https://nextjs.org/) - NextJS
+- [TailwindCSS](https://tailwindcss.com/) - TailwindCSS
+- [KnexJS](https://knexjs.org/) - Database ORM
 
 ## Versioning 🚦
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/itsrennyman/aurora/tags). 
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/itsrennyman/aurora/tags).
 
 ## Authors 🙋
 
-* **Renato Pozzi** - *Initial work* - [itsrennyman](https://github.com/itsrennyman)
+- **Renato Pozzi** - _Initial work_ - [itsrennyman](https://github.com/itsrennyman)
 
 ## Stargazers 🌟
 
