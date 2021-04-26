@@ -13,10 +13,10 @@ const attempt = async ({ email, password }) => {
 
   if (user && verify(password, user.get("password"))) {
     return {
-      id: user.id,
-      email: user.email,
-      firstname: user.firstname,
-      lastname: user.lastname,
+      id: user.get("id"),
+      email: user.get("email"),
+      firstname: user.get("firstname"),
+      lastname: user.get("lastname"),
     };
   }
 
