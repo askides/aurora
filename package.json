@@ -10,6 +10,7 @@
     "db:seed": "knex seed:run",
     "migrate": "knex migrate:latest",
     "migrate:refresh": "knex migrate:rollback --all && knex migrate:latest",
+    "aurora:setup": "node ./lib/commands/setup.js",
     "start": "next start",
     "test": "jest"
   },
@@ -25,6 +26,7 @@
     "deepdash": "^5.3.5",
     "dotenv": "^8.2.0",
     "formik": "^2.2.6",
+    "inquirer": "^8.0.0",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.95.4",
     "locale-codes": "^1.3.1",
