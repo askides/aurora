@@ -2,7 +2,7 @@
 
 Open Source Analytics Platform - Designed for Humans & Developers :sunglasses:
 
-![](https://repository-images.githubusercontent.com/349502977/99c2cf00-9970-11eb-9cb1-9ebecd4f2f27)
+![](https://repository-images.githubusercontent.com/349502977/fbf82f80-a6e5-11eb-85e0-fb2dadd21bd6)
 
 ![](https://img.shields.io/github/v/release/itsrennyman/aurora?style=for-the-badge)
 ![](https://img.shields.io/github/stars/itsrennyman/aurora?style=for-the-badge)
