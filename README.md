@@ -4,6 +4,14 @@ Open Source Analytics Platform - Designed for Humans & Developers :sunglasses:
 
 ![](https://repository-images.githubusercontent.com/349502977/99c2cf00-9970-11eb-9cb1-9ebecd4f2f27)
 
+![](https://img.shields.io/github/v/release/itsrennyman/aurora?style=for-the-badge)
+![](https://img.shields.io/github/stars/itsrennyman/aurora?style=for-the-badge)
+![](https://img.shields.io/github/license/itsrennyman/aurora?style=for-the-badge)
+
+### What's the meaning of “Open Source Cookieless Analytics Platform”?
+
+Open source means the the code is open for anyone to read, comment on and suggest changes. Cookieless means the client side analytic code doesn’t use cookies. Analytic platform means it’s a system to collect, store and display analytic data such as the amount of users on your website at any one time.
+
 ## Getting Started 🤩
 
 This is a public beta! Please star and watch the repository for big news :heart: we have also a simple [roadmap](https://trello.com/b/df17oLMm/aurora-roadmap) in order to track some good ideas.
