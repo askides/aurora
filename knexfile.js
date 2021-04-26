@@ -3,7 +3,11 @@ require("dotenv").config();
 module.exports = {
   development: {
     client: "pg",
-    connection: process.env.DB_URL,
+    connection: {
+      connectionString: process.env.DB_URL,
+      ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: false } : false,
+      // ssl: process.env.DB_SSL ? { rejectUnauthorized: false } : false,
+    },
     migrations: {
       tableName: "knex_migrations",
     },
@@ -20,7 +24,8 @@ module.exports = {
     client: "pg",
     connection: {
       connectionString: process.env.DB_URL,
-      ssl: { rejectUnauthorized: false },
+      ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: false } : false,
+      //ssl: { rejectUnauthorized: process.env.DB_SSL ? false : true },
     },
     migrations: {
       tableName: "knex_migrations",
