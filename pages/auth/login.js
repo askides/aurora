@@ -23,16 +23,16 @@ const Login = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <img
-          className="mx-auto h-12 w-auto"
-          src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-          alt="Workflow"
-        />
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Sign in to your account</h2>
+        <img className="mx-auto h-16 w-auto" src="/logos/aurora_mini_gradient.svg" alt="Aurora" />
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          Sign in to your account
+        </h2>
         <p className="mt-2 text-center text-sm text-gray-600 max-w">
-          Or{" "}
-          <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
-            start your 14-day free trial
+          <a
+            href="https://docs.useaurora.app"
+            className="font-medium text-indigo-600 hover:text-indigo-500"
+          >
+            Or go to the Official Documentation!
           </a>
         </p>
       </div>
@@ -65,11 +65,13 @@ const Login = () => {
                       </label>
                     </div>
 
+                    {/*
                     <div className="text-sm">
                       <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
                         Forgot your password? (WIP)
                       </a>
                     </div>
+                    */}
                   </div>
 
                   <div>

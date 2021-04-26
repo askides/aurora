@@ -92,11 +92,7 @@ export const Main = ({ needsSidebar, children }) => {
               </Transition.Child>
               <div className="pt-5 pb-4">
                 <div className="flex-shrink-0 flex items-center px-4">
-                  <img
-                    className="h-8 w-auto"
-                    src="https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=600"
-                    alt="Workflow"
-                  />
+                  <img className="h-8 w-auto" src="/logos/aurora_blue.svg" alt="Aurora" />
                 </div>
                 <nav aria-label="Sidebar" className="mt-5">
                   <div className="px-2 space-y-1">
@@ -151,12 +147,8 @@ export const Main = ({ needsSidebar, children }) => {
           <div className="flex flex-col w-20">
             <div className="flex flex-col h-0 flex-1 overflow-y-auto bg-indigo-600">
               <div className="flex-1 flex flex-col">
-                <div className="flex-shrink-0 bg-indigo-700 py-4 flex items-center justify-center">
-                  <img
-                    className="h-8 w-auto"
-                    src="https://tailwindui.com/img/logos/workflow-mark.svg?color=white"
-                    alt="Workflow"
-                  />
+                <div className="flex-shrink-0 bg-indigo-600 py-4 flex items-center justify-center">
+                  <img className="h-8 w-auto" src="/logos/aurora_mini_white.svg" alt="Aurora" />
                 </div>
                 <nav aria-label="Sidebar" className="py-6 flex flex-col items-center space-y-3">
                   {navigation
@@ -194,7 +186,7 @@ export const Main = ({ needsSidebar, children }) => {
         <div className="lg:hidden">
           <div className="bg-indigo-600 py-2 px-4 flex items-center justify-between sm:px-6 lg:px-8">
             <div>
-              <img className="h-8 w-auto" src="/logos/aurora.svg" alt="Workflow" />
+              <img className="h-8 w-auto" src="/logos/aurora_mini_white.svg" alt="Aurora" />
             </div>
             <div>
               <button
