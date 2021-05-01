@@ -12,6 +12,10 @@ Open Source Analytics Platform - Designed for Humans & Developers :sunglasses:
 
 Open source means the the code is open for anyone to read, comment on and suggest changes. Cookieless means the client side analytic code doesn’t use cookies. Analytic platform means it’s a system to collect, store and display analytic data such as the amount of users on your website at any one time.
 
+### Can I see a demo?
+
+You can see a running demo [here](https://demo.useaurora.app/s/f3d811716007dcfbbec4c155d00a30dc)!
+
 ### Getting Started 🤩
 
 You can go up and running with Aurora by following the [Official Docs](https://docs.useaurora.app/). These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
