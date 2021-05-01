@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   aurora:
-    image: aurora:latest
+    image: itsrennyman/aurora:latest
     ports:
       - "3000:3000"
     environment:
