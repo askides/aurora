@@ -3,11 +3,13 @@ services:
   aurora:
     image: aurora:latest
     ports:
-      - "3200:3000"
+      - "3000:3000"
     environment:
-      DB_URL: postgres://root:password@localhost:5432/aurora
+      DB_URL: postgres://aurora:aurora@postgres:5432/aurora
       JWT_SECRET: asupersecret
       DB_SSL: "false"
+      AURORA_EMAIL: "email@example.com"
+      AURORA_PASSWORD: "password"
     depends_on:
       - postgres
 
