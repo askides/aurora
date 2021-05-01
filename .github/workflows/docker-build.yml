@@ -35,7 +35,7 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            latest
+            itsrennyman/${{ env.PROJECT_NAME }}:latest
             itsrennyman/${{ env.PROJECT_NAME }}:${{ env.PROJECT_VERSION }}
 
       - name: Image digest
