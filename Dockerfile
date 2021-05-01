@@ -26,13 +26,21 @@ FROM node:14-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
+ENV AURORA_EMAIL aurora@example.com
+ENV AURORA_PASSWORD password
 
 # You only need to copy next.config.js if you are NOT using the default configuration
-# COPY --from=builder /app/next.config.js ./
+COPY --from=builder /app/next.config.js ./
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
+
+# Added for initialization
+COPY --from=builder /app/lib ./lib
+COPY --from=builder /app/migrations ./migrations
+COPY --from=builder /app/knexfile.js ./knexfile.js
+COPY --from=builder /app/utils/hash.js ./utils/hash.js
 
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
@@ -47,4 +55,4 @@ EXPOSE 3000
 # Uncomment the following line in case you want to disable telemetry.
 RUN npx next telemetry disable
 
-CMD ["npm", "run", "start"]
+CMD npm run migrate && npm run aurora:initialize ${AURORA_EMAIL} ${AURORA_PASSWORD} password && npm run start

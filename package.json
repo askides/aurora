@@ -2,6 +2,15 @@
   "name": "aurora",
   "version": "0.3.0",
   "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/itsrennyman/aurora"
+  },
+  "keywords": [
+    "aurora",
+    "analytics"
+  ],
+  "author": "Renato Pozzi",
   "scripts": {
     "dev": "next dev",
     "prebuild": "npm run build:tracker",
@@ -11,6 +20,7 @@
     "migrate": "knex migrate:latest",
     "migrate:refresh": "knex migrate:rollback --all && knex migrate:latest",
     "aurora:setup": "node ./lib/commands/setup.js",
+    "aurora:initialize": "node ./lib/commands/initializer.js",
     "start": "next start",
     "test": "jest"
   },
