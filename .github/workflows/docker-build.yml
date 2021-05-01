@@ -34,7 +34,9 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          tags: itsrennyman/${{ env.PROJECT_NAME }}:${{ env.PROJECT_VERSION }}
+          tags: |
+            latest
+            itsrennyman/${{ env.PROJECT_NAME }}:${{ env.PROJECT_VERSION }}
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
