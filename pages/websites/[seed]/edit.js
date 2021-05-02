@@ -33,7 +33,7 @@ const Edit = ({ seed }) => {
   if (isError) return <div>failed to load</div>;
 
   return (
-    <div className="p-6 h-full">
+    <div className="h-full p-6">
       <div className="flex justify-center">
         <div>
           <PageHeading title={"Edit Website"} breadcumbs={breadcumbs} />
@@ -45,23 +45,36 @@ const Edit = ({ seed }) => {
                   <div className="space-y-8 divide-y divide-gray-200">
                     <div className="space-y-8 divide-y divide-gray-200">
                       <div>
-                        <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                        <div className="grid grid-cols-1 mt-6 gap-y-6 gap-x-4 sm:grid-cols-6">
                           <div className="sm:col-span-6">
-                            <TextField label="Website Name" name="name" type="text" autocomplete="none" />
+                            <TextField
+                              label="Website Name"
+                              name="name"
+                              type="text"
+                              autocomplete="none"
+                            />
                           </div>
 
                           <div className="sm:col-span-6">
-                            <TextField label="Website URL" name="url" type="text" autocomplete="none" />
+                            <TextField
+                              label="Website URL"
+                              name="url"
+                              type="text"
+                              autocomplete="none"
+                            />
                           </div>
                         </div>
                       </div>
 
                       <div className="pt-8">
                         <div>
-                          <h3 className="text-lg leading-6 font-medium text-gray-900">Share Statistics</h3>
+                          <h3 className="text-lg font-medium leading-6 text-gray-900">
+                            Share Statistics
+                          </h3>
                           <p className="mt-1 text-sm text-gray-500">
-                            If you select to share statistics, a public URL will be available presenting a read-only
-                            version of the Aurora Dashboard. You can disable it later.
+                            If you choose to make statistics public, a public URL will be available
+                            presenting a read-only version of the Aurora Dashboard. Don't worry, you
+                            can always disable it later!
                           </p>
                         </div>
 
@@ -69,7 +82,11 @@ const Edit = ({ seed }) => {
                           <fieldset>
                             <div className="space-y-4">
                               <Radio value="1" label="Yes, make it public." name="shared" />
-                              <Radio value="0" label="Nope, i wanna keep it private." name="shared" />
+                              <Radio
+                                value="0"
+                                label="Nope, I want to keep it private."
+                                name="shared"
+                              />
                             </div>
                           </fieldset>
 
@@ -83,12 +100,18 @@ const Edit = ({ seed }) => {
 
                       <div className="pt-8">
                         <div>
-                          <h3 className="text-lg leading-6 font-medium text-gray-900">Connect Your Website</h3>
-                          <p className="mt-1 text-sm text-gray-500">Copy this line of code in the HEAD of your page.</p>
+                          <h3 className="text-lg font-medium leading-6 text-gray-900">
+                            Connect Your Website
+                          </h3>
+                          <p className="mt-1 text-sm text-gray-500">
+                            Copy this line of code in the HEAD of your page.
+                          </p>
                         </div>
 
                         <div className="mt-6 text-sm font-medium text-gray-700">
-                          {`<script async defer src="${window.location.protocol}//${window.location.hostname}${
+                          {`<script async defer src="${window.location.protocol}//${
+                            window.location.hostname
+                          }${
                             location.port ? ":" + location.port : ""
                           }/aurora.js" aurora-id="${seed}"></script>`}
                         </div>
