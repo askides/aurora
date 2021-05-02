@@ -74,7 +74,7 @@ const Edit = ({ seed }) => {
                           <p className="mt-1 text-sm text-gray-500">
                             If you choose to make statistics public, a public URL will be available
                             presenting a read-only version of the Aurora Dashboard. Don't worry, you
-                            can disable it later!
+                            can always disable it later!
                           </p>
                         </div>
 
