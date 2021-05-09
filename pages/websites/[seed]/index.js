@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import { withAuth } from "../../../hoc/withAuth";
 import { useWebsite } from "../../../hooks/useWebsite";
@@ -11,6 +12,8 @@ import { CountryViews } from "../../../components/charts/CountryViews";
 import { RealtimeVisitors } from "../../../components/RealtimeVisitors";
 import { RangeSelector } from "../../../components/RangeSelector";
 import { PageHeading } from "../../../components/PageHeading";
+import { Jumbo } from "../../../components/charts/Jumbo";
+//import { Area } from "../../../components/charts/Area";
 
 export async function getServerSideProps(context) {
   const { seed } = context.query;
@@ -20,6 +23,8 @@ export async function getServerSideProps(context) {
   };
 }
 
+const Area = dynamic(() => import("../../../components/charts/Area"), { ssr: false });
+
 const Website = ({ seed }) => {
   const { website, isLoading, isError } = useWebsite({ seed });
   const [timeRange, setTimeRange] = useState(TimeRanges.DAY);
@@ -28,7 +33,7 @@ const Website = ({ seed }) => {
   if (isError) return <div>failed to load</div>;
 
   return (
-    <div className="h-full p-6 space-y-4 bg-gray-900">
+    <div className="h-full py-8 px-10 space-y-4 bg-gray-900">
       <PageHeading
         title={isLoading ? "" : website.url}
         breadcumbs={["Websites", "Dashboard"]}
@@ -38,7 +43,9 @@ const Website = ({ seed }) => {
       />
 
       <Performance url={`/api/metrics/${seed}/performance`} timeRange={timeRange} />
-      <Chart url={`/api/metrics/${seed}/views/series`} timeRange={timeRange} type="lineChart" />
+      <Area />
+
+      {/* <Chart url={`/api/metrics/${seed}/views/series`} timeRange={timeRange} type="lineChart" /> */}
 
       <div className="grid md:grid-cols-2 gap-4">
         <PageViews url={`/api/metrics/${seed}/views/pages`} timeRange={timeRange} />
