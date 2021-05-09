@@ -1,12 +1,15 @@
 import axios from "axios";
+import { useRouter } from "next/router";
 import { Formik, Form } from "formik";
 import { PageHeading } from "../../components/PageHeading";
 import { TextField } from "../../components/TextField";
 import { withAuth } from "../../hoc/withAuth";
 import { Button } from "../../components/Button";
 import { useUser } from "../../hooks/useUser";
+import { localize } from "../../utils/dates";
 
 const Profile = () => {
+  const router = useRouter();
   const { user, isLoading, isError } = useUser();
 
   const breadcumbs = ["Account"];
@@ -17,6 +20,15 @@ const Profile = () => {
       .then((res) => res.data.data)
       .catch((err) => console.log(err))
       .finally(() => setSubmitting(false));
+
+  const logout = async () => {
+    try {
+      await axios.post("/api/auth/logout");
+      router.push("/auth/login");
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>failed to load</div>;
@@ -38,52 +50,55 @@ const Profile = () => {
                           <div className="sm:col-span-6">
                             <h2 className="text-xl font-medium text-gray-900">Profile</h2>
                             <p className="mt-1 text-sm text-gray-500">
-                              This information will be displayed publicly so be careful what you share.
+                              This information will be not displayed publicly.
                             </p>
                           </div>
 
                           <div className="sm:col-span-3">
-                            <TextField label="First Name" name="firstname" type="text" autocomplete="none" />
+                            <TextField
+                              label="First Name"
+                              name="firstname"
+                              type="text"
+                              autocomplete="none"
+                            />
                           </div>
 
                           <div className="sm:col-span-3">
-                            <TextField label="Last Name" name="lastname" type="text" autocomplete="none" />
-                          </div>
-
-                          {/** TODO: TextArea Component */}
-                          <div className="sm:col-span-6">
-                            <label htmlFor="description" className="block text-sm font-medium text-gray-900">
-                              Description
-                            </label>
-                            <div className="mt-1">
-                              <textarea
-                                id="description"
-                                name="description"
-                                rows={4}
-                                className="block w-full border-gray-300 rounded-md shadow-sm sm:text-sm focus:ring-blue-500 focus:border-blue-500"
-                                defaultValue={""}
-                              />
-                            </div>
-                            <p className="mt-3 text-sm text-gray-500">
-                              Brief description for your profile. URLs are hyperlinked.
-                            </p>
+                            <TextField
+                              label="Last Name"
+                              name="lastname"
+                              type="text"
+                              autocomplete="none"
+                            />
                           </div>
                         </div>
 
                         <div className="pt-8 grid grid-cols-1 gap-y-6 sm:grid-cols-6 sm:gap-x-6">
                           <div className="sm:col-span-6">
-                            <h2 className="text-xl font-medium text-gray-900">Personal Information</h2>
+                            <h2 className="text-xl font-medium text-gray-900">
+                              Personal Information
+                            </h2>
                             <p className="mt-1 text-sm text-gray-500">
-                              This information will be displayed publicly so be careful what you share.
+                              This information will be not displayed publicly.
                             </p>
                           </div>
 
                           <div className="sm:col-span-6">
-                            <TextField label="Email Address" name="email" type="email" autocomplete="none" />
+                            <TextField
+                              label="Email Address"
+                              name="email"
+                              type="email"
+                              autocomplete="none"
+                            />
                           </div>
 
                           <div className="sm:col-span-3">
-                            <TextField label="New Password" name="password" type="password" autocomplete="none" />
+                            <TextField
+                              label="New Password"
+                              name="password"
+                              type="password"
+                              autocomplete="none"
+                            />
                           </div>
 
                           <div className="sm:col-span-3">
@@ -97,7 +112,7 @@ const Profile = () => {
 
                           <p className="text-sm text-gray-500 sm:col-span-6">
                             This account was created on{" "}
-                            <time dateTime="2017-01-05T20:35:40">January 5, 2017, 8:35:40 PM</time>.
+                            <time dateTime="2017-01-05T20:35:40">{localize(user.created_at)}</time>.
                           </p>
                         </div>
                       </div>
@@ -105,7 +120,18 @@ const Profile = () => {
 
                     <div className="pt-5">
                       <div className="flex justify-end">
-                        <Button type="submit" value="Save" isLoading={isSubmitting} />
+                        <Button type="submit" value="Save Informations" isLoading={isSubmitting} />
+                      </div>
+                    </div>
+
+                    <div className="pt-5">
+                      <div className="flex justify-end">
+                        <Button
+                          type="button"
+                          value="Logout"
+                          isLoading={isSubmitting}
+                          onClick={() => logout()}
+                        />
                       </div>
                     </div>
                   </div>

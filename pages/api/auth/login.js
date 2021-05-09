@@ -17,6 +17,7 @@ const attempt = async ({ email, password }) => {
       email: user.get("email"),
       firstname: user.get("firstname"),
       lastname: user.get("lastname"),
+      created_at: user.get("created_at"),
     };
   }
 
