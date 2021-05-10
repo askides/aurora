@@ -12,7 +12,7 @@ export const Performance = ({ url, timeRange }) => {
       <Jumbo title="Total Views" value={graph.pageViews.cp} />
       <Jumbo title="Unique Visitors" value={graph.uniqueVisitors.cp} />
       <Jumbo title="Bounces" value={graph.bounceRate.cp} />
-      <Jumbo title="Avg Visit Time" value="24s" />
+      <Jumbo title="Avg Visit Time" value={`${graph.visitDuration.cp}s`} />
     </dl>
   );
 };
