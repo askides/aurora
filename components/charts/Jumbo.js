@@ -10,7 +10,7 @@ export const Jumbo = ({ title, value }) => (
     <dt className="text-md font-medium text-gray-500 truncate flex justify-between">
       <div>{title}</div>
 
-      <div
+      {/* <div
         className={classNames(
           item.changeType === "increase"
             ? "text-green-800 dark:text-green-500"
@@ -30,7 +30,7 @@ export const Jumbo = ({ title, value }) => (
           />
         )}
         12
-      </div>
+      </div> */}
     </dt>
     <dd className="mt-1 text-5xl font-semibold text-white">{value}</dd>
   </div>
