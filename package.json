@@ -46,8 +46,6 @@
     "pg": "^8.5.1",
     "react": "17.0.1",
     "react-apexcharts": "^1.3.9",
-    "react-chartkick": "^0.4.1",
-    "react-countup": "^4.3.3",
     "react-dom": "17.0.1",
     "react-table": "^7.6.3",
     "react-toast-notifications": "^2.4.3",
