@@ -13,7 +13,7 @@ const handleGet = async (req) => {
 const handlePost = async (req) => {
   const user = req.accessTokenBody.data;
 
-  const { name, url } = req.body;
+  const { name, url, shared } = req.body;
 
   const seed = generate();
 
@@ -21,6 +21,7 @@ const handlePost = async (req) => {
     url: url,
     name: name,
     seed: seed,
+    shared: Boolean(Number(shared)),
     user_id: user.id,
   }).save();
 
