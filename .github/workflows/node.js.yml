@@ -40,7 +40,7 @@ jobs:
       - run: npm run migrate --production
         env:
           DB_URL: postgres://root:password@postgres:5432/aurora
+          DB_SSL: "false"
           JWT_SECRET: ASUPERSECRET
-          DB_SSL: false
       - run: npm run db:seed --production
       - run: npm run test
