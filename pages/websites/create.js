@@ -1,4 +1,5 @@
 import axios from "axios";
+import Head from "next/head";
 import { Formik, Form } from "formik";
 import { useRouter } from "next/router";
 import { PageHeading } from "../../components/PageHeading";
@@ -21,6 +22,10 @@ const Create = () => {
 
   return (
     <div className="p-6 h-full">
+      <Head>
+        <title>Create Website</title>
+      </Head>
+
       <div className="flex justify-center">
         <div>
           <PageHeading title={"Create Website"} breadcumbs={breadcumbs} />

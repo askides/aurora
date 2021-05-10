@@ -1,4 +1,5 @@
 import axios from "axios";
+import Head from "next/head";
 import { Formik, Form } from "formik";
 import { PageHeading } from "../../../components/PageHeading";
 import { TextField } from "../../../components/TextField";
@@ -33,7 +34,10 @@ const Edit = ({ seed }) => {
   if (isError) return <div>failed to load</div>;
 
   return (
-    <div className="h-full p-6">
+    <div className="p-6 h-full">
+      <Head>
+        <title>Edit Website</title>
+      </Head>
       <div className="flex justify-center">
         <div>
           <PageHeading title={"Edit Website"} breadcumbs={breadcumbs} />
@@ -68,6 +72,7 @@ const Edit = ({ seed }) => {
 
                       <div className="pt-8">
                         <div>
+
                           <h3 className="text-lg font-medium leading-6 text-gray-900">
                             Share Statistics
                           </h3>

@@ -1,8 +1,10 @@
+import dynamic from "next/dynamic";
+import Head from "next/head";
 import { useState } from "react";
 import { withAuth } from "../../../hoc/withAuth";
 import { useWebsite } from "../../../hooks/useWebsite";
 import { TimeRanges } from "../../../utils/enums";
-import { Chart } from "../../../components/charts/Chart";
+import { dropProtocol } from "../../../utils/urls";
 import { Performance } from "../../../components/charts/Performance";
 import { BrowserViews } from "../../../components/charts/BrowserViews";
 import { OsViews } from "../../../components/charts/OsViews";
@@ -20,6 +22,8 @@ export async function getServerSideProps(context) {
   };
 }
 
+const Area = dynamic(() => import("../../../components/charts/Area"), { ssr: false });
+
 const Website = ({ seed }) => {
   const { website, isLoading, isError } = useWebsite({ seed });
   const [timeRange, setTimeRange] = useState(TimeRanges.DAY);
@@ -28,9 +32,13 @@ const Website = ({ seed }) => {
   if (isError) return <div>failed to load</div>;
 
   return (
-    <div className="h-full p-6 space-y-4 bg-gray-900">
+    <div className="h-full py-8 px-4 sm:px-10 space-y-4 bg-gray-900">
+      <Head>
+        <title>View Website</title>
+      </Head>
+
       <PageHeading
-        title={isLoading ? "" : website.url}
+        title={isLoading ? "" : dropProtocol(website.url)}
         breadcumbs={["Websites", "Dashboard"]}
         subtitle={<RealtimeVisitors seed={seed} />}
         actions={<RangeSelector onSelected={(value) => setTimeRange(value)} />}
@@ -38,7 +46,8 @@ const Website = ({ seed }) => {
       />
 
       <Performance url={`/api/metrics/${seed}/performance`} timeRange={timeRange} />
-      <Chart url={`/api/metrics/${seed}/views/series`} timeRange={timeRange} type="lineChart" />
+
+      <Area url={`/api/metrics/${seed}/views/series`} timeRange={timeRange} />
 
       <div className="grid md:grid-cols-2 gap-4">
         <PageViews url={`/api/metrics/${seed}/views/pages`} timeRange={timeRange} />
