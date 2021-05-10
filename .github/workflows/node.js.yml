@@ -47,4 +47,12 @@ jobs:
           DB_SSL: "false"
           JWT_SECRET: ASUPERSECRET
       - run: npm run db:seed --production
+        env:
+          DB_URL: postgres://aurora:postgres@localhost:5432/aurora
+          DB_SSL: "false"
+          JWT_SECRET: ASUPERSECRET
       - run: npm run test
+        env:
+          DB_URL: postgres://aurora:postgres@localhost:5432/aurora
+          DB_SSL: "false"
+          JWT_SECRET: ASUPERSECRET
