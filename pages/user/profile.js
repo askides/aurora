@@ -1,4 +1,5 @@
 import axios from "axios";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { Formik, Form } from "formik";
 import { PageHeading } from "../../components/PageHeading";
@@ -35,6 +36,10 @@ const Profile = () => {
 
   return (
     <div className="p-6 h-full">
+      <Head>
+        <title>My Profile</title>
+      </Head>
+
       <div className="flex justify-center">
         <div>
           <PageHeading title="Account" breadcumbs={breadcumbs} />

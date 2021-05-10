@@ -1,8 +1,10 @@
 import dynamic from "next/dynamic";
+import Head from "next/head";
 import { useState } from "react";
 import { withAuth } from "../../../hoc/withAuth";
 import { useWebsite } from "../../../hooks/useWebsite";
 import { TimeRanges } from "../../../utils/enums";
+import { dropProtocol } from "../../../utils/urls";
 import { Performance } from "../../../components/charts/Performance";
 import { BrowserViews } from "../../../components/charts/BrowserViews";
 import { OsViews } from "../../../components/charts/OsViews";
@@ -31,8 +33,12 @@ const Website = ({ seed }) => {
 
   return (
     <div className="h-full py-8 px-4 sm:px-10 space-y-4 bg-gray-900">
+      <Head>
+        <title>View Website</title>
+      </Head>
+
       <PageHeading
-        title={isLoading ? "" : website.url}
+        title={isLoading ? "" : dropProtocol(website.url)}
         breadcumbs={["Websites", "Dashboard"]}
         subtitle={<RealtimeVisitors seed={seed} />}
         actions={<RangeSelector onSelected={(value) => setTimeRange(value)} />}

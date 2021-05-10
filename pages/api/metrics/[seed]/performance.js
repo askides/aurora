@@ -9,7 +9,7 @@ const performance = async (range, seed) => {
       AVG(events.duration) as cp_visit_duration,
       (
         select
-          sum(t.c)
+          COALESCE(sum(t.c), 0)
         from
           (
             select

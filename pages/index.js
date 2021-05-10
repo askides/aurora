@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { default as NextLink } from "next/link";
 import { HeadlessTable } from "../components/HeadlessTable";
 import { PageHeading } from "../components/PageHeading";
@@ -57,6 +58,10 @@ const Websites = () => {
 
   return (
     <div className="p-6 h-full">
+      <Head>
+        <title>Websites</title>
+      </Head>
+
       <PageHeading
         title={"Websites"}
         breadcumbs={breadcumbs}
