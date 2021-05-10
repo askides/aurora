@@ -64,9 +64,9 @@ const Create = () => {
                             Share Statistics
                           </h3>
                           <p className="mt-1 text-sm text-gray-500">
-                            If you select to share statistics, a public URL will be available
-                            presenting a read-only version of the Aurora Dashboard. You can disable
-                            it later.
+                            If you choose to make statistics public, a public URL will be available
+                            presenting a read-only version of the Aurora Dashboard. Don't worry, you
+                            can always disable it later!
                           </p>
                         </div>
                         <div className="mt-6">
@@ -75,7 +75,7 @@ const Create = () => {
                               <Radio value="1" label="Yes, make it public." name="shared" />
                               <Radio
                                 value="0"
-                                label="Nope, i wanna keep it private."
+                                label="Nope, I want to keep it private."
                                 name="shared"
                               />
                             </div>
