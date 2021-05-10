@@ -10,6 +10,21 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     strategy:
       matrix:
         node-version: [12.x, 14.x, 15.x]
@@ -22,4 +37,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
       - run: npm run build --if-present
+      - run: npm run migrate --production
+        env:
+          DB_URL: postgres://root:password@localhost:5432/aurora
+          JWT_SECRET: ASUPERSECRET
+          DB_SSL: false
+      - run: npm run db:seed --production
       - run: npm run test
