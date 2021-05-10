@@ -1,11 +1,8 @@
 import { ArrowSmDownIcon, ArrowSmUpIcon } from "@heroicons/react/solid";
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
+import { classNames } from "../../utils/classes";
 
 const item = {
-  changeType: "increase",
+  changeType: "increase", // TODO: need real data
 };
 
 export const Jumbo = ({ title, value }) => (
@@ -15,13 +12,13 @@ export const Jumbo = ({ title, value }) => (
 
       <div
         className={classNames(
-          item?.changeType === "increase"
-            ? "bg-green-100 text-green-800 dark:text-green-500"
-            : "bg-red-100 text-red-800 dark:text-red-500",
-          "inline-flex items-baseline px-2.5 py-0.5 rounded-full text-sm font-medium md:mt-2 lg:mt-0 dark:bg-gray-700"
+          item.changeType === "increase"
+            ? "text-green-800 dark:text-green-500"
+            : "text-red-800 dark:text-red-500",
+          "inline-flex items-baseline rounded-full text-lg font-bold md:mt-2 lg:mt-0 dark:bg-transparent"
         )}
       >
-        {item?.changeType === "increase" ? (
+        {item.changeType === "increase" ? (
           <ArrowSmUpIcon
             className="-ml-1 mr-0.5 flex-shrink-0 self-center h-5 w-5 text-green-500"
             aria-hidden="true"
@@ -32,9 +29,6 @@ export const Jumbo = ({ title, value }) => (
             aria-hidden="true"
           />
         )}
-        <span className="sr-only">
-          {item?.changeType === "increase" ? "Increased" : "Decreased"} by
-        </span>
         12
       </div>
     </dt>
