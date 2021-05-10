@@ -10,11 +10,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x, 15.x]
+
     services:
       # Label used to access the service container
       postgres:
         # Docker Hub image
-        image: postgres
+        image: postgres:12
         # Provide the password for postgres
         env:
           POSTGRES_PASSWORD: postgres
@@ -24,10 +28,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-
-    strategy:
-      matrix:
-        node-version: [12.x, 14.x, 15.x]
 
     steps:
       - uses: actions/checkout@v2
@@ -39,7 +39,7 @@ jobs:
       - run: npm run build --if-present
       - run: npm run migrate --production
         env:
-          DB_URL: postgres://root:password@postgres:5432/aurora
+          DB_URL: postgres://root:postgres@postgres:5432/aurora
           DB_SSL: "false"
           JWT_SECRET: ASUPERSECRET
       - run: npm run db:seed --production
