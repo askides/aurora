@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic";
+import Head from "next/head";
 import { useState } from "react";
 import { withAuth } from "../../../hoc/withAuth";
 import { useWebsite } from "../../../hooks/useWebsite";
@@ -34,6 +35,10 @@ const Website = ({ seed }) => {
 
   return (
     <div className="h-full py-8 px-4 sm:px-10 space-y-4 bg-gray-900">
+      <Head>
+        <title>Preview {website.url}</title>
+      </Head>
+
       <PageHeading
         title={isLoading ? "" : website.url}
         breadcumbs={["Websites", "Dashboard"]}

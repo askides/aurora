@@ -1,4 +1,5 @@
 import axios from "axios";
+import Head from "next/head";
 import { useState } from "react";
 import { Formik, Form } from "formik";
 import { useRouter } from "next/router";
@@ -22,6 +23,10 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <Head>
+        <title>Aurora | Login</title>
+      </Head>
+
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <img className="mx-auto h-16 w-auto" src="/logos/aurora_mini_gradient.svg" alt="Aurora" />
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
