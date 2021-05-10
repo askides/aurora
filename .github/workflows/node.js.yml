@@ -39,7 +39,7 @@ jobs:
       - run: npm run build --if-present
       - run: npm run migrate --production
         env:
-          DB_URL: postgres://root:password@localhost:5432/aurora
+          DB_URL: postgres://root:password@postgres:5432/aurora
           JWT_SECRET: ASUPERSECRET
           DB_SSL: false
       - run: npm run db:seed --production
