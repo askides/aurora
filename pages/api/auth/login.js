@@ -9,7 +9,7 @@ const makeJwt = ({ data }) =>
   jwt.sign({ data: data }, process.env.JWT_SECRET, { expiresIn: AUTH_COOKIE_LIFETIME });
 
 const attempt = async ({ email, password }) => {
-  const user = await new User().where("email", email).fetch();
+  const user = await new User().where("email", email).fetch({ require: false });
 
   if (user && verify(password, user.get("password"))) {
     return {
