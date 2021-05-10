@@ -1,90 +1,42 @@
 const { withSharedAuth } = require("../../../../../utils/hof/withSharedAuth");
 const { db } = require("../../../../../lib/db_connect");
 
-// TODO: only pageView event & Fix range
-const thisRangeViews = async (range = "month", seed) => {
+const thisRangeViews = async (seed, range, factor) => {
   return await db.raw(`
     SELECT
       range.generate_series as range,
-      COALESCE(e.views, 0) AS views
+      SUM(
+        COALESCE(e.views, 0)
+      ) AS views
     FROM
       (
-        select
+        SELECT
           generate_series(
             date_trunc('${range}', now()),
-            date_trunc('${range}', now()) + '1 ${range}' :: interval - '1 day' :: interval,
-            '1 day' :: interval
-          ):: date
+            date_trunc('${range}', now()) + '1 ${range}' :: interval - '1 ${factor}' :: interval,
+            '1 ${factor}' :: interval
+          ):: timestamptz
       ) as range
       LEFT JOIN (
         SELECT
-          events.created_at :: date AS day,
-          Count(events.id) AS views
+          events.created_at AS day,
+          COUNT(events.id) AS views
         FROM
           events
           JOIN websites on websites.id = events.website_id
         WHERE
           websites.seed = '${seed}'
+        AND
+          events.type = 'pageView'
         GROUP BY
           day
-      ) AS e ON range.generate_series = e.day
+      ) AS e ON range.generate_series = date_trunc('${factor}', e.day)
+    GROUP BY
+      range
     ORDER BY
       range
   `);
 };
-
-const thisDayViews = async (seed) =>
-  await db.raw(`
-    SELECT
-      range.generate_series::timestamp::time as range,
-      COALESCE(e.views, 0) AS views
-    FROM
-        (select
-          generate_series(
-            date_trunc('day', now()),
-            date_trunc('day', now()) + '1 day' :: interval - '1 hour' :: interval,
-            '1 hour' :: interval
-          )) AS range
-      LEFT JOIN (
-        SELECT
-          date_trunc('hour', events.created_at) AS hour,
-          Count(events.id) AS views
-        FROM
-          events
-          JOIN websites on websites.id = events.website_id
-      WHERE
-          events.created_at >= date_trunc('day', now())
-          AND websites.seed = '${seed}'
-        GROUP BY
-          hour
-      ) AS e ON range.generate_series = e.hour
-    ORDER BY
-      range
-  `);
-
-const thisYearViews = async (seed) =>
-  await db.raw(`
-    SELECT
-      to_char(
-        to_timestamp (range :: text, 'MM'),
-        'TMMonth'
-      ) as range,
-      COALESCE(e.views, 0) AS views
-    FROM
-      Generate_series(1, 12) AS range
-      LEFT JOIN (
-        SELECT
-          Date_part('month', events.created_at) AS month,
-          Count(events.id) AS views
-        FROM
-          events
-          JOIN websites on websites.id = events.website_id
-        WHERE
-          websites.seed = '${seed}'
-        GROUP BY
-          month
-      ) AS e ON range = e.month
-  `);
 
 const handleGet = async (req, res) => {
   const { seed, range } = req.query;
@@ -93,24 +45,35 @@ const handleGet = async (req, res) => {
 
   switch (range) {
     case "day":
-      data = await thisDayViews(seed);
+      data = await thisRangeViews(seed, "day", "hour");
       break;
     case "year":
-      data = await thisYearViews(seed);
+      data = await thisRangeViews(seed, "year", "month");
       break;
     case "month":
-      data = await thisRangeViews("month", seed);
+      data = await thisRangeViews(seed, "month", "day");
       break;
     case "week":
-      data = await thisRangeViews("week", seed);
+      data = await thisRangeViews(seed, "week", "day");
       break;
     default:
-      data = []; // To be fixed
+      throw new Error("Not a valid option..");
   }
 
-  const series = data.rows.map((dv) => [dv.range, dv.views]);
+  const labels = data.rows.map((el) => el.range);
+  const values = data.rows.map((el) => el.views);
 
-  return { status: 200, data: series };
+  const response = {
+    labels: labels,
+    series: [
+      {
+        name: "visits",
+        data: values,
+      },
+    ],
+  };
+
+  return { status: 200, data: response };
 };
 
 const handle = async function (req, res) {
