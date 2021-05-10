@@ -11,9 +11,9 @@ const format = ({ labels }) => ({
     zoom: {
       enabled: false,
     },
-    sparkline: {
-      enabled: true,
-    },
+    // sparkline: {
+    //   enabled: true,
+    // },
   },
   grid: {
     row: {
