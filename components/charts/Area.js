@@ -4,7 +4,6 @@ import { useGraph } from "../../hooks/useGraph";
 const format = ({ labels }) => ({
   chart: {
     height: 350,
-    type: "area",
     toolbar: {
       show: false,
     },
@@ -90,8 +89,6 @@ const Area = ({ url, timeRange }) => {
 
   if (isLoading) return <div>Loading ...</div>;
   if (isError) return <div>failed to load</div>;
-
-  console.log("grapg", graph);
 
   return (
     <Chart
