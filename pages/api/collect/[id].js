@@ -13,9 +13,13 @@ const handlePost = async (req) => {
     return { status: 422 };
   }
 
-  await new Event()
-    .where({ id: id, website_id: website.id })
-    .save({ duration: duration }, { patch: true });
+  try {
+    await new Event()
+      .where({ id: id, website_id: website.id })
+      .save({ duration: duration }, { patch: true });
+  } catch (err) {
+    console.log("Impossible to log duration.");
+  }
 
   return { status: 200 };
 };
