@@ -70,16 +70,6 @@ const { sum } = require("../utils/math");
 
   document.addEventListener("visibilitychange", sendTiming);
 
-  window.addEventListener("popstate", function (event) {
-    // Log the state data to the console
-    console.log("POPPABLE", event);
-  });
-
-  window.addEventListener("pushstate", function (event) {
-    // Log the state data to the console
-    console.log("PUSHABLE", event);
-  });
-
   const handlePushState = () => {
     const pushState = history.pushState;
 
