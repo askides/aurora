@@ -1,8 +1,8 @@
 export const Panel = ({ header, isLoading, children }) => {
   return (
-    <div className="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+    <div className="bg-white dark:bg-gray-900 overflow-hidden sm:first:pl-0 sm:pl-5 sm:py-5">
       {header && <div className="px-4 py-5 sm:px-6">{header}</div>}
-      <div className="px-4 py-5 sm:p-6">{children}</div>
+      <div className="">{children}</div>
     </div>
   );
 };

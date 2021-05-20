@@ -13,6 +13,8 @@ import { CountryViews } from "../../../components/charts/CountryViews";
 import { RealtimeVisitors } from "../../../components/RealtimeVisitors";
 import { RangeSelector } from "../../../components/RangeSelector";
 import { PageHeading } from "../../../components/PageHeading";
+import { Test } from "../../../components/Test";
+import { ReferrerViews } from "../../../components/charts/ReferrerViews";
 
 export async function getServerSideProps(context) {
   const { seed } = context.query;
@@ -49,12 +51,18 @@ const Website = ({ seed }) => {
 
       <Area url={`/api/metrics/${seed}/views/series`} timeRange={timeRange} />
 
-      <div className="grid md:grid-cols-2 gap-4">
-        <PageViews url={`/api/metrics/${seed}/views/pages`} timeRange={timeRange} />
+      <div className="grid md:grid-cols-3 gap-4 sm:divide-x-2 sm:divide-gray-800">
         <OsViews url={`/api/metrics/${seed}/views/oses`} timeRange={timeRange} />
         <BrowserViews url={`/api/metrics/${seed}/views/browsers`} timeRange={timeRange} />
         <CountryViews url={`/api/metrics/${seed}/views/countries`} timeRange={timeRange} />
       </div>
+
+      <div className="grid md:grid-cols-2 gap-4 sm:divide-x divide-gray-800">
+        <PageViews url={`/api/metrics/${seed}/views/pages`} timeRange={timeRange} />
+        <ReferrerViews url={`/api/metrics/${seed}/views/referrers`} timeRange={timeRange} />
+      </div>
+
+      <Test />
     </div>
   );
 };
