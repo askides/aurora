@@ -14,7 +14,8 @@ const handleGet = async (req, res) => {
     .where("events.type", "pageView")
     .where("websites.seed", seed)
     .groupBy("element")
-    .orderBy("views", "desc");
+    .orderBy("views", "desc")
+    .limit(8);
 
   const totalViews = rows.reduce((acc, el) => acc + Number(el.views), 0);
 
