@@ -49,10 +49,8 @@ const format = ({ labels }) => ({
         fontWeight: 800,
         cssClass: "apexcharts-xaxis-label",
       },
-      padding: {
-        left: 0,
-        right: 0,
-      },
+      offsetX: -15,
+      offsetY: 0,
     },
   },
   xaxis: {
