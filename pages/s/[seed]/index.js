@@ -67,4 +67,4 @@ const Website = ({ seed }) => {
   );
 };
 
-export default withAuth(Website);
+export default Website;
