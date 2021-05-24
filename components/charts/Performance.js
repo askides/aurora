@@ -5,8 +5,8 @@ import { Loader } from "../Loader";
 
 const LoaderWrapper = () => (
   <dl className="grid grid-cols-2 gap-5 sm:grid-cols-4 sm:divide-x divide-gray-800">
-    {range(4).map((el) => (
-      <Loader width={200} height={116} />
+    {range(4).map((el, key) => (
+      <Loader key={key} width={200} height={116} />
     ))}
   </dl>
 );
