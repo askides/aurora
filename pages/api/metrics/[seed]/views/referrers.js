@@ -6,14 +6,15 @@ const handleGet = async (req, res) => {
   const { range, seed } = req.query;
 
   const rows = await db("events")
-    .select("element")
+    .select("referrer as element")
     .count("events.id as views")
     .countDistinct("hash as unique")
     .join("websites", "events.website_id", "websites.id")
     .whereRaw(`events.created_at >= DATE_TRUNC('${range}', now())`)
     .where("events.type", "pageView")
+    .whereNotNull("referrer")
     .where("websites.seed", seed)
-    .groupBy("element")
+    .groupBy("referrer")
     .orderBy("views", "desc")
     .limit(8);
 
