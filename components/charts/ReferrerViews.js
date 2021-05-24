@@ -1,5 +1,6 @@
-import { Loader, ProgressList } from "../ProgressList";
+import { ProgressList } from "../ProgressList";
 import { useGraph } from "../../hooks/useGraph";
+import { Loader } from "../Loader";
 
 const applyConfiguration = (data) => ({
   header: {
@@ -17,7 +18,7 @@ const applyConfiguration = (data) => ({
 export const ReferrerViews = ({ url, timeRange }) => {
   const { graph, isLoading, isError } = useGraph(url, timeRange);
 
-  if (isLoading) return <Loader />;
+  if (isLoading) return <Loader width={340} height={548} />;
   if (isError) return <div>failed to load</div>;
 
   return <ProgressList configuration={applyConfiguration(graph)} />;

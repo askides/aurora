@@ -1,5 +1,6 @@
 import Chart from "react-apexcharts";
 import { useGraph } from "../../hooks/useGraph";
+import { Loader } from "../Loader";
 
 const format = ({ labels }) => ({
   chart: {
@@ -85,7 +86,7 @@ const format = ({ labels }) => ({
 const Area = ({ url, timeRange }) => {
   const { graph, isLoading, isError } = useGraph(url, timeRange);
 
-  if (isLoading) return <div>Loading ...</div>;
+  if (isLoading) return <Loader width={540} height={350} />;
   if (isError) return <div>failed to load</div>;
 
   return (
