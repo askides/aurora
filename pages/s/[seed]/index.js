@@ -45,7 +45,7 @@ const Website = ({ seed }) => {
 
       <Area url={`/api/metrics/${seed}/views/series`} timeRange={timeRange} />
 
-      <div className="grid md:grid-cols-3 gap-4 sm:divide-x-2 sm:divide-gray-800">
+      <div className="grid md:grid-cols-3 gap-4 gap-y-10 sm:divide-x-2 divide-gray-800">
         <Linear title="Os" url={`/api/metrics/${seed}/views/oses`} timeRange={timeRange} />
         <Linear title="Browser" url={`/api/metrics/${seed}/views/browsers`} timeRange={timeRange} />
         <Linear
@@ -55,7 +55,7 @@ const Website = ({ seed }) => {
         />
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4 sm:divide-x divide-gray-800">
+      <div className="grid md:grid-cols-2 gap-4 pt-6 sm:pt-0 gap-y-10 sm:divide-x divide-gray-800">
         <Linear title="Page" url={`/api/metrics/${seed}/views/pages`} timeRange={timeRange} />
         <Linear
           title="Referrer"
