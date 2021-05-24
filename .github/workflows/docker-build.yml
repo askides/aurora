@@ -37,6 +37,7 @@ jobs:
           tags: |
             latest
             itsrennyman/${{ env.PROJECT_NAME }}:${{ env.PROJECT_VERSION }}
+            docker.pkg.github.com/${{ github.repository }}/${{ env.PROJECT_NAME }}:${{ env.PROJECT_VERSION }}
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
