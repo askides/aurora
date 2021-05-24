@@ -1,6 +1,6 @@
 import Chart from "react-apexcharts";
+import dynamic from "next/dynamic";
 import { useGraph } from "../../hooks/useGraph";
-import { Loader } from "../Loader";
 
 const format = ({ labels }) => ({
   chart: {
@@ -82,6 +82,8 @@ const format = ({ labels }) => ({
     },
   },
 });
+
+const Loader = dynamic(() => import("../Loader").then((mod) => mod.Loader), { ssr: false });
 
 const Area = ({ url, timeRange }) => {
   const { graph, isLoading, isError } = useGraph(url, timeRange);

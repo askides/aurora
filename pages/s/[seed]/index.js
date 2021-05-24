@@ -13,9 +13,7 @@ import { CountryViews } from "../../../components/charts/CountryViews";
 import { RealtimeVisitors } from "../../../components/RealtimeVisitors";
 import { RangeSelector } from "../../../components/RangeSelector";
 import { PageHeading } from "../../../components/PageHeading";
-import { Alert } from "../../../components/Alert";
-import { Show } from "../../../components/Show";
-import { demo } from "../../../utils/demo";
+import { ReferrerViews } from "../../../components/charts/ReferrerViews";
 
 export async function getServerSideProps(context) {
   const { seed } = context.query;
@@ -31,13 +29,13 @@ const Website = ({ seed }) => {
   const { website, isLoading, isError } = useWebsite({ seed });
   const [timeRange, setTimeRange] = useState(TimeRanges.DAY);
 
-  if (isLoading) return <div>Loading..</div>;
+  //if (isLoading) return <div>Loading..</div>;
   if (isError) return <div>failed to load</div>;
 
   return (
     <div className="h-full py-8 px-4 sm:px-10 space-y-4 bg-gray-900">
       <Head>
-        <title>Preview {dropProtocol(website.url)}</title>
+        <title>View Website</title>
       </Head>
 
       <PageHeading
@@ -48,22 +46,19 @@ const Website = ({ seed }) => {
         EXPERIMENTAL_IS_DARK={true}
       />
 
-      <Show when={demo()}>
-        <Alert
-          style="alert"
-          title="Please note that as this is a demo, the data is refreshed frequently."
-        />
-      </Show>
-
       <Performance url={`/api/metrics/${seed}/performance`} timeRange={timeRange} />
 
       <Area url={`/api/metrics/${seed}/views/series`} timeRange={timeRange} />
 
-      <div className="grid md:grid-cols-2 gap-4">
-        <PageViews url={`/api/metrics/${seed}/views/pages`} timeRange={timeRange} />
+      <div className="grid md:grid-cols-3 gap-4 sm:divide-x-2 sm:divide-gray-800">
         <OsViews url={`/api/metrics/${seed}/views/oses`} timeRange={timeRange} />
         <BrowserViews url={`/api/metrics/${seed}/views/browsers`} timeRange={timeRange} />
         <CountryViews url={`/api/metrics/${seed}/views/countries`} timeRange={timeRange} />
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-4 sm:divide-x divide-gray-800">
+        <PageViews url={`/api/metrics/${seed}/views/pages`} timeRange={timeRange} />
+        <ReferrerViews url={`/api/metrics/${seed}/views/referrers`} timeRange={timeRange} />
       </div>
     </div>
   );

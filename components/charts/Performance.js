@@ -1,7 +1,9 @@
+import dynamic from "next/dynamic";
 import { range } from "lodash";
 import { Jumbo } from "./Jumbo";
 import { useGraph } from "../../hooks/useGraph";
-import { Loader } from "../Loader";
+
+const Loader = dynamic(() => import("../Loader").then((mod) => mod.Loader), { ssr: false });
 
 const LoaderWrapper = () => (
   <dl className="grid grid-cols-2 gap-5 sm:grid-cols-4 sm:divide-x divide-gray-800">
