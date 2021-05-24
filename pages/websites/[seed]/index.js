@@ -29,7 +29,7 @@ const Website = ({ seed }) => {
   const { website, isLoading, isError } = useWebsite({ seed });
   const [timeRange, setTimeRange] = useState(TimeRanges.DAY);
 
-  if (isLoading) return <div>Loading..</div>;
+  //if (isLoading) return <div>Loading..</div>;
   if (isError) return <div>failed to load</div>;
 
   return (
