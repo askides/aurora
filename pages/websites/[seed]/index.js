@@ -13,7 +13,6 @@ import { CountryViews } from "../../../components/charts/CountryViews";
 import { RealtimeVisitors } from "../../../components/RealtimeVisitors";
 import { RangeSelector } from "../../../components/RangeSelector";
 import { PageHeading } from "../../../components/PageHeading";
-import { Test } from "../../../components/Test";
 import { ReferrerViews } from "../../../components/charts/ReferrerViews";
 
 export async function getServerSideProps(context) {
@@ -61,8 +60,6 @@ const Website = ({ seed }) => {
         <PageViews url={`/api/metrics/${seed}/views/pages`} timeRange={timeRange} />
         <ReferrerViews url={`/api/metrics/${seed}/views/referrers`} timeRange={timeRange} />
       </div>
-
-      <Test />
     </div>
   );
 };
