@@ -2,11 +2,8 @@ const { sum } = require("../utils/math");
 
 (async (window) => {
   const {
-    screen: { width, height },
     navigator: { language },
-    location: { hostname, pathname, search },
-    localStorage,
-    sessionStorage,
+    location: { pathname },
     document,
     history,
   } = window;
@@ -21,23 +18,29 @@ const { sum } = require("../utils/math");
   const analyticsUrl = script.getAttribute("src").replace("/aurora.js", "/api/collect");
   const websiteSeed = script.getAttribute("aurora-id");
 
-  fetch(analyticsUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      type: "pageView",
-      element: pathname,
-      locale: language,
-      seed: websiteSeed,
-      referrer: document.referrer,
-    }),
-  })
-    .then((res) => res.json())
-    .then((res) => res.data)
-    .then((res) => (lastPageViewID = res.id))
-    .catch((error) => console.log(error));
+  // Vars
+  let current = pathname;
+
+  // Tracking
+  const track = (path) => {
+    fetch(analyticsUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        type: "pageView",
+        element: path,
+        locale: language,
+        seed: websiteSeed,
+        referrer: document.referrer,
+      }),
+    })
+      .then((res) => res.json())
+      .then((res) => res.data)
+      .then((res) => (lastPageViewID = res.id))
+      .catch((error) => console.log(error));
+  };
 
   // Listerer Cycle
   const initializeTimings = (timings = []) => {
@@ -61,7 +64,26 @@ const { sum } = require("../utils/math");
     };
   };
 
+  track(current);
+
   const sendTiming = initializeTimings();
 
   document.addEventListener("visibilitychange", sendTiming);
+
+  const handlePushState = () => {
+    const pushState = history.pushState;
+
+    return (...args) => {
+      const [, , url] = args;
+
+      if (url !== current) {
+        current = url;
+        track(url);
+      }
+
+      return pushState.apply(history, args);
+    };
+  };
+
+  history.pushState = handlePushState();
 })(window);

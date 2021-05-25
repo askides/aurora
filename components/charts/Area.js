@@ -1,4 +1,5 @@
 import Chart from "react-apexcharts";
+import dynamic from "next/dynamic";
 import { useGraph } from "../../hooks/useGraph";
 
 const format = ({ labels }) => ({
@@ -49,10 +50,8 @@ const format = ({ labels }) => ({
         fontWeight: 800,
         cssClass: "apexcharts-xaxis-label",
       },
-      padding: {
-        left: 0,
-        right: 0,
-      },
+      offsetX: -15,
+      offsetY: 0,
     },
   },
   xaxis: {
@@ -84,10 +83,12 @@ const format = ({ labels }) => ({
   },
 });
 
+const Loader = dynamic(() => import("../Loader").then((mod) => mod.Loader), { ssr: false });
+
 const Area = ({ url, timeRange }) => {
   const { graph, isLoading, isError } = useGraph(url, timeRange);
 
-  if (isLoading) return <div>Loading ...</div>;
+  if (isLoading) return <Loader width={540} height={350} />;
   if (isError) return <div>failed to load</div>;
 
   return (
