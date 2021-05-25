@@ -13,9 +13,9 @@
 
 # About Aurora 🌈
 
-Hate Cookies? Introducing Aurora, 100% Cookie-Free Website's Analytics. Collect Anonymous Data, Make your Audience Happy Now!
+Hate Cookies? Introducing Aurora, 100% Cookie-Free Open Website Analytics. Collect Anonymous Data. Make your Audience Happy Now!
 
-## Can I see a demo?
+## Can I see a demo? 👀
 
 You can see a **running demo** [here](https://demo.useaurora.app/s/f3d811716007dcfbbec4c155d00a30dc)!
 
