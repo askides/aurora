@@ -1,7 +1,7 @@
-<br/><br/>
+<br/>
 
 <p align="center">
-<img width="400" src="https://raw.githubusercontent.com/itsrennyman/aurora/main/public/logos/aurora_gradient.svg"/>
+<img width="50%" src="https://raw.githubusercontent.com/itsrennyman/aurora/main/public/logos/aurora_gradient.svg"/>
 </p>
 
 <br/>
