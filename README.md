@@ -1,8 +1,10 @@
-<div style="height:30px"></div>
+<br/><br/>
 
 <p align="center">
-<img width="80%" src="https://raw.githubusercontent.com/itsrennyman/aurora/main/public/logos/aurora_gradient.svg"/>
+<img width="400" src="https://raw.githubusercontent.com/itsrennyman/aurora/main/public/logos/aurora_gradient.svg"/>
 </p>
+
+<br/>
 
 <p align="center" style="padding-bottom:3rem">
 <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/itsrennyman/aurora/Docker%20Image%20CI?style=for-the-badge" />
@@ -10,6 +12,8 @@
 <img alt="Aurora Stars" src="https://img.shields.io/github/stars/itsrennyman/aurora?style=for-the-badge" />
 <img alt="Aurora License" src="https://img.shields.io/github/license/itsrennyman/aurora?style=for-the-badge" />
 </p>
+
+<br/>
 
 # About Aurora 🌈
 
