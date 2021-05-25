@@ -1,14 +1,12 @@
-<p align="center" style="text-align:center;padding:3rem">
+<p align="center" style="text-align:center;margin:3rem">
 <img width="80%" src="https://raw.githubusercontent.com/itsrennyman/aurora/main/public/logos/aurora_gradient.svg"/>
 </p>
 
-<p align="center" style="text-align:center;padding-bottom:3rem">
-
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/itsrennyman/aurora/Docker%20Image%20CI?style=for-the-badge)
-![Aurora Release](https://img.shields.io/github/v/release/itsrennyman/aurora?style=for-the-badge)
-![Aurora Stars](https://img.shields.io/github/stars/itsrennyman/aurora?style=for-the-badge)
-![Aurora License](https://img.shields.io/github/license/itsrennyman/aurora?style=for-the-badge)
-
+<p align="center" style="padding-bottom:3rem">
+<img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/itsrennyman/aurora/Docker%20Image%20CI?style=for-the-badge" />
+<img alt="Aurora Release" src="https://img.shields.io/github/v/release/itsrennyman/aurora?style=for-the-badge" />
+<img alt="Aurora Stars" src="https://img.shields.io/github/stars/itsrennyman/aurora?style=for-the-badge" />
+<img alt="Aurora License" src="https://img.shields.io/github/license/itsrennyman/aurora?style=for-the-badge" />
 </p>
 
 # About Aurora 🌈
