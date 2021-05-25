@@ -1,4 +1,6 @@
-<p align="center" style="text-align:center;margin:3rem">
+<div style="height:30px"></div>
+
+<p align="center">
 <img width="80%" src="https://raw.githubusercontent.com/itsrennyman/aurora/main/public/logos/aurora_gradient.svg"/>
 </p>
 
