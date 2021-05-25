@@ -15,6 +15,7 @@ module.exports = {
         "col-span-1",
         "text-right",
         "truncate",
+        "gap-y-10",
       ],
     },
   },
