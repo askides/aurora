@@ -1,20 +1,23 @@
-# Aurora 🌈
+<div style="text-align:center;padding:7rem">
+<img width="80%" src="https://raw.githubusercontent.com/itsrennyman/aurora/main/public/logos/aurora_gradient.svg"/>
+</div>
 
-Open Source Analytics Platform - Designed for Humans & Developers :sunglasses:
+<div style="text-align:center;padding-bottom:3rem">
 
-![](https://repository-images.githubusercontent.com/349502977/fbf82f80-a6e5-11eb-85e0-fb2dadd21bd6)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/itsrennyman/aurora/Docker%20Image%20CI?style=for-the-badge)
+![Aurora Release](https://img.shields.io/github/v/release/itsrennyman/aurora?style=for-the-badge)
+![Aurora Stars](https://img.shields.io/github/stars/itsrennyman/aurora?style=for-the-badge)
+![Aurora License](https://img.shields.io/github/license/itsrennyman/aurora?style=for-the-badge)
 
-![](https://img.shields.io/github/v/release/itsrennyman/aurora?style=for-the-badge)
-![](https://img.shields.io/github/stars/itsrennyman/aurora?style=for-the-badge)
-![](https://img.shields.io/github/license/itsrennyman/aurora?style=for-the-badge)
+</div>
 
-### What's the meaning of “Open Source Cookieless Analytics Platform”?
+# About Aurora 🌈
 
-Open source means the the code is open for anyone to read, comment on and suggest changes. Cookieless means the client side analytic code doesn’t use cookies. Analytic platform means it’s a system to collect, store and display analytic data such as the amount of users on your website at any one time.
+Hate Cookies? Introducing Aurora, 100% Cookie-Free Website's Analytics. Collect Anonymous Data, Make your Audience Happy Now!
 
-### Can I see a demo?
+## Can I see a demo?
 
-You can see a running demo [here](https://demo.useaurora.app/s/f3d811716007dcfbbec4c155d00a30dc)!
+You can see a **running demo** [here](https://demo.useaurora.app/s/f3d811716007dcfbbec4c155d00a30dc)!
 
 ### Getting Started 🤩
 
