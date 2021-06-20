@@ -1,4 +1,3 @@
-import axios from "axios";
 import Head from "next/head";
 import { Formik, Form } from "formik";
 import { useRouter } from "next/router";
@@ -7,18 +6,21 @@ import { TextField } from "../../components/TextField";
 import { Radio } from "../../components/Radio";
 import { withAuth } from "../../hoc/withAuth";
 import { Button } from "../../components/Button";
+import { client } from "../../utils/api";
 
 const Create = () => {
   const router = useRouter();
   const breadcumbs = ["Websites", "Create"];
   const initialValues = { name: "", url: "", share: "no" };
 
-  const handleSubmit = (values, { setSubmitting }) =>
-    axios
-      .post("/api/me/websites", values)
-      .then((res) => res.data.data)
+  const handleSubmit = (values, { setSubmitting }) => {
+    values.shared = Boolean(Number(values.shared));
+    client
+      .post("/v2/me/websites", values)
+      .then((res) => res.data)
       .then((res) => router.push(`/websites/${res.seed}/edit`))
       .finally(setSubmitting(false));
+  };
 
   return (
     <div className="p-6 h-full">
