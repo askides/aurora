@@ -1,12 +1,11 @@
 import useSWR from "swr";
+import { client } from "../utils/api";
 
 export const useGraph = (url, timeRange) => {
   const fetcher = (...args) => {
     const [url, params] = args;
 
-    return fetch(`${url}?range=${params.range}`)
-      .then((res) => res.json())
-      .then((res) => res.data);
+    return client.get(`${url}?range=${params.range}`).then((res) => res.data);
   };
 
   const { data, error } = useSWR([url, timeRange], (url, range) => fetcher(url, { range }));

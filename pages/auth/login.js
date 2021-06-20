@@ -1,4 +1,3 @@
-import axios from "axios";
 import Head from "next/head";
 import { useState } from "react";
 import { Formik, Form } from "formik";
@@ -7,6 +6,7 @@ import { TextField } from "../../components/TextField";
 import { Alert } from "../../components/Alert";
 import { Show } from "../../components/Show";
 import { Button } from "../../components/Button";
+import { client } from "../../utils/api";
 
 const Login = () => {
   const router = useRouter();
@@ -15,8 +15,8 @@ const Login = () => {
   const initialValues = { email: "", password: "" };
 
   const handleSubmit = (values, { setSubmitting }) =>
-    axios
-      .post("/api/auth/login", values)
+    client
+      .post("/v2/auth/login", values)
       .then(() => router.push("/"))
       .catch(() => setErrors(["Invalid credentials."]))
       .finally(() => setSubmitting(false));
