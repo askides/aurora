@@ -8,7 +8,8 @@ import "../assets/css/scrollbar.css";
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
 
-  const isAuthPath = () => router.pathname.startsWith("/auth");
+  const isAuthPath = () =>
+    router.pathname.startsWith("/auth") || router.pathname.startsWith("/setup");
   const isShareablePath = () => router.pathname.startsWith("/s");
 
   if (isAuthPath()) {
