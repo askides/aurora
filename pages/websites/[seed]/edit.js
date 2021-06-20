@@ -1,4 +1,3 @@
-import axios from "axios";
 import Head from "next/head";
 import { Formik, Form } from "formik";
 import { PageHeading } from "../../../components/PageHeading";
@@ -9,6 +8,7 @@ import { Show } from "../../../components/Show";
 import { withAuth } from "../../../hoc/withAuth";
 import { useMeWebsite } from "../../../hooks/useMeWebsite";
 import { SharedLink } from "../../../components/ShareLink";
+import { client } from "../../../utils/api";
 
 export async function getServerSideProps(context) {
   const { seed } = context.query;
@@ -23,12 +23,14 @@ const Edit = ({ seed }) => {
 
   const breadcumbs = ["Websites", "Edit"];
 
-  const handleSubmit = (values, { setSubmitting }) =>
-    axios
-      .put(`/api/me/websites/${seed}`, values)
+  const handleSubmit = (values, { setSubmitting }) => {
+    values.shared = Boolean(Number(values.shared));
+    client
+      .put(`/v2/me/websites/${seed}`, values)
       .then(mutate)
       .catch(console.log) // TODO: Error Management
       .finally(() => setSubmitting(false));
+  };
 
   if (isLoading) return <div>Loading..</div>;
   if (isError) return <div>failed to load</div>;
@@ -72,7 +74,6 @@ const Edit = ({ seed }) => {
 
                       <div className="pt-8">
                         <div>
-
                           <h3 className="text-lg font-medium leading-6 text-gray-900">
                             Share Statistics
                           </h3>
