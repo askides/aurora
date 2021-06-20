@@ -1,4 +1,7 @@
+const FingerprintJS = require("@fingerprintjs/fingerprintjs");
 const { sum } = require("../utils/math");
+
+const fpPromise = FingerprintJS.load();
 
 (async (window) => {
   const {
@@ -8,6 +11,10 @@ const { sum } = require("../utils/math");
     history,
   } = window;
 
+  const fp = await fpPromise;
+  const result = await fp.get();
+  const fingerprint = result.visitorId;
+
   let lastPageViewID = null;
 
   // Check Script Exists
@@ -15,7 +22,7 @@ const { sum } = require("../utils/math");
 
   if (!script) return false;
 
-  const analyticsUrl = script.getAttribute("src").replace("/aurora.js", "/api/collect");
+  const analyticsUrl = "http://localhost:5000/v2/collect"; // script.getAttribute("src").replace("/aurora.js", "/api/collect");
   const websiteSeed = script.getAttribute("aurora-id");
 
   // Vars
@@ -31,13 +38,13 @@ const { sum } = require("../utils/math");
       body: JSON.stringify({
         type: "pageView",
         element: path,
-        locale: language,
+        language: language,
         seed: websiteSeed,
         referrer: document.referrer,
+        fingerprint: fingerprint,
       }),
     })
       .then((res) => res.json())
-      .then((res) => res.data)
       .then((res) => (lastPageViewID = res.id))
       .catch((error) => console.log(error));
   };
