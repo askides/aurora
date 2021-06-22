@@ -8,7 +8,7 @@ class MyDocument extends Document {
 
   render() {
     return (
-      <Html className="dark">
+      <Html>
         <Head>
           <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
           <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
@@ -18,7 +18,7 @@ class MyDocument extends Document {
           <meta name="msapplication-TileColor" content="#2d89ef" />
           <meta name="theme-color" content="#ffffff" />
         </Head>
-        <body>
+        <body className="bg-white dark:bg-black text-white dark:text-black">
           <Main />
           <NextScript />
         </body>
