@@ -1,12 +1,10 @@
 import useSWR from "swr";
+import { client } from "../utils/api";
 
 export const useMeWebsites = () => {
-  const fetcher = (...args) =>
-    fetch(...args)
-      .then((res) => res.json())
-      .then((res) => res.data);
+  const fetcher = (...args) => client.get(...args).then((res) => res.data);
 
-  const { data, error } = useSWR("/api/me/websites", fetcher);
+  const { data, error } = useSWR("/v2/me/websites", fetcher);
 
   return {
     websites: data,

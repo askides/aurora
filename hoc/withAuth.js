@@ -1,17 +1,19 @@
-import axios from "axios";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { client } from "../utils/api";
 
-export const withAuth = (Component) => ({ ...props }) => {
-  const router = useRouter();
+export const withAuth =
+  (Component) =>
+  ({ ...props }) => {
+    const router = useRouter();
 
-  useEffect(async () => {
-    await axios.get("/api/me").catch((err) => {
-      if (err.response.status == 401) {
-        router.push("/auth/login");
-      }
+    useEffect(async () => {
+      await client.get("/v2/me").catch((err) => {
+        if (err.response.status == 401) {
+          router.push("/login");
+        }
+      });
     });
-  });
 
-  return <Component {...props} />;
-};
+    return <Component {...props} />;
+  };
