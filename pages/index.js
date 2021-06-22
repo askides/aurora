@@ -1,6 +1,7 @@
 import { Container } from "../components/Container";
 import { Websites } from "../components/Websites";
 import { DividerButton } from "../components/DividerButton";
+import { withAuth } from "../hoc/withAuth";
 
 const Home = () => {
   return (
@@ -26,5 +27,4 @@ const Home = () => {
   );
 };
 
-export default Home;
-// export default withAuth(Websites); // TODO:
+export default withAuth(Home);
