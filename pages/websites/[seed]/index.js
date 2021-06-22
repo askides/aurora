@@ -25,16 +25,14 @@ const Website = ({ seed }) => {
   const { website, isLoading, isError } = useWebsite({ seed });
   const [timeRange, setTimeRange] = useState(TimeRanges.DAY);
 
-  //if (isError) return <div>failed to load</div>;
-
   return (
-    <div className="h-full py-8 px-4 sm:px-10 space-y-4 bg-gray-900">
+    <div className="h-full py-8 px-4 sm:px-10 space-y-4 bg-white dark:bg-black">
       <Head>
         <title>View Website</title>
       </Head>
 
       <PageHeading
-        title={website && !isLoading ? "" : dropProtocol("ciao")}
+        title={isLoading ? "" : dropProtocol(website.url)}
         breadcumbs={["Websites", "Dashboard"]}
         subtitle={<RealtimeVisitors seed={seed} />}
         actions={<RangeSelector onSelected={(value) => setTimeRange(value)} />}
@@ -45,13 +43,13 @@ const Website = ({ seed }) => {
 
       <Area url={`/v2/metrics/${seed}/views/series`} timeRange={timeRange} />
 
-      <div className="grid md:grid-cols-3 gap-4 gap-y-10 sm:divide-x-2 divide-gray-800">
+      <div className="grid md:grid-cols-3 gap-4 gap-y-10 sm:divide-x divide-gray-200 dark:divide-gray-800">
         <Linear title="Os" url={`/v2/metrics/${seed}/views/os`} timeRange={timeRange} />
         <Linear title="Browser" url={`/v2/metrics/${seed}/views/browser`} timeRange={timeRange} />
         <Linear title="Country" url={`/v2/metrics/${seed}/views/country`} timeRange={timeRange} />
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4 pt-6 sm:pt-0 gap-y-10 sm:divide-x divide-gray-800">
+      <div className="grid md:grid-cols-2 gap-4 pt-6 sm:pt-0 gap-y-10 sm:divide-x divide-gray-200 dark:divide-gray-800">
         <Linear title="Page" url={`/v2/metrics/${seed}/views/page`} timeRange={timeRange} />
         <Linear title="Referrer" url={`/v2/metrics/${seed}/views/referrer`} timeRange={timeRange} />
       </div>
