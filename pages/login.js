@@ -1,4 +1,3 @@
-import Head from "next/head";
 import { useState } from "react";
 import { Formik, Form } from "formik";
 import { useRouter } from "next/router";

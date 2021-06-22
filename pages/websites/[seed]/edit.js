@@ -140,5 +140,4 @@ const Edit = ({ seed }) => {
   );
 };
 
-// export default withAuth(Edit);
-export default Edit;
+export default withAuth(Edit);

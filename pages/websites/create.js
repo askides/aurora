@@ -87,5 +87,4 @@ const Create = () => {
   );
 };
 
-// export default withAuth(Create);
-export default Create;
+export default withAuth(Create);
