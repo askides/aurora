@@ -10,7 +10,7 @@ export const withAuth =
     useEffect(async () => {
       await client.get("/v2/me").catch((err) => {
         if (err.response.status == 401) {
-          router.push("/auth/login");
+          router.push("/login");
         }
       });
     });
