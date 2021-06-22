@@ -1,5 +1,4 @@
 import dynamic from "next/dynamic";
-import Head from "next/head";
 import { useState } from "react";
 import { withAuth } from "../../../hoc/withAuth";
 import { useWebsite } from "../../../hooks/useWebsite";
