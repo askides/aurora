@@ -7,7 +7,6 @@ import { dropProtocol } from "../../../utils/urls";
 import { Performance } from "../../../components/charts/Performance";
 import { RealtimeVisitors } from "../../../components/RealtimeVisitors";
 import { RangeSelector } from "../../../components/RangeSelector";
-import { PageHeading } from "../../../components/PageHeading";
 import { Linear } from "../../../components/charts/Linear";
 import { Container } from "../../../components/Container";
 
@@ -37,11 +36,21 @@ const Website = ({ seed }) => {
         </p>
 
         <div className="border border-gray-200 dark:border-gray-800 rounded-lg p-4 sm:p-8 mt-8 w-full space-y-10">
-          <PageHeading
-            title={isLoading ? "" : dropProtocol(website.url)}
-            subtitle={<RealtimeVisitors seed={seed} />}
-            actions={<RangeSelector onSelected={(value) => setTimeRange(value)} />}
-          />
+          <div className="md:flex md:items-center md:justify-between">
+            <div className="flex-1 min-w-0">
+              <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate text-black dark:text-white">
+                {isLoading ? "_" : dropProtocol(website.url)}
+              </h2>
+
+              <div className="pt-2 flex flex-col sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-6">
+                <RealtimeVisitors seed={seed} />
+              </div>
+            </div>
+
+            <div className="mt-4 flex-shrink-0 flex md:mt-0 md:ml-4 space-x-3">
+              <RangeSelector onSelected={(value) => setTimeRange(value)} />
+            </div>
+          </div>
 
           <Performance url={`/v2/metrics/${seed}/performance`} timeRange={timeRange} />
 
