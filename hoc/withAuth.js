@@ -8,11 +8,15 @@ export const withAuth =
     const router = useRouter();
 
     useEffect(async () => {
-      await client.get("/v2/me").catch((err) => {
-        if (err.response.status == 401) {
+      try {
+        await client.get("/v2/me");
+      } catch (err) {
+        if (err.status && err.response.status == 401) {
           router.push("/login");
+        } else {
+          console.log(err);
         }
-      });
+      }
     });
 
     return <Component {...props} />;
