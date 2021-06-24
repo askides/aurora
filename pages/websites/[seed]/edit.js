@@ -40,9 +40,7 @@ const Edit = ({ seed }) => {
 
   const generate = (seed) =>
     `<script async defer
-  src="${window.location.protocol}//${window.location.hostname}${
-      location.port ? ":" + location.port : ""
-    }/aurora.js"
+  src="${process.env.NEXT_PUBLIC_API_URL}/public/aurora.js"
   aurora-id="${seed}">
 </script>`;
 
