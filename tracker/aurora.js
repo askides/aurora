@@ -22,7 +22,7 @@ const fpPromise = FingerprintJS.load();
 
   if (!script) return false;
 
-  const analyticsUrl = "http://localhost:5000/v2/collect"; // script.getAttribute("src").replace("/aurora.js", "/api/collect");
+  const analyticsUrl = `${process.env.NEXT_PUBLIC_API_URL}/v2/collect`; // script.getAttribute("src").replace("/aurora.js", "/api/collect");
   const websiteSeed = script.getAttribute("aurora-id");
 
   // Vars

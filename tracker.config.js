@@ -1,5 +1,8 @@
 const path = require("path");
+const webpack = require("webpack");
+const dotenv = require("dotenv").config();
 
+console.log(dotenv.parsed);
 module.exports = {
   entry: "./tracker/aurora.js",
   output: {
@@ -20,4 +23,9 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new webpack.DefinePlugin({
+      "process.env": JSON.stringify(dotenv.parsed),
+    }),
+  ],
 };
