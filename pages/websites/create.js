@@ -1,4 +1,5 @@
 import { Formik, Form } from "formik";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import { TextField } from "../../components/TextField";
 import { Radio } from "../../components/Radio";
@@ -6,18 +7,25 @@ import { withAuth } from "../../hoc/withAuth";
 import { Button } from "../../components/Button";
 import { client } from "../../utils/api";
 import { Container } from "../../components/Container";
+import { Show } from "../../components/Show";
+import { Alert } from "../../components/Alert";
 
 const Create = () => {
   const router = useRouter();
-  const initialValues = { name: "", url: "", share: "no" };
+  const [errors, setErrors] = useState([]);
+  const initialValues = { name: "", url: "", shared: "0" };
 
-  const handleSubmit = (values, { setSubmitting }) => {
+  const handleSubmit = async (values, { setSubmitting }) => {
+    setErrors([]);
     values.shared = Boolean(Number(values.shared));
-    client
-      .post("/v2/me/websites", values)
-      .then((res) => res.data)
-      .then((res) => router.push(`/websites/${res.seed}/edit`))
-      .finally(setSubmitting(false));
+
+    try {
+      const res = await client.post("/v2/me/websites", values);
+      router.push(`/websites/${res.data.seed}/edit`);
+    } catch (err) {
+      setErrors([err.response.data.message]);
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -32,6 +40,12 @@ const Create = () => {
         </p>
 
         <div className="border border-gray-200 dark:border-gray-800 rounded-lg p-4 sm:p-8 mt-8">
+          <Show when={errors.length}>
+            <div className="mb-4">
+              <Alert title="Something goes wrong!" messages={errors} />
+            </div>
+          </Show>
+
           <Formik initialValues={initialValues} onSubmit={handleSubmit}>
             {({ isSubmitting }) => (
               <Form>

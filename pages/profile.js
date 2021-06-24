@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import { useState } from "react";
 import { Formik, Form } from "formik";
 import { TextField } from "../components/TextField";
 import { withAuth } from "../hoc/withAuth";
@@ -7,17 +8,25 @@ import { useUser } from "../hooks/useUser";
 import { localize } from "../utils/dates";
 import { Container } from "../components/Container";
 import { client } from "../utils/api";
+import { Show } from "../components/Show";
+import { Alert } from "../components/Alert";
 
 const Profile = () => {
   const router = useRouter();
+  const [errors, setErrors] = useState([]);
   const { user, isLoading, isError } = useUser();
 
-  const handleSubmit = (values, { setSubmitting }) =>
-    client
-      .put(`/v2/me`, values)
-      .then((res) => res.data.data)
-      .catch((err) => console.log(err))
-      .finally(() => setSubmitting(false));
+  const handleSubmit = async (values, { setSubmitting }) => {
+    setErrors([]);
+
+    try {
+      await client.put(`/v2/me`, values);
+    } catch (err) {
+      setErrors([err.response.data.message]);
+    }
+
+    setSubmitting(false);
+  };
 
   const logout = async () => {
     // TODO:
@@ -44,6 +53,12 @@ const Profile = () => {
         </p>
 
         <div className="border border-gray-200 dark:border-gray-800 rounded-lg p-4 sm:p-8 mt-8 w-full">
+          <Show when={errors.length}>
+            <div className="mb-4">
+              <Alert title="Something goes wrong!" messages={errors} />
+            </div>
+          </Show>
+
           <Formik initialValues={user} onSubmit={handleSubmit}>
             {({ isSubmitting }) => (
               <Form>

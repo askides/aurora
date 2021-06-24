@@ -1,4 +1,5 @@
 import { Formik, Form } from "formik";
+import { useState } from "react";
 import { CopyBlock, nord } from "react-code-blocks";
 import { TextField } from "../../../components/TextField";
 import { Radio } from "../../../components/Radio";
@@ -9,6 +10,7 @@ import { useMeWebsite } from "../../../hooks/useMeWebsite";
 import { SharedLink } from "../../../components/ShareLink";
 import { Container } from "../../../components/Container";
 import { client } from "../../../utils/api";
+import { Alert } from "../../../components/Alert";
 
 export async function getServerSideProps(context) {
   const { seed } = context.query;
@@ -19,15 +21,21 @@ export async function getServerSideProps(context) {
 }
 
 const Edit = ({ seed }) => {
+  const [errors, setErrors] = useState([]);
   const { website, isLoading, isError, mutate } = useMeWebsite({ seed });
 
-  const handleSubmit = (values, { setSubmitting }) => {
+  const handleSubmit = async (values, { setSubmitting }) => {
+    setErrors([]);
     values.shared = Boolean(Number(values.shared));
-    client
-      .put(`/v2/me/websites/${seed}`, values)
-      .then(mutate)
-      .catch(console.log) // TODO: Error Management
-      .finally(() => setSubmitting(false));
+
+    try {
+      await client.put(`/v2/me/websites/${seed}`, values);
+      await mutate(`/v2/me/websites/${seed}`);
+    } catch (err) {
+      setErrors([err.response.data.message]);
+    }
+
+    setSubmitting(false);
   };
 
   const generate = (seed) =>
@@ -53,6 +61,12 @@ const Edit = ({ seed }) => {
         </p>
 
         <div className="border border-gray-200 dark:border-gray-800 rounded-lg p-4 sm:p-8 mt-8">
+          <Show when={errors.length}>
+            <div className="mb-4">
+              <Alert title="Something goes wrong!" messages={errors} />
+            </div>
+          </Show>
+
           <Formik initialValues={website} onSubmit={handleSubmit}>
             {({ isSubmitting }) => (
               <Form>
