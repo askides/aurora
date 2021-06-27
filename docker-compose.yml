@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   ui:
-    image: ghcr.io/useaurora/aurora/aurora:dev
+    image: ghcr.io/useaurora/aurora/aurora
     ports:
       - "3000:3000"
     environment:
@@ -10,7 +10,7 @@ services:
       - postgres
 
   api:
-    image: ghcr.io/useaurora/api/api:dev
+    image: ghcr.io/useaurora/api/api
     ports:
       - "5000:5000"
     environment:
