@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Formik, Form } from "formik";
 import { useRouter } from "next/router";
 import { TextField } from "../components/TextField";
@@ -11,6 +11,14 @@ import { Aurora } from "../components/Aurora";
 const Login = () => {
   const router = useRouter();
   const [errors, setErrors] = useState([]);
+
+  useEffect(async () => {
+    const res = await client.get("/status");
+
+    if (res.data.status === "uninitialized") {
+      router.push("/setup");
+    }
+  }, []);
 
   const initialValues = { email: "", password: "" };
 
