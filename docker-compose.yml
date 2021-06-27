@@ -1,15 +1,28 @@
 version: "3.7"
 services:
-  aurora:
-    image: itsrennyman/aurora:latest
+  ui:
+    image: ghcr.io/useaurora/aurora/aurora
     ports:
       - "3000:3000"
     environment:
-      DB_URL: postgres://aurora:aurora@postgres:5432/aurora
-      JWT_SECRET: asupersecret
+      NEXT_PUBLIC_API_URL: http://localhost:5000
+    depends_on:
+      - postgres
+
+  api:
+    image: ghcr.io/useaurora/api/api
+    ports:
+      - "5000:5000"
+    environment:
+      DB_CONNECTION: pg
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: aurora
+      DB_USERNAME: aurora
+      DB_PASSWORD: aurora
       DB_SSL: "false"
-      AURORA_EMAIL: "email@example.com"
-      AURORA_PASSWORD: "password"
+
+      JWT_SECRET: djd83ng94hf03hf93j
     depends_on:
       - postgres
 

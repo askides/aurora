@@ -1,12 +1,10 @@
 import useSWR from "swr";
+import { client } from "../utils/api";
 
 export const useRealtime = ({ seed }) => {
-  const fetcher = (...args) =>
-    fetch(...args)
-      .then((res) => res.json())
-      .then((res) => res.data);
+  const fetcher = (...args) => client.get(...args).then((res) => res.data);
 
-  const { data, error } = useSWR(`/api/metrics/${seed}/realtime/visitors`, fetcher, {
+  const { data, error } = useSWR(`/v2/metrics/${seed}/realtime/visitors`, fetcher, {
     refreshInterval: 2000,
   });
 
