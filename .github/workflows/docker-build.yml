@@ -36,6 +36,7 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
+            ghcr.io/${{ github.repository }}/${{ env.PROJECT_NAME }}:latest
             ghcr.io/${{ github.repository }}/${{ env.PROJECT_NAME }}:${{ env.PROJECT_VERSION }}
 
       - name: Image digest
