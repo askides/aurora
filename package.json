@@ -14,9 +14,6 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "db:seed": "knex seed:run",
-    "migrate": "knex migrate:latest",
-    "migrate:refresh": "knex migrate:rollback --all && knex migrate:latest",
     "start": "next start",
     "test": "jest"
   },
