@@ -11,7 +11,7 @@ export const withAuth =
       try {
         await client.get("/v2/me");
       } catch (err) {
-        if (err.status && err.response.status == 401) {
+        if (err.response && err.response.status == 401) {
           router.push("/login");
         } else {
           console.log(err);
