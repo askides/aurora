@@ -1,6 +1,5 @@
 import { Formik, Form } from "formik";
 import { useState } from "react";
-import { CopyBlock, nord } from "react-code-blocks";
 import { TextField } from "../../../components/TextField";
 import { Radio } from "../../../components/Radio";
 import { Button } from "../../../components/Button";
@@ -126,14 +125,9 @@ const Edit = ({ seed }) => {
                         </p>
                       </div>
 
-                      <CopyBlock
-                        text={generate(seed)}
-                        language={"javascript"}
-                        theme={nord}
-                        customStyle={{
-                          padding: "15px",
-                        }}
-                      />
+                      <pre className="rounded-md p-4 bg-gray-200 dark:bg-gray-800 text-black dark:text-white">
+                        {generate(seed)}
+                      </pre>
                     </div>
                   </div>
 
