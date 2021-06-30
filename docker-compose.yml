@@ -2,6 +2,7 @@ version: "3.7"
 services:
   ui:
     image: ghcr.io/useaurora/aurora/aurora
+    build: .
     ports:
       - "3000:3000"
     environment:
