@@ -39,7 +39,6 @@ This is a public beta! Please star and watch the repository for big news :heart:
 
 - [NextJS](https://nextjs.org/) - NextJS
 - [TailwindCSS](https://tailwindcss.com/) - TailwindCSS
-- [KnexJS](https://knexjs.org/) - Database ORM
 
 ### Versioning 🚦
 
