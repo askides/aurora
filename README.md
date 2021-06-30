@@ -7,7 +7,7 @@
 <br/>
 
 <p align="center" style="padding-bottom:3rem">
-<img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/itsrennyman/aurora/Docker%20Image%20CI?style=for-the-badge" />
+<img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/itsrennyman/aurora/Docker%20Hub%20Image%20CI?style=for-the-badge" />
 <img alt="Aurora Release" src="https://img.shields.io/github/v/release/itsrennyman/aurora?style=for-the-badge" />
 <img alt="Aurora Stars" src="https://img.shields.io/github/stars/itsrennyman/aurora?style=for-the-badge" />
 <img alt="Aurora License" src="https://img.shields.io/github/license/itsrennyman/aurora?style=for-the-badge" />
@@ -39,7 +39,6 @@ This is a public beta! Please star and watch the repository for big news :heart:
 
 - [NextJS](https://nextjs.org/) - NextJS
 - [TailwindCSS](https://tailwindcss.com/) - TailwindCSS
-- [KnexJS](https://knexjs.org/) - Database ORM
 
 ### Versioning 🚦
 

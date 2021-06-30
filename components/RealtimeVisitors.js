@@ -12,7 +12,9 @@ export const RealtimeVisitors = ({ seed }) => {
         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
         <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
       </span>
-      <div className="text-white text-sm">Current Visitors: {visitors.visitors}</div>
+      <div className="text-black dark:text-white text-sm">
+        Current Visitors: {visitors.visitors}
+      </div>
     </div>
   );
 };

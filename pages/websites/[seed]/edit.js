@@ -1,7 +1,5 @@
-import axios from "axios";
-import Head from "next/head";
 import { Formik, Form } from "formik";
-import { PageHeading } from "../../../components/PageHeading";
+import { useState } from "react";
 import { TextField } from "../../../components/TextField";
 import { Radio } from "../../../components/Radio";
 import { Button } from "../../../components/Button";
@@ -9,6 +7,9 @@ import { Show } from "../../../components/Show";
 import { withAuth } from "../../../hoc/withAuth";
 import { useMeWebsite } from "../../../hooks/useMeWebsite";
 import { SharedLink } from "../../../components/ShareLink";
+import { Container } from "../../../components/Container";
+import { client } from "../../../utils/api";
+import { Alert } from "../../../components/Alert";
 
 export async function getServerSideProps(context) {
   const { seed } = context.query;
@@ -19,123 +20,129 @@ export async function getServerSideProps(context) {
 }
 
 const Edit = ({ seed }) => {
+  const [errors, setErrors] = useState([]);
   const { website, isLoading, isError, mutate } = useMeWebsite({ seed });
 
-  const breadcumbs = ["Websites", "Edit"];
+  const handleSubmit = async (values, { setSubmitting }) => {
+    setErrors([]);
+    values.shared = Boolean(Number(values.shared));
 
-  const handleSubmit = (values, { setSubmitting }) =>
-    axios
-      .put(`/api/me/websites/${seed}`, values)
-      .then(mutate)
-      .catch(console.log) // TODO: Error Management
-      .finally(() => setSubmitting(false));
+    try {
+      await client.put(`/v2/me/websites/${seed}`, values);
+      await mutate(`/v2/me/websites/${seed}`);
+    } catch (err) {
+      setErrors([err.response.data.message]);
+    }
+
+    setSubmitting(false);
+  };
+
+  const generate = (seed) =>
+    `<script async defer
+  src="${process.env.NEXT_PUBLIC_API_URL}/public/aurora.js"
+  aurora-id="${seed}">
+</script>`;
 
   if (isLoading) return <div>Loading..</div>;
   if (isError) return <div>failed to load</div>;
 
   return (
-    <div className="p-6 h-full">
-      <Head>
-        <title>Edit Website</title>
-      </Head>
-      <div className="flex justify-center">
-        <div>
-          <PageHeading title={"Edit Website"} breadcumbs={breadcumbs} />
+    <Container>
+      <div className="flex flex-col justify-center items-start max-w-3xl w-full mx-auto mb-16">
+        <h1 className="font-bold text-3xl md:text-5xl tracking-tight mb-4 text-black dark:text-white">
+          Edit Website
+        </h1>
 
-          <div className="mt-8">
-            <Formik initialValues={website} onSubmit={handleSubmit}>
-              {({ isSubmitting }) => (
-                <Form>
-                  <div className="space-y-8 divide-y divide-gray-200">
-                    <div className="space-y-8 divide-y divide-gray-200">
-                      <div>
-                        <div className="grid grid-cols-1 mt-6 gap-y-6 gap-x-4 sm:grid-cols-6">
-                          <div className="sm:col-span-6">
-                            <TextField
-                              label="Website Name"
-                              name="name"
-                              type="text"
-                              autocomplete="none"
-                            />
-                          </div>
+        <p className="prose leading-relaxed text-gray-600 dark:text-gray-400 mb-4">
+          These are your websites, you can manage them by clicking on the proper buttons.
+        </p>
 
-                          <div className="sm:col-span-6">
-                            <TextField
-                              label="Website URL"
-                              name="url"
-                              type="text"
-                              autocomplete="none"
-                            />
-                          </div>
-                        </div>
+        <div className="border border-gray-200 dark:border-gray-800 rounded-lg p-4 sm:p-8 mt-8">
+          <Show when={errors.length}>
+            <div className="mb-4">
+              <Alert title="Something goes wrong!" messages={errors} />
+            </div>
+          </Show>
+
+          <Formik initialValues={website} onSubmit={handleSubmit}>
+            {({ isSubmitting }) => (
+              <Form>
+                <div className="space-y-8 divide-y divide-gray-200 dark:divide-gray-800">
+                  <div className="space-y-8">
+                    <div className="space-y-6">
+                      <div className="sm:col-span-6">
+                        <TextField
+                          label="Website Name"
+                          name="name"
+                          type="text"
+                          autocomplete="none"
+                        />
                       </div>
 
-                      <div className="pt-8">
-                        <div>
-
-                          <h3 className="text-lg font-medium leading-6 text-gray-900">
-                            Share Statistics
-                          </h3>
-                          <p className="mt-1 text-sm text-gray-500">
-                            If you choose to make statistics public, a public URL will be available
-                            presenting a read-only version of the Aurora Dashboard. Don't worry, you
-                            can always disable it later!
-                          </p>
-                        </div>
-
-                        <div className="mt-6 space-y-8">
-                          <fieldset>
-                            <div className="space-y-4">
-                              <Radio value="1" label="Yes, make it public." name="shared" />
-                              <Radio
-                                value="0"
-                                label="Nope, I want to keep it private."
-                                name="shared"
-                              />
-                            </div>
-                          </fieldset>
-
-                          <Show when={website.shared}>
-                            <div className="text-sm font-medium text-gray-700">
-                              Share Link: <SharedLink seed={seed} />
-                            </div>
-                          </Show>
-                        </div>
-                      </div>
-
-                      <div className="pt-8">
-                        <div>
-                          <h3 className="text-lg font-medium leading-6 text-gray-900">
-                            Connect Your Website
-                          </h3>
-                          <p className="mt-1 text-sm text-gray-500">
-                            Copy this line of code in the HEAD of your page.
-                          </p>
-                        </div>
-
-                        <div className="mt-6 text-sm font-medium text-gray-700">
-                          {`<script async defer src="${window.location.protocol}//${
-                            window.location.hostname
-                          }${
-                            location.port ? ":" + location.port : ""
-                          }/aurora.js" aurora-id="${seed}"></script>`}
-                        </div>
+                      <div className="sm:col-span-6">
+                        <TextField label="Website URL" name="url" type="text" autocomplete="none" />
                       </div>
                     </div>
 
-                    <div className="pt-5">
-                      <div className="flex justify-end">
-                        <Button type="submit" value="Save" isLoading={isSubmitting} />
+                    <div>
+                      <h3 className="font-bold text-2xl md:text-2xl tracking-tight mt-14 mb-1 text-black dark:text-white">
+                        Share Statistics
+                      </h3>
+                      <p className="prose leading-relaxed text-gray-600 dark:text-gray-400 mb-2">
+                        If you choose to make statistics public, a public URL will be available
+                        presenting a read-only version of the Aurora Dashboard. Don't worry, you can
+                        always disable it later!
+                      </p>
+                    </div>
+
+                    <div className="mt-6">
+                      <fieldset>
+                        <div className="space-y-4">
+                          <Radio value="1" label="Yes, make it public." name="shared" />
+                          <Radio value="0" label="Nope, I want to keep it private." name="shared" />
+                        </div>
+                      </fieldset>
+
+                      <Show when={website.shared}>
+                        <div>
+                          <h3 className="font-bold text-2xl md:text-2xl tracking-tight mt-14 mb-1 text-black dark:text-white">
+                            Share Link
+                          </h3>
+                          <p className="prose leading-relaxed text-gray-600 dark:text-gray-400 mb-2">
+                            <SharedLink seed={seed} />
+                          </p>
+                        </div>
+                      </Show>
+                    </div>
+
+                    <div className="hidden sm:block">
+                      <div>
+                        <h3 className="font-bold text-2xl md:text-2xl tracking-tight mt-14 mb-1 text-black dark:text-white">
+                          How to Connect Your Website
+                        </h3>
+                        <p className="prose leading-relaxed text-gray-600 dark:text-gray-400 mb-2">
+                          Copy this line of code in the HEAD of your page.
+                        </p>
                       </div>
+
+                      <pre className="rounded-md p-4 bg-gray-200 dark:bg-gray-800 text-black dark:text-white">
+                        {generate(seed)}
+                      </pre>
                     </div>
                   </div>
-                </Form>
-              )}
-            </Formik>
-          </div>
+
+                  <div className="pt-5">
+                    <div className="flex justify-end">
+                      <Button type="submit" value="Update Website" isLoading={isSubmitting} />
+                    </div>
+                  </div>
+                </div>
+              </Form>
+            )}
+          </Formik>
         </div>
       </div>
-    </div>
+    </Container>
   );
 };
 
