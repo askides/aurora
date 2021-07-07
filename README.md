@@ -1,16 +1,16 @@
 <br/>
 
 <p align="center">
-<img width="60%" src="https://raw.githubusercontent.com/itsrennyman/aurora/main/public/logos/aurora_gradient.svg"/>
+<img width="60%" src="https://raw.githubusercontent.com/useaurora/aurora/main/public/logos/aurora_gradient.svg"/>
 </p>
 
 <br/>
 
 <p align="center" style="padding-bottom:3rem">
-<img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/itsrennyman/aurora/Docker%20Hub%20Image%20CI?style=for-the-badge" />
-<img alt="Aurora Release" src="https://img.shields.io/github/v/release/itsrennyman/aurora?style=for-the-badge" />
-<img alt="Aurora Stars" src="https://img.shields.io/github/stars/itsrennyman/aurora?style=for-the-badge" />
-<img alt="Aurora License" src="https://img.shields.io/github/license/itsrennyman/aurora?style=for-the-badge" />
+<img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/useaurora/aurora/Docker%20Hub%20Image%20CI?style=for-the-badge" />
+<img alt="Aurora Release" src="https://img.shields.io/github/v/release/useaurora/aurora?style=for-the-badge" />
+<img alt="Aurora Stars" src="https://img.shields.io/github/stars/useaurora/aurora?style=for-the-badge" />
+<img alt="Aurora License" src="https://img.shields.io/github/license/useaurora/aurora?style=for-the-badge" />
 </p>
 
 <br/>
@@ -25,15 +25,11 @@ You can see a **running demo** [here](https://demo.useaurora.app/s/f3d811716007d
 
 ### Getting Started 🤩
 
-You can go up and running with Aurora by following the [Official Docs](https://docs.useaurora.app/). These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+You can go up and running with Aurora by following the [Official Docs](https://useaurora.app/docs/getting-started/installation). These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
 ### Deployment 🛫
 
-You can deploy Aurora manually from this repo, or via Docker, please refer to the [Official Docs](https://docs.useaurora.app/) for the instructions.
-
-### Roadmap 🗺️
-
-This is a public beta! Please star and watch the repository for big news :heart: we have a Trello [roadmap](https://trello.com/b/df17oLMm/aurora-roadmap) in order to track some good ideas.
+You can deploy Aurora manually from this repo, or via Docker, please refer to the [Official Docs](https://useaurora.app/docs/getting-started/installation) for the instructions.
 
 ### Built With 🏗️
 
@@ -42,7 +38,7 @@ This is a public beta! Please star and watch the repository for big news :heart:
 
 ### Versioning 🚦
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/itsrennyman/aurora/tags).
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/useaurora/aurora/tags).
 
 ### Authors 🙋
 
@@ -50,9 +46,9 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ### Stargazers 🌟
 
-[![Stargazers repo roster for @itsrennyman/aurora](https://reporoster.com/stars/itsrennyman/aurora)](https://github.com/itsrennyman/aurora/stargazers)
+[![Stargazers repo roster for @useaurora/aurora](https://reporoster.com/stars/useaurora/aurora)](https://github.com/useaurora/aurora/stargazers)
 
-See also the list of [contributors](https://github.com/itsrennyman/aurora/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/useaurora/aurora/contributors) who participated in this project.
 
 ### License
 

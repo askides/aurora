@@ -6,4 +6,16 @@ const client = axios.create({
   withCredentials: true,
 });
 
+client.interceptors.request.use(
+  (request) => {
+    if (localStorage.getItem("aurora_jwt") !== null) {
+      request.headers.common["Authorization"] = `Bearer ${localStorage.getItem("aurora_jwt")}`;
+    }
+    return request;
+  },
+  (err) => {
+    return Promise.reject(err);
+  }
+);
+
 module.exports = { client };
