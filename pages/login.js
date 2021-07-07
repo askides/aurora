@@ -22,12 +22,21 @@ const Login = () => {
 
   const initialValues = { email: "", password: "" };
 
-  const handleSubmit = (values, { setSubmitting }) =>
-    client
-      .post("/v2/auth/login", values)
-      .then(() => router.push("/"))
-      .catch(() => setErrors(["Invalid credentials."]))
-      .finally(() => setSubmitting(false));
+  const handleSubmit = async (values, { setSubmitting }) => {
+    try {
+      const res = await client.post("/v2/auth/login", values);
+
+      if (res.data.response_type === "jwt") {
+        window.localStorage.setItem("aurora_jwt", res.data.access_token);
+      }
+
+      router.push("/");
+    } catch (err) {
+      setErrors(["Invalid credentials."]);
+    }
+
+    setSubmitting(false);
+  };
 
   return (
     <div className="min-h-screen bg-white dark:bg-black flex flex-col justify-center items-center">
