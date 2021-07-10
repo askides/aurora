@@ -88,13 +88,10 @@ const Loader = dynamic(() => import("../Loader").then((mod) => mod.Loader), { ss
 const Area = ({ url, timeRange }) => {
   const { graph, isLoading, isError } = useGraph(url, timeRange);
 
-  if (isLoading) return <Loader width={540} height={350} />;
-  if (isError) return <div>failed to load</div>;
-
   return (
     <Chart
-      options={format({ labels: graph.labels })}
-      series={graph.series}
+      options={format({ labels: graph ? graph.labels : [] })}
+      series={graph ? graph.series : []}
       type="area"
       height={350}
     />
