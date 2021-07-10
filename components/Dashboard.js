@@ -8,7 +8,10 @@ import { RealtimeVisitors } from "./RealtimeVisitors";
 import { RangeSelector } from "./RangeSelector";
 import { Linear } from "./charts/Linear";
 
-const Area = dynamic(() => import("./charts/Area"), { ssr: false });
+const Area = dynamic(() => import("./charts/Area"), {
+  ssr: false,
+  loading: () => <div style={{ height: 350 }}></div>,
+});
 
 export const Dashboard = ({ seed }) => {
   const { website, isLoading, isError } = useWebsite({ seed });
