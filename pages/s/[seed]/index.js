@@ -2,22 +2,22 @@ import { Aurora } from "../../../components/Aurora";
 import { Container } from "../../../components/Container";
 import { Dashboard } from "../../../components/Dashboard";
 
+import { useRouter } from "next/router";
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
 
-export async function getServerSideProps(context) {
-  const { seed } = context.query;
-
-  return {
-    props: { seed },
-  };
-}
-
-const Shared = ({ seed }) => {
+const Shared = () => {
+  const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const { resolvedTheme, setTheme } = useTheme();
 
   useEffect(() => setMounted(true), []);
+
+  const { seed } = router.query;
+
+  if (!seed) {
+    return null;
+  }
 
   return (
     <Container navbar={false}>
