@@ -38,8 +38,31 @@ const Profile = () => {
     }
   };
 
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>failed to load</div>;
+  if (!user) {
+    return (
+      <Container>
+        <div className="flex flex-col justify-center items-start max-w-3xl w-full mx-auto mb-16">
+          <h1 className="font-bold text-3xl md:text-5xl tracking-tight mb-4 text-black dark:text-white">
+            My Profile
+          </h1>
+
+          <p className="prose leading-relaxed text-gray-600 dark:text-gray-400 mb-4">
+            These are your websites, you can manage them by clicking on the proper buttons.
+          </p>
+
+          <div className="border border-gray-200 dark:border-gray-800 rounded-lg p-4 sm:p-8 mt-8 w-full">
+            ciao
+          </div>
+
+          <div className="flex justify-center mt-8 w-full">
+            <p className="prose leading-relaxed text-gray-600 dark:text-gray-400 mb-2">
+              This account was created on
+            </p>
+          </div>
+        </div>
+      </Container>
+    );
+  }
 
   return (
     <Container>
@@ -136,4 +159,4 @@ const Profile = () => {
   );
 };
 
-export default withAuth(Profile);
+export default Profile;
