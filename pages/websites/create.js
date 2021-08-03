@@ -49,6 +49,7 @@ const Create = () => {
         shared: Boolean(Number(data.shared)),
       });
 
+      toast.success("Website created!");
       router.push(`/websites/${res.data.seed}/edit`);
     } catch (err) {
       toast.error("Something goes wrong..");
