@@ -1,104 +1,101 @@
-import { Formik, Form } from "formik";
-import { useState } from "react";
+import toast from "react-hot-toast";
 import { useRouter } from "next/router";
-import { TextField } from "../../components/TextField";
-import { Radio } from "../../components/Radio";
-import { withAuth } from "../../hoc/withAuth";
+import { useForm } from "react-hook-form";
 import { Button } from "../../components/Button";
 import { client } from "../../utils/api";
 import { Container } from "../../components/Container";
-import { Show } from "../../components/Show";
-import { Alert } from "../../components/Alert";
+import { Page } from "../../components/Page";
+
+const Input = ({ register, name, type = "text", ...rest }) => (
+  <div>
+    {rest.label && (
+      <label className="block text-sm font-medium text-gray-600 dark:text-gray-100 mb-1">
+        {rest.label}
+      </label>
+    )}
+
+    <input
+      {...register(name)}
+      {...rest}
+      type={type}
+      className="text-black dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500 dark:focus:border-blue-500 block w-full sm:text-sm border-gray-300 dark:border-gray-800 rounded-md bg-white dark:bg-black dark:placeholder-gray-500"
+    />
+  </div>
+);
+
+const Radio = ({ register, name, ...rest }) => (
+  <div className="flex items-center">
+    <input
+      {...register(name)}
+      {...rest}
+      type="radio"
+      className="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 dark:bg-black"
+    />
+
+    <label className="ml-3 block text-sm font-medium text-gray-600 dark:text-gray-100">
+      {rest.label}
+    </label>
+  </div>
+);
 
 const Create = () => {
   const router = useRouter();
-  const [errors, setErrors] = useState([]);
-  const initialValues = { name: "", url: "", shared: "0" };
+  const { register, handleSubmit, formState } = useForm();
 
-  const handleSubmit = async (values, { setSubmitting }) => {
-    setErrors([]);
-    values.shared = Boolean(Number(values.shared));
-
+  const onSubmit = async (data) => {
     try {
-      const res = await client.post("/v2/me/websites", values);
+      const res = await client.post("/v2/me/websites", {
+        ...data,
+        shared: Boolean(Number(data.shared)),
+      });
+
       router.push(`/websites/${res.data.seed}/edit`);
     } catch (err) {
-      setErrors([err.response.data.message]);
-      setSubmitting(false);
+      toast.error("Something goes wrong..");
     }
   };
 
   return (
     <Container>
-      <div className="flex flex-col justify-center items-start max-w-3xl w-full mx-auto mb-16">
-        <h1 className="font-bold text-3xl md:text-5xl tracking-tight mb-4 text-black dark:text-white">
-          Create Website
-        </h1>
+      <Page title="Create Website">
+        <div className="border border-gray-200 dark:border-gray-800 rounded-lg p-4 sm:p-8">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="space-y-8">
+              <div className="space-y-6">
+                <Input name="name" label="Name" register={register} />
+                <Input name="url" label="URL" register={register} />
+              </div>
 
-        <p className="prose leading-relaxed text-gray-600 dark:text-gray-400 mb-4">
-          These are your websites, you can manage them by clicking on the proper buttons.
-        </p>
+              <div>
+                <h3 className="font-bold text-2xl md:text-2xl tracking-tight mt-14 mb-1 text-black dark:text-white">
+                  Share Statistics
+                </h3>
+                <p className="prose leading-relaxed text-gray-600 dark:text-gray-400 mb-2">
+                  If you choose to make statistics public, a public URL will be available presenting
+                  a read-only version of the Aurora Dashboard. Don't worry, you can always disable
+                  it later!
+                </p>
+              </div>
 
-        <div className="border border-gray-200 dark:border-gray-800 rounded-lg p-4 sm:p-8 mt-8">
-          <Show when={errors.length}>
-            <div className="mb-4">
-              <Alert title="Something goes wrong!" messages={errors} />
+              <div className="space-y-4">
+                <Radio name="shared" label="Yes, make it public." value="1" register={register} />
+                <Radio
+                  name="shared"
+                  label="Nope, I want to keep it private."
+                  value="0"
+                  register={register}
+                />
+              </div>
+
+              <div className="flex justify-end pt-4 border-t border-gray-200 dark:border-gray-800">
+                <Button type="submit" value="Create" isLoading={formState.isSubmitting} />
+              </div>
             </div>
-          </Show>
-
-          <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-            {({ isSubmitting }) => (
-              <Form>
-                <div className="space-y-8 divide-y divide-gray-200 dark:divide-gray-800">
-                  <div className="space-y-8">
-                    <div className="space-y-6">
-                      <div className="sm:col-span-6">
-                        <TextField
-                          label="Website Name"
-                          name="name"
-                          type="text"
-                          autocomplete="none"
-                        />
-                      </div>
-
-                      <div className="sm:col-span-6">
-                        <TextField label="Website URL" name="url" type="text" autocomplete="none" />
-                      </div>
-                    </div>
-
-                    <div>
-                      <h3 className="font-bold text-2xl md:text-2xl tracking-tight mt-14 mb-1 text-black dark:text-white">
-                        Share Statistics
-                      </h3>
-                      <p className="prose leading-relaxed text-gray-600 dark:text-gray-400 mb-2">
-                        If you choose to make statistics public, a public URL will be available
-                        presenting a read-only version of the Aurora Dashboard. Don't worry, you can
-                        always disable it later!
-                      </p>
-                    </div>
-                    <div className="mt-6">
-                      <fieldset>
-                        <div className="space-y-4">
-                          <Radio value="1" label="Yes, make it public." name="shared" />
-                          <Radio value="0" label="Nope, I want to keep it private." name="shared" />
-                        </div>
-                      </fieldset>
-                    </div>
-                  </div>
-
-                  <div className="pt-5">
-                    <div className="flex justify-end">
-                      <Button type="submit" value="Create" isLoading={isSubmitting} />
-                    </div>
-                  </div>
-                </div>
-              </Form>
-            )}
-          </Formik>
+          </form>
         </div>
-      </div>
+      </Page>
     </Container>
   );
 };
 
-export default withAuth(Create);
+export default Create;
