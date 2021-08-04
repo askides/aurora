@@ -2,7 +2,6 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { Formik, Form } from "formik";
 import { TextField } from "../components/TextField";
-import { withAuth } from "../hoc/withAuth";
 import { Button } from "../components/Button";
 import { useUser } from "../hooks/useUser";
 import { localize } from "../utils/dates";
@@ -10,6 +9,10 @@ import { Container } from "../components/Container";
 import { client } from "../utils/api";
 import { Show } from "../components/Show";
 import { Alert } from "../components/Alert";
+import { Page } from "../components/Page";
+
+// XXX PROSSIMA COSA DA FARE, PASSAGGIO A PAGE DI QUESTA QUI (COME INDEX), DOPODICHE VEDERE SE CON REACT-HOOK-FORM SI PUO GESTIRE
+// I DATI IN ARRIVO
 
 const Profile = () => {
   const router = useRouter();
@@ -41,41 +44,23 @@ const Profile = () => {
   if (!user) {
     return (
       <Container>
-        <div className="flex flex-col justify-center items-start max-w-3xl w-full mx-auto mb-16">
-          <h1 className="font-bold text-3xl md:text-5xl tracking-tight mb-4 text-black dark:text-white">
-            My Profile
-          </h1>
-
-          <p className="prose leading-relaxed text-gray-600 dark:text-gray-400 mb-4">
-            These are your websites, you can manage them by clicking on the proper buttons.
-          </p>
-
-          <div className="border border-gray-200 dark:border-gray-800 rounded-lg p-4 sm:p-8 mt-8 w-full">
-            ciao
-          </div>
+        <Page title="My Profile">
+          <div className="border border-gray-200 dark:border-gray-800 rounded-lg p-4 sm:p-8 mt-8 w-full"></div>
 
           <div className="flex justify-center mt-8 w-full">
             <p className="prose leading-relaxed text-gray-600 dark:text-gray-400 mb-2">
               This account was created on
             </p>
           </div>
-        </div>
+        </Page>
       </Container>
     );
   }
 
   return (
     <Container>
-      <div className="flex flex-col justify-center items-start max-w-3xl w-full mx-auto mb-16">
-        <h1 className="font-bold text-3xl md:text-5xl tracking-tight mb-4 text-black dark:text-white">
-          My Profile
-        </h1>
-
-        <p className="prose leading-relaxed text-gray-600 dark:text-gray-400 mb-4">
-          These are your websites, you can manage them by clicking on the proper buttons.
-        </p>
-
-        <div className="border border-gray-200 dark:border-gray-800 rounded-lg p-4 sm:p-8 mt-8 w-full">
+      <Page title="My Profile">
+        <div className="border border-gray-200 dark:border-gray-800 rounded-lg p-4 sm:p-8 w-full">
           <Show when={errors.length}>
             <div className="mb-4">
               <Alert title="Something goes wrong!" messages={errors} />
@@ -154,7 +139,7 @@ const Profile = () => {
             This account was created on {localize(user.created_at)}.
           </p>
         </div>
-      </div>
+      </Page>
     </Container>
   );
 };
