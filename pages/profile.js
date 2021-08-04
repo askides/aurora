@@ -1,43 +1,30 @@
-import { useRouter } from "next/router";
-import { useState } from "react";
-import { Formik, Form } from "formik";
-import { TextField } from "../components/TextField";
+import toast from "react-hot-toast";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { Button } from "../components/Button";
-import { useUser } from "../hooks/useUser";
-import { localize } from "../utils/dates";
+import { Input } from "../components/Input";
 import { Container } from "../components/Container";
-import { client } from "../utils/api";
-import { Show } from "../components/Show";
-import { Alert } from "../components/Alert";
 import { Page } from "../components/Page";
-
-// XXX PROSSIMA COSA DA FARE, PASSAGGIO A PAGE DI QUESTA QUI (COME INDEX), DOPODICHE VEDERE SE CON REACT-HOOK-FORM SI PUO GESTIRE
-// I DATI IN ARRIVO
+import { useUser } from "../hooks/useUser";
+import { client } from "../utils/api";
+import { localize } from "../utils/dates";
 
 const Profile = () => {
-  const router = useRouter();
-  const [errors, setErrors] = useState([]);
-  const { user, isLoading, isError } = useUser();
+  const { user } = useUser();
+  const { register, handleSubmit, formState, reset } = useForm();
 
-  const handleSubmit = async (values, { setSubmitting }) => {
-    setErrors([]);
-
-    try {
-      await client.put(`/v2/me`, values);
-    } catch (err) {
-      setErrors([err.response.data.message]);
+  useEffect(() => {
+    if (user) {
+      reset({ firstname: user.firstname, lastname: user.lastname, email: user.email });
     }
+  }, [user]);
 
-    setSubmitting(false);
-  };
-
-  const logout = async () => {
-    // TODO:
+  const onSubmit = async (data) => {
     try {
-      await axios.post("/api/auth/logout");
-      router.push("/auth/login");
+      await client.put(`/v2/me`, data);
+      toast.success("Profile updated!");
     } catch (err) {
-      console.log(err);
+      toast.error("Something goes wrong..");
     }
   };
 
@@ -60,78 +47,42 @@ const Profile = () => {
   return (
     <Container>
       <Page title="My Profile">
-        <div className="border border-gray-200 dark:border-gray-800 rounded-lg p-4 sm:p-8 w-full">
-          <Show when={errors.length}>
-            <div className="mb-4">
-              <Alert title="Something goes wrong!" messages={errors} />
-            </div>
-          </Show>
+        <div className="border border-gray-200 dark:border-gray-800 rounded-lg p-4 sm:p-8">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="space-y-8">
+              <div className="space-y-6">
+                <Input name="firstname" label="First Name" register={register} />
+                <Input name="lastname" label="Last Name" register={register} />
+              </div>
 
-          <Formik initialValues={user} onSubmit={handleSubmit}>
-            {({ isSubmitting }) => (
-              <Form>
-                <div className="space-y-8 divide-y divide-gray-200 dark:divide-gray-800">
-                  <div className="space-y-8">
-                    <div className="space-y-6">
-                      <TextField
-                        label="First Name"
-                        name="firstname"
-                        type="text"
-                        autocomplete="none"
-                      />
+              <div>
+                <h3 className="font-bold text-2xl md:text-2xl tracking-tight mt-14 mb-1 text-black dark:text-white">
+                  Personal Information
+                </h3>
+                <p className="prose leading-relaxed text-gray-600 dark:text-gray-400 mb-2">
+                  This information will be not displayed publicly.
+                </p>
+              </div>
 
-                      <TextField
-                        label="Last Name"
-                        name="lastname"
-                        type="text"
-                        autocomplete="none"
-                      />
-                    </div>
+              <div className="space-y-6">
+                <Input name="email" label="Email Address" register={register} />
 
-                    <div>
-                      <h3 className="font-bold text-2xl md:text-2xl tracking-tight mt-14 mb-1 text-black dark:text-white">
-                        Personal Information
-                      </h3>
-                      <p className="prose leading-relaxed text-gray-600 dark:text-gray-400 mb-2">
-                        This information will be not displayed publicly.
-                      </p>
-                    </div>
-
-                    <div className="space-y-6">
-                      <TextField
-                        label="Email Address"
-                        name="email"
-                        type="email"
-                        autocomplete="none"
-                      />
-
-                      <div className="grid sm:grid-cols-2 gap-x-4 gap-y-6">
-                        <TextField
-                          label="New Password"
-                          name="password"
-                          type="password"
-                          autocomplete="none"
-                        />
-
-                        <TextField
-                          label="Repeat New Password"
-                          name="password_confirmation"
-                          type="password"
-                          autocomplete="none"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="pt-5">
-                    <div className="flex justify-end">
-                      <Button type="submit" value="Update Profile" isLoading={isSubmitting} />
-                    </div>
-                  </div>
+                <div className="grid sm:grid-cols-2 gap-x-4 gap-y-6">
+                  <Input name="password" type="password" label="Password" register={register} />
+                  <Input
+                    name="password_confirmation"
+                    type="password"
+                    label="Repeat New Password"
+                    register={register}
+                  />
                 </div>
-              </Form>
-            )}
-          </Formik>
+              </div>
+
+              <div className="flex justify-end pt-4 border-t border-gray-200 dark:border-gray-800">
+                <Button type="submit" value="Update Profile" isLoading={formState.isSubmitting} />
+              </div>
+            </div>
+          </form>
         </div>
 
         <div className="flex justify-center mt-8 w-full">
