@@ -1,12 +1,10 @@
-import Head from "next/head";
+import { Meta } from "./Meta";
 import { Navbar } from "./Navbar";
 
 export const Container = ({ children, navbar = true }) => {
   return (
     <div className="bg-white dark:bg-black">
-      <Head>
-        <title>Aurora - Open Website Analytics</title>
-      </Head>
+      <Meta />
 
       {navbar && (
         <div className="mb-16">
