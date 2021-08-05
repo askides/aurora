@@ -4,7 +4,7 @@ export const Page = (props) => {
   const maxWidth = props.fluid ? "max-w-6xl" : "max-w-3xl";
 
   return (
-    <div className={`flex flex-col justify-center items-start ${maxWidth} w-full mx-auto mb-16`}>
+    <div className={`flex flex-col justify-center items-start ${maxWidth} w-full mx-auto`}>
       {props.title && (
         <h1 className="font-bold text-3xl md:text-5xl tracking-tight text-black dark:text-white">
           {props.title}
