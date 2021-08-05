@@ -18,7 +18,7 @@ export const Dashboard = ({ seed }) => {
   const [timeRange, setTimeRange] = useState(TimeRanges.DAY);
 
   return (
-    <div className="sm:border border-gray-200 dark:border-gray-800 rounded-lg py-8 sm:p-8 mt-8 w-full space-y-10">
+    <div className="sm:border border-gray-200 dark:border-gray-800 rounded-lg py-8 sm:p-8 w-full space-y-10">
       <div className="md:flex md:items-center md:justify-between">
         <div className="flex-1 min-w-0">
           <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate text-black dark:text-white">
