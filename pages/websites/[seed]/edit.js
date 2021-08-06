@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Input } from "../../../components/Input";
 import { Button } from "../../../components/Button";
+import { Radio } from "../../../components/Radio";
 import { Show } from "../../../components/Show";
 import { useMeWebsite } from "../../../hooks/useMeWebsite";
 import { SharedLink } from "../../../components/ShareLink";
@@ -10,23 +11,6 @@ import { Container } from "../../../components/Container";
 import { client } from "../../../utils/api";
 import { Page } from "../../../components/Page";
 
-const Radio = ({ register, name, ...rest }) => {
-  console.log("rest", rest);
-  return (
-    <div className="flex items-center">
-      <input
-        {...register(name)}
-        {...rest}
-        type="radio"
-        className="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 dark:bg-black"
-      />
-
-      <label className="ml-3 block text-sm font-medium text-gray-600 dark:text-gray-100">
-        {rest.label}
-      </label>
-    </div>
-  );
-};
 export async function getServerSideProps(context) {
   const { seed } = context.query;
 
