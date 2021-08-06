@@ -35,7 +35,7 @@ export const Navbar = () => (
           </a>
         </NextLink>
 
-        <ToggleTheme />
+        <ToggleTheme outline />
       </div>
     </div>
   </section>

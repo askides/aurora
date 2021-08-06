@@ -1,3 +1,5 @@
+import { ToggleTheme } from "./ToggleTheme";
+
 export const Footer = () => (
   <footer className="container flex flex-col items-center px-8 py-16 mx-auto max-w-7xl sm:flex-row">
     <a
@@ -41,6 +43,8 @@ export const Footer = () => (
           ></path>
         </svg>
       </a>
+
+      <ToggleTheme />
     </span>
   </footer>
 );

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 
-export const ToggleTheme = () => {
+export const ToggleTheme = (props) => {
   const [mounted, setMounted] = useState(false);
   const { resolvedTheme, setTheme } = useTheme();
 
@@ -11,7 +11,11 @@ export const ToggleTheme = () => {
     <button
       aria-label="Toggle Dark Mode"
       type="button"
-      className="w-10 h-10 p-3 bg-gray-200 rounded dark:bg-gray-800 focus:outline-none"
+      className={
+        props.outline
+          ? "w-10 h-10 p-3 bg-gray-200 rounded dark:bg-gray-800 focus:outline-none"
+          : "focus:outline-none"
+      }
       onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
     >
       {mounted && (
@@ -20,7 +24,11 @@ export const ToggleTheme = () => {
           viewBox="0 0 24 24"
           fill="currentColor"
           stroke="currentColor"
-          className="w-4 h-4 text-gray-800 dark:text-gray-200"
+          className={
+            props.outline
+              ? "w-4 h-4 text-gray-800 dark:text-gray-200"
+              : "w-6 h-6 text-gray-400 hover:text-gray-500"
+          }
         >
           {resolvedTheme === "dark" ? (
             <path
