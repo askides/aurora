@@ -5,10 +5,12 @@ import { useForm } from "react-hook-form";
 import { Button } from "../components/Button";
 import { Aurora } from "../components/Aurora";
 import { Input } from "../components/Input";
+import { useAuth } from "../hooks/useAuth";
 import { client } from "../utils/api";
 
 const Login = () => {
   const router = useRouter();
+  const { signIn } = useAuth();
   const { register, handleSubmit, formState } = useForm();
 
   useEffect(async () => {
@@ -21,12 +23,7 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     try {
-      const res = await client.post("/v2/auth/login", data);
-
-      if (res.data.response_type === "jwt") {
-        window.localStorage.setItem("aurora_jwt", res.data.access_token);
-      }
-
+      await signIn(data);
       toast.success("Login succeded!");
       router.push("/");
     } catch (err) {
