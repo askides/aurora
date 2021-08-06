@@ -25,10 +25,16 @@ export const Navbar = () => (
               Profile
             </a>
           </NextLink>
+
+          <NextLink href="/login">
+            <a className="inline-flex sm:hidden font-medium leading-6 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-500">
+              Sign In
+            </a>
+          </NextLink>
         </nav>
       </div>
 
-      <div className="inline-flex items-center space-x-6 lg:justify-end">
+      <div className="hidden sm:inline-flex items-center space-x-6 lg:justify-end">
         <NextLink href="/login">
           <a className="text-base font-medium leading-6 whitespace-no-wrap transition duration-150 ease-in-out text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-500">
             Sign in
