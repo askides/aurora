@@ -12,7 +12,7 @@ export const Linear = ({ title, url, timeRange }) => {
 
   if (!graph) {
     return (
-      <div className="px-4">
+      <div className="px-4 py-8 flex items-center">
         <ProgressListSkeleton />
       </div>
     );
