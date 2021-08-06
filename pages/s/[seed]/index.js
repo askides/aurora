@@ -24,7 +24,7 @@ const Shared = () => {
           <Aurora className="h-12 sm:h-14" />
 
           <div className="flex justify-center">
-            <ToggleTheme />
+            <ToggleTheme outline />
           </div>
         </div>
 
