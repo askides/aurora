@@ -7,7 +7,7 @@ export const Container = ({ children, navbar = true }) => {
       <Meta />
 
       {navbar && (
-        <div className="mb-16">
+        <div className="mb-4 sm:mb-16">
           <Navbar />
         </div>
       )}
