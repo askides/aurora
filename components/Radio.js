@@ -1,5 +1,4 @@
 export const Radio = ({ register, name, ...rest }) => {
-  console.log("rest", rest);
   return (
     <div className="flex items-center">
       <input
