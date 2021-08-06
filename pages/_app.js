@@ -5,7 +5,7 @@ import { ThemeProvider } from "next-themes";
 
 const App = ({ Component, pageProps }) => {
   return (
-    <ThemeProvider attribute="class" defaultTheme="dark">
+    <ThemeProvider attribute="class">
       <Component {...pageProps} />
       <Toaster position="top-right" />
     </ThemeProvider>
