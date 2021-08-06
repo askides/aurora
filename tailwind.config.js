@@ -19,6 +19,7 @@ module.exports = {
         "px-8",
         "py-8",
         "py-16",
+        "sm:inline-flex",
       ],
     },
   },
