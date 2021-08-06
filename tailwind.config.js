@@ -16,6 +16,8 @@ module.exports = {
         "text-right",
         "truncate",
         "gap-y-10",
+        "px-8",
+        "py-8",
       ],
     },
   },
