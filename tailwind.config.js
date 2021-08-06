@@ -18,6 +18,7 @@ module.exports = {
         "gap-y-10",
         "px-8",
         "py-8",
+        "py-16",
       ],
     },
   },
