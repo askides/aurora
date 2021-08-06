@@ -1,7 +1,7 @@
 import { useRealtime } from "../hooks/useRealtime";
 
 export const RealtimeVisitors = ({ seed }) => {
-  const { visitors, isLoading, isError } = useRealtime({ seed });
+  const { visitors, isLoading } = useRealtime({ seed });
 
   return (
     <div className="flex items-center">
