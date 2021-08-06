@@ -25,7 +25,7 @@ const Edit = ({ seed }) => {
 
   useEffect(() => {
     if (website) {
-      reset({ name: website.name, url: website.url, shared: website.shared });
+      reset({ name: website.name, url: website.url, shared: String(+website.shared) });
     }
   }, [website]);
 
