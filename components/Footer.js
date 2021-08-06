@@ -1,5 +1,5 @@
 export const Footer = () => (
-  <footer className="container flex flex-col items-center px-8 py-8 mx-auto max-w-7xl sm:flex-row">
+  <footer className="container flex flex-col items-center px-8 py-16 mx-auto max-w-7xl sm:flex-row">
     <a
       rel="noreferrer"
       target="_blank"
