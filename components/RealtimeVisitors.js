@@ -1,10 +1,7 @@
 import { useRealtime } from "../hooks/useRealtime";
 
 export const RealtimeVisitors = ({ seed }) => {
-  const { visitors, isLoading, isError } = useRealtime({ seed });
-
-  if (isLoading) return <div>Loading..</div>;
-  if (isError) return <div>failed to load</div>;
+  const { visitors, isLoading } = useRealtime({ seed });
 
   return (
     <div className="flex items-center">
@@ -13,7 +10,7 @@ export const RealtimeVisitors = ({ seed }) => {
         <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
       </span>
       <div className="text-black dark:text-white text-sm">
-        Current Visitors: {visitors.visitors}
+        {isLoading ? "_" : `Current Visitors: ${visitors.visitors}`}
       </div>
     </div>
   );

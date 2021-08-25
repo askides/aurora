@@ -9,8 +9,7 @@ export const Button = ({ type, block, value, isLoading, onClick }) => (
       block ? "w-full justify-center" : null
     }`}
   >
-    {isLoading && <Loader />}
-    {value}
+    {isLoading ? <Loader /> : value}
   </button>
 );
 

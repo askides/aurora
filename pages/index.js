@@ -1,30 +1,34 @@
 import { Container } from "../components/Container";
 import { Websites } from "../components/Websites";
+import { Page } from "../components/Page";
 import { DividerButton } from "../components/DividerButton";
-import { withAuth } from "../hoc/withAuth";
+import { WebsiteCardsSkeleton } from "../components/loaders/WebsiteCardsSkeleton";
+import { useMeWebsites } from "../hooks/useMeWebsites";
 
 const Home = () => {
+  const { websites } = useMeWebsites();
+
+  if (!websites) {
+    return (
+      <Container>
+        <Page title="Websites">
+          <WebsiteCardsSkeleton />
+        </Page>
+      </Container>
+    );
+  }
+
   return (
     <Container>
-      <div className="flex flex-col justify-center items-start max-w-3xl w-full mx-auto mb-16">
-        <h1 className="font-bold text-3xl md:text-5xl tracking-tight mb-4 text-black dark:text-white">
-          Homepage
-        </h1>
+      <Page title="Websites">
+        <Websites websites={websites} />
 
-        <p className="prose leading-relaxed text-gray-600 dark:text-gray-400 mb-4">
-          These are your websites, you can manage them by clicking on the proper buttons.
-        </p>
-
-        <div className="mt-8 w-full">
-          <Websites />
-        </div>
-
-        <div className="mt-12 w-full">
+        <div className="mt-12">
           <DividerButton link={`/websites/create`} />
         </div>
-      </div>
+      </Page>
     </Container>
   );
 };
 
-export default withAuth(Home);
+export default Home;

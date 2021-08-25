@@ -1,5 +1,3 @@
-import { Panel } from "./Panel";
-
 const ProgressListItem = ({ percentage, children }) => (
   <div className="space-y-3">
     {children}
@@ -9,31 +7,25 @@ const ProgressListItem = ({ percentage, children }) => (
   </div>
 );
 
-export const ProgressList = ({ configuration = {} }) => (
-  <Panel>
+export const ProgressList = (props) => (
+  <div className="bg-white dark:bg-black overflow-hidden sm:first:pl-0 sm:pl-5 sm:py-5">
     <div className="space-y-7">
       <div className="text-black dark:text-white font-medium">
         <div className="grid grid-cols-4 text-black dark:text-white text-sm">
-          {configuration.header &&
-            configuration.header.columns.map((column, columnKey) => (
-              <div key={columnKey} className={column.className}>
-                {column.label}
-              </div>
-            ))}
+          <div className="col-span-2 truncate">{props.title}</div>
+          <div className="col-span-1 text-right">Views</div>
+          <div className="col-span-1 text-right">Unique</div>
         </div>
       </div>
       <div className="space-y-5">
-        {configuration.body && configuration.body.values.length ? (
-          configuration.body.values.map((row, rowKey) => (
+        {props.data.length ? (
+          props.data.map((row, rowKey) => (
             <div key={rowKey} className="space-y-3">
               <ProgressListItem percentage={row.percentage}>
                 <div className="grid grid-cols-4 text-black dark:text-white text-sm">
-                  {configuration.header &&
-                    configuration.header.columns.map((rowColumn, rowColumnKey) => (
-                      <div key={rowColumnKey} className={rowColumn.className}>
-                        {row[rowColumn.accessor]}
-                      </div>
-                    ))}
+                  <div className="col-span-2 truncate">{row.element}</div>
+                  <div className="col-span-1 text-right">{row.views}</div>
+                  <div className="col-span-1 text-right">{row.unique}</div>
                 </div>
               </ProgressListItem>
             </div>
@@ -43,5 +35,5 @@ export const ProgressList = ({ configuration = {} }) => (
         )}
       </div>
     </div>
-  </Panel>
+  </div>
 );
