@@ -21,6 +21,20 @@ export const buildRes = (overrides) => {
   return res;
 };
 
+export const buildLoginReq = () => {
+  return buildReq({
+    method: "POST",
+    body: {
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+    },
+  });
+};
+
+/**
+ * Models Factories
+ */
+
 export const buildUser = (overrides, options = { timestamps: true }) => {
   let user = {
     firstname: faker.name.firstName(),
