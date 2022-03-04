@@ -25,6 +25,15 @@ test("AuroraDB.getUser", async () => {
   expect(user).toEqual(createdUser);
 });
 
+test("AuroraDB.getUserByEmail", async () => {
+  const createdUser = await AuroraDB.createUser(buildUser());
+  const user = await AuroraDB.getUserByEmail(createdUser.email);
+
+  expect(user).toBeDefined();
+  expect(user).toBeInstanceOf(Object);
+  expect(user).toEqual(createdUser);
+});
+
 test("AuroraDB.createUser", async () => {
   const user = buildUser({ id: "FAKE_USER_ID", password: "DUMMY" });
   const createdUser = await AuroraDB.createUser(user);

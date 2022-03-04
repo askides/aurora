@@ -17,6 +17,16 @@ export async function getUser(uid) {
   return user;
 }
 
+export async function getUserByEmail(email) {
+  const user = await prisma.user.findUnique({
+    where: {
+      email: email,
+    },
+  });
+
+  return user;
+}
+
 export async function createUser(data) {
   const hashedPw = hash(data.password);
   const user = await prisma.user.create({
