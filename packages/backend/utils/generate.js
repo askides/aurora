@@ -21,16 +21,20 @@ export const buildRes = (overrides) => {
   return res;
 };
 
-export const buildUser = (overrides) => {
-  const user = {
+export const buildUser = (overrides, options = { timestamps: true }) => {
+  let user = {
     firstname: faker.name.firstName(),
     lastname: faker.name.lastName(),
     email: faker.internet.email(),
     password: faker.internet.password(),
-    created_at: faker.date.past(),
-    updated_at: faker.date.recent(),
-    ...overrides,
   };
+
+  if (options.timestamps) {
+    user.created_at = faker.date.past();
+    user.updated_at = faker.date.recent();
+  }
+
+  user = { ...user, ...overrides };
 
   return user;
 };
