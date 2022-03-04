@@ -30,10 +30,12 @@
     "@faker-js/faker": "^6.0.0-alpha.7",
     "babel-jest": "^27.5.1",
     "jest": "^27.5.1",
+    "jest-mock-extended": "^2.0.4",
     "prettier": "^2.5.1",
     "prisma": "^3.10.0"
   },
   "dependencies": {
-    "@prisma/client": "^3.10.0"
+    "@prisma/client": "^3.10.0",
+    "bcryptjs": "^2.4.3"
   }
 }
