@@ -27,6 +27,7 @@
   "devDependencies": {
     "@babel/core": "^7.17.5",
     "@babel/preset-env": "^7.16.11",
+    "@faker-js/faker": "^6.0.0-alpha.7",
     "babel-jest": "^27.5.1",
     "jest": "^27.5.1",
     "prettier": "^2.5.1",
