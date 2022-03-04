@@ -33,8 +33,7 @@ export async function createUser(data) {
     data: { ...data, password: hashedPw },
   });
 
-  const { password, ...rest } = user;
-  return rest;
+  return user;
 }
 
 export async function updateUser(uid, data = {}) {
