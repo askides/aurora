@@ -18,8 +18,8 @@
     "url": "git+https://github.com/useaurora/aurora.git"
   },
   "scripts": {
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "test": "jest --runInBand",
+    "test:watch": "jest --runInBand --watch"
   },
   "bugs": {
     "url": "https://github.com/useaurora/aurora/issues"
