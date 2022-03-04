@@ -11,6 +11,22 @@ beforeEach(async () => {
   await AuroraDB.client.user.deleteMany();
 });
 
+describe("non allowed methods should not work", () => {
+  const disallowedMethods = ["GET", "PUT", "PATCH", "DELETE"];
+
+  disallowedMethods.forEach((method) => {
+    it(`should return 405 for ${method}`, async () => {
+      const req = buildReq({ method: method });
+      const res = buildRes();
+
+      await handler(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(405);
+      expect(res.json).toHaveBeenCalledWith({ message: "Method not allowed" });
+    });
+  });
+});
+
 it("should return 401 because there are no users", async () => {
   const req = buildLoginReq();
   const res = buildRes();
