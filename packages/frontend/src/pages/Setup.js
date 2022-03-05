@@ -25,7 +25,7 @@ const useNeedsSetup = () => {
   return { needsSetup, isLoading };
 };
 
-export default function App() {
+export default function Setup() {
   const { needsSetup, isLoading } = useNeedsSetup();
 
   if (isLoading) {
