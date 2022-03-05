@@ -20,6 +20,7 @@ export const SetupController = {
       value: { confirmPassword, ...validated },
     } = rules.validate(req.body);
 
+    // TODO: ValidationException
     if (error) {
       return res.status(400).json({ message: error.message });
     }
