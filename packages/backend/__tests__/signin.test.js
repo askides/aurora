@@ -1,11 +1,7 @@
+import { createMocks } from "node-mocks-http";
 import handler from "../api/signin";
 import * as AuroraDB from "../lib/database";
-import {
-  buildLoginReq,
-  buildReq,
-  buildRes,
-  buildUser,
-} from "../utils/generate";
+import { buildLoginReq, buildUser } from "../utils/generate";
 
 beforeEach(async () => {
   await AuroraDB.client.user.deleteMany();
@@ -16,25 +12,23 @@ describe("non allowed methods should not work", () => {
 
   disallowedMethods.forEach((method) => {
     it(`should return 405 for ${method}`, async () => {
-      const req = buildReq({ method: method });
-      const res = buildRes();
+      const { req, res } = createMocks({ method });
 
       await handler(req, res);
 
-      expect(res.status).toHaveBeenCalledWith(405);
-      expect(res.json).toHaveBeenCalledWith({ message: "Method not allowed" });
+      expect(res._getStatusCode()).toBe(405);
+      expect(res._getJSONData()).toEqual({ message: "Method not allowed" });
     });
   });
 });
 
 it("should return 401 because there are no users", async () => {
-  const req = buildLoginReq();
-  const res = buildRes();
+  const { req, res } = createMocks(buildLoginReq());
 
   await handler(req, res);
 
-  expect(res.status).toHaveBeenCalledWith(401);
-  expect(res.json.mock.calls[0][0]).toMatchInlineSnapshot(`
+  expect(res._getStatusCode()).toBe(401);
+  expect(res._getJSONData()).toMatchInlineSnapshot(`
     Object {
       "message": "Invalid credentials",
     }
@@ -43,15 +37,15 @@ it("should return 401 because there are no users", async () => {
 
 it("should return 401 because the password is wrong", async () => {
   const user = buildUser({ password: "THIS_IS_THE_PASSWORD" });
+
   await AuroraDB.createUser(user);
 
-  const req = buildLoginReq();
-  const res = buildRes();
+  const { req, res } = createMocks(buildLoginReq());
 
   await handler(req, res);
 
-  expect(res.status).toHaveBeenCalledWith(401);
-  expect(res.json.mock.calls[0][0]).toMatchInlineSnapshot(`
+  expect(res._getStatusCode()).toBe(401);
+  expect(res._getJSONData()).toMatchInlineSnapshot(`
     Object {
       "message": "Invalid credentials",
     }
@@ -62,19 +56,18 @@ it("should return 200 and a token", async () => {
   const user = buildUser({ password: "THIS_IS_THE_PASSWORD" });
   const createdUser = await AuroraDB.createUser(user);
 
-  const req = buildReq({
+  const { req, res } = createMocks({
     method: "POST",
     body: {
       email: createdUser.email,
       password: "THIS_IS_THE_PASSWORD",
     },
   });
-  const res = buildRes();
 
   await handler(req, res);
 
-  expect(res.status).toHaveBeenCalledWith(200);
-  expect(res.json.mock.calls[0][0]).toMatchObject({
+  expect(res._getStatusCode()).toBe(200);
+  expect(res._getJSONData()).toMatchObject({
     accessToken: expect.any(String),
     user: {
       id: createdUser.id,
