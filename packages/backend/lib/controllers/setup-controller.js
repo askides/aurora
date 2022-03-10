@@ -1,5 +1,6 @@
 import Joi from "joi";
 import * as AuroraDB from "../database";
+import { ValidationError } from "../error";
 
 export const SetupController = {
   index: async ({ res }) => {
@@ -20,9 +21,8 @@ export const SetupController = {
       value: { confirmPassword, ...validated },
     } = rules.validate(req.body);
 
-    // TODO: ValidationException
     if (error) {
-      return res.status(400).json({ message: error.message });
+      throw new ValidationError(422, error.message);
     }
 
     const createdUser = await AuroraDB.createUser(validated);

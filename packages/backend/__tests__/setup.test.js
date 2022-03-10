@@ -84,7 +84,7 @@ it("should return an error when the password is not valid", async () => {
 
   await handler(req, res);
 
-  expect(res._getStatusCode()).toBe(400);
+  expect(res._getStatusCode()).toBe(422);
   expect(res._getJSONData()).toMatchInlineSnapshot(`
     Object {
       "message": "\\"password\\" length must be at least 8 characters long",
@@ -105,7 +105,7 @@ it("should return an error when the password is not confirmed", async () => {
 
   await handler(req, res);
 
-  expect(res._getStatusCode()).toBe(400);
+  expect(res._getStatusCode()).toBe(422);
   expect(res._getJSONData()).toMatchInlineSnapshot(`
     Object {
       "message": "\\"confirmPassword\\" must be [ref:password]",
@@ -126,7 +126,7 @@ it("should return an error when the email is not valid", async () => {
 
   await handler(req, res);
 
-  expect(res._getStatusCode()).toBe(400);
+  expect(res._getStatusCode()).toBe(422);
   expect(res._getJSONData()).toMatchInlineSnapshot(`
     Object {
       "message": "\\"email\\" must be a valid email",
@@ -147,7 +147,7 @@ it("should return an error when firstname is not valid", async () => {
 
   await handler(req, res);
 
-  expect(res._getStatusCode()).toBe(400);
+  expect(res._getStatusCode()).toBe(422);
   expect(res._getJSONData()).toMatchInlineSnapshot(`
     Object {
       "message": "\\"firstname\\" must be a string",
@@ -168,7 +168,7 @@ it("should return an error when lastname is not valid", async () => {
 
   await handler(req, res);
 
-  expect(res._getStatusCode()).toBe(400);
+  expect(res._getStatusCode()).toBe(422);
   expect(res._getJSONData()).toMatchInlineSnapshot(`
     Object {
       "message": "\\"lastname\\" must be a string",

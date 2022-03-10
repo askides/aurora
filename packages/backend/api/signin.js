@@ -1,6 +1,7 @@
 import Joi from "joi";
 import JWT from "jsonwebtoken";
 import * as AuroraDB from "../lib/database";
+import { AuthenticationError, ValidationError } from "../lib/error";
 import { Router } from "../lib/router";
 import { verify } from "../utils/hash";
 
@@ -19,21 +20,20 @@ export default async function handler(request, response) {
 
   await router.route("POST", async ({ req, res }) => {
     const rules = Joi.object({
-      email: Joi.string().required(),
+      email: Joi.string().email().required(),
       password: Joi.string().required(),
     });
 
     const { error, value } = rules.validate(req.body);
 
-    // TODO: ValidationException
     if (error) {
-      return res.status(400).json({ message: error.message });
+      throw new ValidationError(422, error.message);
     }
 
     const user = await AuroraDB.getUserByEmail(value.email);
 
     if (!user || !verify(value.password, user.password)) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      throw new AuthenticationError(401, "Invalid credentials");
     }
 
     const { password, ...rest } = user;

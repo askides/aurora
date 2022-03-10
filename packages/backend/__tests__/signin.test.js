@@ -77,3 +77,22 @@ it("should return 200 and a token", async () => {
     },
   });
 });
+
+it("should returl 422 because the email is not valid", async () => {
+  const { req, res } = createMocks({
+    method: "POST",
+    body: {
+      email: "not_an_email",
+      password: "THIS_IS_THE_PASSWORD",
+    },
+  });
+
+  await handler(req, res);
+
+  expect(res._getStatusCode()).toBe(422);
+  expect(res._getJSONData()).toMatchInlineSnapshot(`
+    Object {
+      "message": "\\"email\\" must be a valid email",
+    }
+  `);
+});
