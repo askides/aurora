@@ -56,3 +56,44 @@ export async function deleteUser(uid) {
 
   return user;
 }
+
+export async function getUserWebsites(uid) {
+  return prisma.website.findMany({
+    where: {
+      user_id: uid,
+    },
+  });
+}
+
+export async function getWebsite(wid) {
+  return prisma.website.findUnique({
+    where: {
+      id: wid,
+    },
+  });
+}
+
+export async function createWebsite(data) {
+  const website = await prisma.website.create({
+    data: { ...data },
+  });
+
+  return website;
+}
+
+export async function updateWebsite(wid, data = {}) {
+  const website = await prisma.website.update({
+    where: { id: wid },
+    data: { ...data },
+  });
+
+  return website;
+}
+
+export async function deleteWebsite(wid) {
+  const website = await prisma.website.delete({
+    where: { id: wid },
+  });
+
+  return website;
+}

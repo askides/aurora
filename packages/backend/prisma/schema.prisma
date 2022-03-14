@@ -28,7 +28,7 @@ model Website {
   name       String
   url        String
   is_public  Boolean  @default(false)
-  user_id    Int
+  user_id    String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 

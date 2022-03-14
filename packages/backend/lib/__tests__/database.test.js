@@ -1,9 +1,10 @@
-import { buildUser } from "../../utils/generate";
+import { buildUser, buildWebsite } from "../../utils/generate";
 import { verify } from "../../utils/hash";
 import * as AuroraDB from "../database";
 
 beforeEach(async () => {
   await AuroraDB.client.user.deleteMany();
+  await AuroraDB.client.website.deleteMany();
 });
 
 test("AuroraDB.getUsers", async () => {
@@ -87,4 +88,64 @@ test("AuroraDB.deleteUser", async () => {
   // Ensure the user is deleted
   const checkDeletedUser = await AuroraDB.getUser(createdUser.id);
   expect(checkDeletedUser).toBeNull();
+});
+
+test("AuroraDB.createWebsite", async () => {
+  const website = buildWebsite({ id: "FAKE_WEBSITE_ID" });
+  const createdWebsite = await AuroraDB.createWebsite(website);
+
+  expect(createdWebsite).toBeDefined();
+  expect(createdWebsite).toEqual({ ...website });
+});
+
+test("AuroraDB.getWebsite", async () => {
+  const website = buildWebsite({ id: "FAKE_WEBSITE_ID" });
+  const createdWebsite = await AuroraDB.createWebsite(website);
+
+  const retrieved = await AuroraDB.getWebsite(website.id);
+
+  expect(retrieved).toBeDefined();
+  expect(retrieved).toEqual(website);
+});
+
+test("AuroraDB.getUserWebsites", async () => {
+  const user = buildUser({ id: "FAKE_USER_ID", password: "DUMMY" });
+  const website = buildWebsite({ user_id: user.id });
+  const createdUser = await AuroraDB.createUser(user);
+  const createdWebsite = await AuroraDB.createWebsite(website);
+
+  // Also a non owned wid
+  await AuroraDB.createWebsite(buildWebsite());
+
+  const userWebsites = await AuroraDB.getUserWebsites(user.id);
+
+  expect(userWebsites).toBeDefined();
+  expect(userWebsites).toHaveLength(1);
+  expect(userWebsites).toEqual([createdWebsite]);
+});
+
+test("AuroraDB.updateWebsite", async () => {
+  const website = buildWebsite({ id: "FAKE_WEBSITE_ID" });
+  const createdWebsite = await AuroraDB.createWebsite(website);
+
+  expect(createdWebsite).toBeDefined();
+
+  let updates = buildWebsite({ id: "FAKE_WEBSITE_ID" });
+  let updatedWebsite = await AuroraDB.updateWebsite(createdWebsite.id, updates);
+
+  expect(updatedWebsite).toBeDefined();
+  expect(updatedWebsite).toEqual({ ...updates });
+});
+
+test("AuroraDB.deleteWebsite", async () => {
+  const website = buildWebsite({ id: "FAKE_USER_ID" });
+  const createdWebsite = await AuroraDB.createWebsite(website);
+  const deletedWebsite = await AuroraDB.deleteWebsite(createdWebsite.id);
+
+  expect(deletedWebsite).toBeDefined();
+  expect(deletedWebsite).toEqual(createdWebsite);
+
+  // Ensure the user is deleted
+  const checkDeletedWebsite = await AuroraDB.getWebsite(createdWebsite.id);
+  expect(checkDeletedWebsite).toBeNull();
 });
