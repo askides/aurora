@@ -57,8 +57,8 @@ export const buildWebsite = (overrides) => {
   const website = {
     name: faker.company.companyName(),
     url: faker.internet.url(),
-    is_public: faker.random.boolean(),
-    user_id: faker.random.number(),
+    is_public: faker.datatype.boolean(),
+    user_id: faker.datatype.uuid(),
     created_at: faker.date.past(),
     updated_at: faker.date.recent(),
     ...overrides,
