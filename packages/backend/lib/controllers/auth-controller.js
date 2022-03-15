@@ -21,7 +21,9 @@ export const AuthController = {
       password: Joi.string().required(),
     });
 
-    const { error, value } = rules.validate(req.body);
+    const { error, value } = rules.validate(req.body, {
+      stripUnknown: true,
+    });
 
     if (error) {
       throw new ValidationError(422, error.message);

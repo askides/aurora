@@ -19,7 +19,9 @@ export const SetupController = {
     const {
       error,
       value: { confirmPassword, ...validated },
-    } = rules.validate(req.body);
+    } = rules.validate(req.body, {
+      stripUnknown: true,
+    });
 
     if (error) {
       throw new ValidationError(422, error.message);
