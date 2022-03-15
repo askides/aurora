@@ -6,8 +6,9 @@ export default async function handler(request, response) {
   const router = new Router(request, response);
 
   await router.use(authentication);
-  await router.route("GET", WebsiteController.index);
-  await router.route("POST", WebsiteController.store);
+  await router.route("GET", WebsiteController.show);
+  await router.route("PUT", WebsiteController.update);
+  await router.route("DELETE", WebsiteController.destroy);
 
   router.fallback();
 }
