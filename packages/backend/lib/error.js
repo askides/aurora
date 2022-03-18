@@ -18,3 +18,17 @@ export class AuthenticationError extends Error {
     this.statusCode = statusCode;
   }
 }
+
+export class NotFoundError extends Error {
+  constructor(statusCode = 404, message = "Not found") {
+    super(message);
+    this.statusCode = statusCode;
+  }
+}
+
+export class UnhauthorizedError extends Error {
+  constructor(statusCode = 403, message = "Unhauthorized") {
+    super(message);
+    this.statusCode = statusCode;
+  }
+}
