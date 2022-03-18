@@ -1,6 +1,5 @@
 import { createMocks } from "node-mocks-http";
 import handler from "../api/websites/index";
-import { default as singleHandler } from "../api/websites/[id]";
 import * as AuroraDB from "../lib/database";
 import { signInMock } from "../lib/jest";
 import { buildUser, buildWebsite } from "../utils/generate";
@@ -86,31 +85,6 @@ it("should return the user websites", async () => {
   expect(res._getJSONData()).toHaveLength(1);
 });
 
-it("should return a specific user website", async () => {
-  const { accessToken } = await signInMock(user);
-
-  const website = buildWebsite({ id: "FAKE_WEBSITE_ID", user_id: user.id });
-  await AuroraDB.createWebsite(website);
-
-  const { req, res } = createMocks({
-    method: "GET",
-    query: {
-      id: website.id,
-    },
-    headers: {
-      authorization: `Bearer ${accessToken}`,
-    },
-  });
-
-  await singleHandler(req, res);
-
-  expect(res._getStatusCode()).toBe(200);
-
-  const data = res._getJSONData();
-  expect(data.user_id).toBe(user.id);
-  expect(data.id).toBe(website.id);
-});
-
 it("should return 422 because the name is required", async () => {
   const { accessToken } = await signInMock(user);
   const { name, ...website } = buildWebsite();
@@ -189,5 +163,4 @@ it("should create a website for the user", async () => {
 
   expect(res._getStatusCode()).toBe(201);
   expect(res._getJSONData().user_id).toBe(user.id);
-  // TODO: add more data
 });

@@ -1,6 +1,6 @@
 import Joi from "joi";
 import * as AuroraDB from "../database";
-import { ValidationError } from "../error";
+import { NotFoundError, UnhauthorizedError, ValidationError } from "../error";
 
 export const WebsiteController = {
   index: async ({ req, res }) => {
@@ -10,6 +10,15 @@ export const WebsiteController = {
 
   show: async ({ req, res }) => {
     const website = await AuroraDB.getWebsite(req.query.id);
+
+    if (!website) {
+      throw new NotFoundError();
+    }
+
+    if (website.user_id !== req.user.id) {
+      throw new UnhauthorizedError();
+    }
+
     return res.status(200).json(website);
   },
 
@@ -37,6 +46,17 @@ export const WebsiteController = {
   },
 
   update: async ({ req, res }) => {
+    // Check if website exists
+    const website = await AuroraDB.getWebsite(req.query.id);
+
+    if (!website) {
+      throw new NotFoundError();
+    }
+
+    if (website.user_id !== req.user.id) {
+      throw new UnhauthorizedError();
+    }
+
     const rules = Joi.object({
       name: Joi.string().required(),
       url: Joi.string().required(),
@@ -53,11 +73,11 @@ export const WebsiteController = {
     }
 
     const updatedWebsite = await AuroraDB.updateWebsite(
-      req.params.id,
+      req.query.id,
       validated
     );
 
-    return res.status(201).json({ data: updatedWebsite });
+    return res.status(200).json(updatedWebsite);
   },
 
   destroy: async ({ req, res }) => {
