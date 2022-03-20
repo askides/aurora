@@ -2,13 +2,15 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
-  provider          = "mysql"
-  url               = env("DATABASE_URL")
-  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  shadowDatabaseUrl    = env("SHADOW_DATABASE_URL")
+  referentialIntegrity = "prisma"
 }
 
 model User {
@@ -33,4 +35,32 @@ model Website {
   updated_at DateTime @updatedAt
 
   @@map("websites")
+}
+
+model Event {
+  id             String     @id @default(cuid())
+  type           String     @default("pageview")
+  element        String
+  duration       Float      @default(0.0)
+  is_new_visitor Boolean    @default(false)
+  is_new_session Boolean    @default(false)
+  is_a_bounce    Boolean    @default(false)
+  website_id     String
+  created_at     DateTime   @default(now())
+  updated_at     DateTime   @updatedAt
+  metadata       Metadata[]
+
+  @@map("events")
+}
+
+model Metadata {
+  id         String   @id @default(cuid())
+  type       String
+  value      String
+  version    String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  events     Event[]
+
+  @@map("metadata")
 }
