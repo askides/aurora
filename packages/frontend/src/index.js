@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Main } from "./layouts/Main";
 import { Home } from "./pages/Home";
+import { NotFound } from "./pages/NotFound";
 import { Setup } from "./pages/Setup";
 import reportWebVitals from "./reportWebVitals";
 
@@ -15,8 +16,8 @@ ReactDOM.render(
           <Route path="setup" element={<Setup />} />
           <Route path="/" element={<Main />}>
             <Route index element={<Home />} />
-            {/* <Route path="*" element={<NoMatch />} /> */}
           </Route>
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </MantineProvider>
