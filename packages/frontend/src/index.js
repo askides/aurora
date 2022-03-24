@@ -1,13 +1,20 @@
 import { MantineProvider } from "@mantine/core";
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./App";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Home } from "./pages/Home";
+import { Setup } from "./pages/Setup";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <React.StrictMode>
-    <MantineProvider>
-      <App />
+    <MantineProvider withNormalizeCSS>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="setup" element={<Setup />} />
+        </Routes>
+      </BrowserRouter>
     </MantineProvider>
   </React.StrictMode>,
   document.getElementById("root")
