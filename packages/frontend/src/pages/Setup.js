@@ -5,7 +5,9 @@ import {
   FormHelperText,
   FormLabel,
   Heading,
+  Image,
   Input,
+  Text,
   VStack,
 } from "@chakra-ui/react";
 import * as React from "react";
@@ -66,8 +68,18 @@ export function SetupForm() {
 export function Setup() {
   return (
     <Flex minHeight="100vh" justifyContent="center" alignItems="center">
-      <Flex maxWidth="xl" direction="column" flex={1} gap={5}>
-        <Heading as="h1">Setup</Heading>
+      <Flex direction="column" flex={2} gap={10} padding={10}>
+        <Image src="./aurora_mini_blue.svg" boxSize="100px" alt="Aurora Logo" />
+        <Flex direction="column" gap={3}>
+          <Heading as="h1">Welcome</Heading>
+          <Text fontSize="xl">
+            You are about to setup your first Aurora account. Please fill the
+            form to continue. You will be able to change these informations
+            later, so don't worry.
+          </Text>
+        </Flex>
+      </Flex>
+      <Flex direction="column" flex={1} gap={5} padding={10}>
         <SetupForm onSubmit={(data) => console.log(data)} />
       </Flex>
     </Flex>
