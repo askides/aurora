@@ -1,32 +1,15 @@
-import {
-  Button,
-  Center,
-  Container,
-  Loader,
-  TextInput,
-  Title,
-} from "@mantine/core";
+import { Center, Loader } from "@mantine/core";
 import * as React from "react";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { Main } from "./layouts/Main";
+import { useSetup } from "./lib/hooks/use-setup";
+import { Home } from "./pages/Home";
+import { NotFound } from "./pages/NotFound";
+import { Setup } from "./pages/Setup";
 
-const useNeedsSetup = () => {
-  const [needsSetup, setNeedsSetup] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(true);
-
-  React.useEffect(() => {
-    const ns = window.localStorage.getItem("needsSetup");
-
-    if (ns === "true") {
-      setNeedsSetup(true);
-    }
-
-    setIsLoading(false);
-  }, []);
-
-  return { needsSetup, isLoading };
-};
-
-export default function App() {
-  const { needsSetup, isLoading } = useNeedsSetup();
+export function App() {
+  const { pathname } = useLocation();
+  const { setupDone, isLoading } = useSetup();
 
   if (isLoading) {
     return (
@@ -36,11 +19,18 @@ export default function App() {
     );
   }
 
+  if (pathname !== "/setup" && !setupDone) {
+    return <Navigate replace to="/setup" />;
+  }
+
   return (
-    <Container>
-      <Title order={1}>This is h1 title</Title>
-      <TextInput placeholder="Your name" label="Full name" required />
-      <Button>Submit</Button>
-    </Container>
+    <Routes>
+      <Route path="/" element={<Main />}>
+        <Route index element={<Home />} />
+      </Route>
+
+      <Route path="setup" element={<Setup />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }
