@@ -1,4 +1,4 @@
-import { MantineProvider } from "@mantine/core";
+import { ChakraProvider } from "@chakra-ui/react";
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
@@ -7,11 +7,11 @@ import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <React.StrictMode>
-    <MantineProvider withNormalizeCSS>
+    <ChakraProvider>
       <BrowserRouter>
         <App />
       </BrowserRouter>
-    </MantineProvider>
+    </ChakraProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
