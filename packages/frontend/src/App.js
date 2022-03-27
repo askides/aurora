@@ -6,6 +6,7 @@ import { useSetup } from "./lib/hooks/use-setup";
 import { Home } from "./pages/Home";
 import { NotFound } from "./pages/NotFound";
 import { Setup } from "./pages/Setup";
+import { Signin } from "./pages/Signin";
 
 export function App() {
   const { pathname } = useLocation();
@@ -29,6 +30,7 @@ export function App() {
         <Route index element={<Home />} />
       </Route>
 
+      <Route path="signin" element={<Signin />} />
       <Route path="setup" element={<Setup />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
