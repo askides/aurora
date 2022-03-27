@@ -1,23 +1,19 @@
-import { AppShell } from "@mantine/core";
+import { Flex } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
-import { NavbarMinimal } from "../components/NavbarMinimal";
+import { Navbar } from "../components/Navbar";
 
-export function Main() {
+export function Main({ children }) {
   return (
-    <AppShell
-      padding="md"
-      navbar={<NavbarMinimal />}
-      styles={(theme) => ({
-        main: {
-          backgroundColor:
-            theme.colorScheme === "dark"
-              ? theme.colors.dark[8]
-              : theme.colors.gray[0],
-          marginLeft: 80,
-        },
-      })}
-    >
-      <Outlet />
-    </AppShell>
+    <>
+      <Navbar />
+      <Flex
+        padding={10}
+        minHeight="100vh"
+        backgroundColor="#f8f9fa"
+        marginLeft={20}
+      >
+        <Outlet />
+      </Flex>
+    </>
   );
 }
