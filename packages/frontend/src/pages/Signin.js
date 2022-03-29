@@ -7,17 +7,29 @@ import {
   Image,
   Input,
   Text,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
 import * as React from "react";
+import { ApiClient } from "../lib/api-client";
 import { useForm } from "../lib/hooks/use-form";
 
 export function SigninForm() {
+  const toast = useToast();
   const { getFormProps, onSubmit, isSubmitting } = useForm();
 
   const handleSubmit = async (data) => {
-    await new Promise((r) => setTimeout(r, 2000));
     console.log("Submitted Data", data);
+
+    try {
+      await ApiClient.post("/signin", data);
+    } catch (err) {
+      toast({
+        title: "Error",
+        description: err.message,
+        status: "error",
+      });
+    }
   };
 
   return (
