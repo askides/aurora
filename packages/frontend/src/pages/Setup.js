@@ -8,17 +8,35 @@ import {
   Image,
   Input,
   Text,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
 import * as React from "react";
+import { ApiClient } from "../lib/api-client";
 import { useForm } from "../lib/hooks/use-form";
 
 export function SetupForm() {
+  const toast = useToast();
   const { getFormProps, onSubmit, isSubmitting } = useForm();
 
   const handleSubmit = async (data) => {
-    await new Promise((r) => setTimeout(r, 2000));
     console.log("Submitted Data", data);
+
+    try {
+      await ApiClient.post("/setup", data);
+
+      toast({
+        title: "Account created.",
+        description: "We've created your account for you.",
+        status: "success",
+      });
+    } catch (err) {
+      toast({
+        title: "Error",
+        description: err.message,
+        status: "error",
+      });
+    }
   };
 
   return (
@@ -47,6 +65,7 @@ export function SetupForm() {
       <FormControl>
         <FormLabel htmlFor="password">Password</FormLabel>
         <Input name="password" id="password" type="password" />
+        <FormHelperText>Minimum 8 Characters</FormHelperText>
       </FormControl>
 
       <FormControl>
@@ -67,8 +86,14 @@ export function SetupForm() {
 
 export function Setup() {
   return (
-    <Flex minHeight="100vh" justifyContent="center" alignItems="center">
-      <Flex direction="column" flex={2} gap={10} padding={10}>
+    <Flex
+      maxWidth="7xl"
+      marginX="auto"
+      minHeight="100vh"
+      justifyContent="center"
+      alignItems="center"
+    >
+      <Flex direction="column" flex={1} gap={10} padding={10}>
         <Image src="./aurora_mini_blue.svg" boxSize="100px" alt="Aurora Logo" />
         <Flex direction="column" gap={3}>
           <Heading as="h1">Welcome</Heading>
