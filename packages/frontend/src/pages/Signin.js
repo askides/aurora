@@ -4,7 +4,9 @@ import {
   FormControl,
   FormLabel,
   Heading,
+  Image,
   Input,
+  Text,
   VStack,
 } from "@chakra-ui/react";
 import * as React from "react";
@@ -44,9 +46,21 @@ export function SigninForm() {
 
 export function Signin() {
   return (
-    <Flex minHeight="100vh" justifyContent="center" alignItems="center">
-      <Flex maxWidth="xl" direction="column" flex={1} gap={5}>
-        <Heading as="h1">Sign In</Heading>
+    <Flex
+      maxWidth="7xl"
+      marginX="auto"
+      minHeight="100vh"
+      justifyContent="center"
+      alignItems="center"
+    >
+      <Flex direction="column" flex={1} gap={10} padding={10}>
+        <Image src="./aurora_mini_blue.svg" boxSize="100px" alt="Aurora Logo" />
+        <Flex direction="column" gap={3}>
+          <Heading as="h1">Sign In</Heading>
+          <Text fontSize="xl">Use your email and password to sign in.</Text>
+        </Flex>
+      </Flex>
+      <Flex direction="column" flex={1} gap={5} padding={10}>
         <SigninForm onSubmit={(data) => console.log(data)} />
       </Flex>
     </Flex>
