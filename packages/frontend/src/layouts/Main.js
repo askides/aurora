@@ -7,6 +7,7 @@ export function Main({ children }) {
     <>
       <Navbar />
       <Flex
+        maxWidth="8xl"
         padding={10}
         minHeight="100vh"
         backgroundColor="#f8f9fa"
