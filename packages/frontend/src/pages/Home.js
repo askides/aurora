@@ -1,77 +1,32 @@
+import { Button } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
+import { Websites } from "../components/Websites";
 import {
-  Button,
-  Flex,
-  Grid,
-  GridItem,
-  Heading,
-  HStack,
-  IconButton,
-  Spinner,
-} from "@chakra-ui/react";
-import { Dashboard, Trash } from "tabler-icons-react";
+  Wrapper,
+  WrapperActions,
+  WrapperContent,
+  WrapperHeader,
+  WrapperTitle,
+} from "../components/Wrapper";
 import { useMockWebsites } from "../lib/hooks/mocks/use-mock-websites";
-
-export function Website({ name, is_public }) {
-  return (
-    <Flex
-      direction="column"
-      backgroundColor="white"
-      boxShadow="sm"
-      padding={5}
-      borderRadius={3}
-    >
-      <Heading as="h3" size="lg">
-        {name}
-      </Heading>
-      <p>{is_public ? "Public" : "Private"}</p>
-
-      <HStack spacing={4}>
-        <Button flex="1">View Details</Button>
-        <IconButton
-          aria-label="View Analytics"
-          icon={<Dashboard />}
-          backgroundColor="blue.500"
-        />
-        <IconButton
-          aria-label="Delete Website"
-          icon={<Trash />}
-          backgroundColor="red.500"
-        />
-      </HStack>
-    </Flex>
-  );
-}
-
-export function Websites({ data }) {
-  const items = data.map((website) => {
-    return (
-      <GridItem w="100%">
-        <Website {...website} />
-      </GridItem>
-    );
-  });
-
-  return (
-    <Grid templateColumns="repeat(3, 1fr)" gap={6}>
-      {items}
-    </Grid>
-  );
-}
 
 export function Home() {
   const { data, isLoading } = useMockWebsites();
 
-  if (isLoading) {
-    return <Spinner size="xl" />;
-  }
-
   return (
-    <Flex width="100%" direction="column" gap={6}>
-      <Flex direction="column" justifyContent="space-between">
-        <Heading as="h1">Home</Heading>
-        <Button>Create New</Button>
-      </Flex>
-      <Websites data={data} />
-    </Flex>
+    <Wrapper>
+      <WrapperHeader>
+        <WrapperTitle>Home</WrapperTitle>
+        <WrapperActions>
+          <Button as={Link} to="/websites/new">
+            Create New
+          </Button>
+        </WrapperActions>
+      </WrapperHeader>
+
+      <WrapperContent isLoading={isLoading}>
+        <Websites data={data} />
+      </WrapperContent>
+    </Wrapper>
   );
 }
