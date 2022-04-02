@@ -67,7 +67,10 @@ export function Home() {
 
   return (
     <Flex width="100%" direction="column" gap={6}>
-      <Heading as="h1">Home</Heading>
+      <Flex direction="column" justifyContent="space-between">
+        <Heading as="h1">Home</Heading>
+        <Button>Create New</Button>
+      </Flex>
       <Websites data={data} />
     </Flex>
   );
