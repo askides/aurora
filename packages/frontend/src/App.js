@@ -4,6 +4,7 @@ import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { Main } from "./layouts/Main";
 import { useSetup } from "./lib/hooks/use-setup";
 import { Home } from "./pages/Home";
+import { NewWebsite } from "./pages/NewWebsite";
 import { NotFound } from "./pages/NotFound";
 import { Setup } from "./pages/Setup";
 import { Signin } from "./pages/Signin";
@@ -28,6 +29,7 @@ export function App() {
     <Routes>
       <Route path="/" element={<Main />}>
         <Route index element={<Home />} />
+        <Route path="websites/new" element={<NewWebsite />} />
       </Route>
 
       <Route path="signin" element={<Signin />} />
