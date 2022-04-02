@@ -1,6 +1,6 @@
 import { Button } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { Websites } from "../components/Websites";
+import { WebsitesList } from "../components/Websites/WebsitesList";
 import {
   Wrapper,
   WrapperActions,
@@ -25,7 +25,7 @@ export function Home() {
       </WrapperHeader>
 
       <WrapperContent isLoading={isLoading}>
-        <Websites data={data} />
+        <WebsitesList data={data} />
       </WrapperContent>
     </Wrapper>
   );

@@ -3,6 +3,7 @@ import * as React from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { Main } from "./layouts/Main";
 import { useSetup } from "./lib/hooks/use-setup";
+import { EditWebsite } from "./pages/EditWebsite";
 import { Home } from "./pages/Home";
 import { NewWebsite } from "./pages/NewWebsite";
 import { NotFound } from "./pages/NotFound";
@@ -30,6 +31,7 @@ export function App() {
       <Route path="/" element={<Main />}>
         <Route index element={<Home />} />
         <Route path="websites/new" element={<NewWebsite />} />
+        <Route path="websites/:id/edit" element={<EditWebsite />} />
       </Route>
 
       <Route path="signin" element={<Signin />} />

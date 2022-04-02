@@ -8,12 +8,15 @@ import {
   WrapperHeader,
   WrapperTitle,
 } from "../components/Wrapper";
+import { useMockWebsite } from "../lib/hooks/mocks/use-mock-website";
 
-export function NewWebsite() {
+export function EditWebsite() {
+  const { data, isLoading } = useMockWebsite();
+
   return (
     <Wrapper>
       <WrapperHeader>
-        <WrapperTitle>Create Website</WrapperTitle>
+        <WrapperTitle>Edit Website</WrapperTitle>
         <WrapperActions>
           <Button as={Link} to="/">
             Back to Websites
@@ -21,9 +24,9 @@ export function NewWebsite() {
         </WrapperActions>
       </WrapperHeader>
 
-      <WrapperContent>
+      <WrapperContent isLoading={isLoading}>
         <Box boxShadow="xs" p="6" rounded="md" bg="white">
-          <WebsitesForm isNew={true} />
+          <WebsitesForm isNew={false} values={data} />
         </Box>
       </WrapperContent>
     </Wrapper>

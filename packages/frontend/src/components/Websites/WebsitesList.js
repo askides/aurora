@@ -18,6 +18,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import * as React from "react";
+import { Link } from "react-router-dom";
 import { Dashboard, Trash } from "tabler-icons-react";
 
 const ModalContext = React.createContext();
@@ -75,7 +76,9 @@ export function Website({ id, name, is_public }) {
       </Flex>
 
       <HStack spacing={10}>
-        <Button flex="1">View Details</Button>
+        <Button flex="1" as={Link} to={`/websites/${id}/edit`}>
+          View Details
+        </Button>
         <HStack spacing={2}>
           <IconButton
             aria-label="View Analytics"
@@ -94,7 +97,7 @@ export function Website({ id, name, is_public }) {
   );
 }
 
-export function Websites({ data }) {
+export function WebsitesList({ data }) {
   const items = data.map((website) => {
     return (
       <GridItem w="100%" key={website.id}>
