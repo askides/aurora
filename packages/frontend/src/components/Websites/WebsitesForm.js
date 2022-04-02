@@ -11,6 +11,7 @@ import {
 import { useForm } from "../../lib/hooks/use-form";
 
 export function WebsitesForm({ isNew, values = {} }) {
+  // TODO: Fix checkboxes pre-fill. Maybe use a library?
   const { getFormProps, onSubmit, isSubmitting } = useForm(values);
 
   const handleSubmit = async (data) => {
