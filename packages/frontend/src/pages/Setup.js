@@ -69,12 +69,8 @@ export function SetupForm() {
       </FormControl>
 
       <FormControl>
-        <FormLabel htmlFor="password_confirmation">Repeat Password</FormLabel>
-        <Input
-          name="password_confirmation"
-          id="password_confirmation"
-          type="password"
-        />
+        <FormLabel htmlFor="confirmPassword">Repeat Password</FormLabel>
+        <Input name="confirmPassword" id="confirmPassword" type="password" />
       </FormControl>
 
       <Button width="100%" type="submit" isLoading={isSubmitting}>
