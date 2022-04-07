@@ -26,6 +26,10 @@ export function App() {
     return <Navigate replace to="/setup" />;
   }
 
+  if (pathname === "/setup" && setupDone) {
+    return <Navigate replace to="/" />;
+  }
+
   return (
     <Routes>
       <Route path="/" element={<Main />}>
