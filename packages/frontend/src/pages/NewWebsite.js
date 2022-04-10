@@ -8,8 +8,17 @@ import {
   WrapperHeader,
   WrapperTitle,
 } from "../components/Wrapper";
+import { ApiClient } from "../lib/api-client";
 
 export function NewWebsite() {
+  const handleSubmit = async (data) => {
+    try {
+      await ApiClient.post("/websites", { ...data, is_public: false }); // XXX TODO: is_public
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <Wrapper>
       <WrapperHeader>
@@ -23,7 +32,7 @@ export function NewWebsite() {
 
       <WrapperContent>
         <Box boxShadow="xs" p="6" rounded="md" bg="white">
-          <WebsitesForm isNew={true} />
+          <WebsitesForm isNew={true} onSubmit={handleSubmit} />
         </Box>
       </WrapperContent>
     </Wrapper>

@@ -1,5 +1,5 @@
 import { Box, Button } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { WebsitesForm } from "../components/Websites/WebsitesForm";
 import {
   Wrapper,
@@ -8,10 +8,15 @@ import {
   WrapperHeader,
   WrapperTitle,
 } from "../components/Wrapper";
-import { useMockWebsite } from "../lib/hooks/mocks/use-mock-website";
+import { useWebsite } from "../lib/hooks/use-website";
 
 export function EditWebsite() {
-  const { data, isLoading } = useMockWebsite();
+  const { id } = useParams();
+  const { data, isLoading, isError } = useWebsite(id);
+
+  const handleSubmit = (data) => {
+    console.log("Submitted Data", data);
+  };
 
   return (
     <Wrapper>
@@ -25,9 +30,12 @@ export function EditWebsite() {
       </WrapperHeader>
 
       <WrapperContent isLoading={isLoading}>
-        <Box boxShadow="xs" p="6" rounded="md" bg="white">
-          <WebsitesForm isNew={false} values={data} />
-        </Box>
+        {isError && <div>Something went wrong ...</div>}
+        {!isLoading && !isError && (
+          <Box boxShadow="xs" p="6" rounded="md" bg="white">
+            <WebsitesForm isNew={false} values={data} onSubmit={handleSubmit} />
+          </Box>
+        )}
       </WrapperContent>
     </Wrapper>
   );
