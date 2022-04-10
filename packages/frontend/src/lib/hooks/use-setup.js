@@ -6,9 +6,19 @@ export function useSetup() {
   const [setupDone, setSetupDone] = React.useState(false);
 
   React.useEffect(() => {
-    ApiClient.get("/setup")
-      .catch(() => setSetupDone(true))
-      .finally(() => setIsLoading(false));
+    const isFlagPresent = localStorage.getItem("aurora_setup_done");
+
+    if (isFlagPresent) {
+      setSetupDone(true);
+      setIsLoading(false);
+    } else {
+      ApiClient.get("/setup")
+        .catch(() => {
+          localStorage.setItem("aurora_setup_done", 1);
+          setSetupDone(true);
+        })
+        .finally(() => setIsLoading(false));
+    }
   }, []);
 
   return { isLoading, setupDone };
