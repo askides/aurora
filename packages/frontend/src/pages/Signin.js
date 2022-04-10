@@ -11,19 +11,20 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import * as React from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../lib/hooks/use-auth";
 import { useForm } from "../lib/hooks/use-form";
 
 export function SigninForm() {
   const toast = useToast();
+  const navigate = useNavigate();
   const { signIn } = useAuth();
   const { getFormProps, onSubmit, isSubmitting } = useForm();
 
   const handleSubmit = async (data) => {
-    console.log("Submitted Data", data);
-
     try {
       await signIn(data.email, data.password);
+      navigate("/", { replace: true });
     } catch (err) {
       toast({
         title: "Error",
