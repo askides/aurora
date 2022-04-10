@@ -1,5 +1,6 @@
 import { Button } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
+import { EmptyState } from "../components/EmptyState";
 import { WebsitesList } from "../components/Websites/WebsitesList";
 import {
   Wrapper,
@@ -10,10 +11,21 @@ import {
 } from "../components/Wrapper";
 import { useWebsites } from "../lib/hooks/use-websites";
 
+const WebsitesEmptyState = () => (
+  <EmptyState
+    header="You don't have any item yet."
+    description="You can create one by clicking the button below."
+    action={
+      <Button as={Link} to="/websites/new" size="lg">
+        Create First!
+      </Button>
+    }
+  />
+);
+
 export function Home() {
   const { data, isLoading, isError } = useWebsites();
-
-  console.log(isLoading, isError);
+  const isEmpty = !data || data.length === 0;
 
   return (
     <Wrapper>
@@ -28,6 +40,7 @@ export function Home() {
 
       <WrapperContent isLoading={isLoading}>
         {isError && <div>Something went wrong ...</div>}
+        {!isLoading && isEmpty && <WebsitesEmptyState />}
         {!isLoading && !isError && <WebsitesList data={data} />}
       </WrapperContent>
     </Wrapper>
