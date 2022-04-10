@@ -11,18 +11,19 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import * as React from "react";
-import { ApiClient } from "../lib/api-client";
+import { useAuth } from "../lib/hooks/use-auth";
 import { useForm } from "../lib/hooks/use-form";
 
 export function SigninForm() {
   const toast = useToast();
+  const { signIn } = useAuth();
   const { getFormProps, onSubmit, isSubmitting } = useForm();
 
   const handleSubmit = async (data) => {
     console.log("Submitted Data", data);
 
     try {
-      await ApiClient.post("/signin", data);
+      await signIn(data.email, data.password);
     } catch (err) {
       toast({
         title: "Error",
