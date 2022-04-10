@@ -10,13 +10,9 @@ import {
 } from "@chakra-ui/react";
 import { useForm } from "../../lib/hooks/use-form";
 
-export function WebsitesForm({ isNew, values = {} }) {
+export function WebsitesForm({ isNew, onSubmit: handleSubmit, values = {} }) {
   // TODO: Fix checkboxes pre-fill. Maybe use a library?
   const { getFormProps, onSubmit, isSubmitting } = useForm(values);
-
-  const handleSubmit = async (data) => {
-    console.warn("TODO: handleSubmit", data);
-  };
 
   return (
     <VStack
