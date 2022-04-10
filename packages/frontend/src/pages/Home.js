@@ -8,10 +8,12 @@ import {
   WrapperHeader,
   WrapperTitle,
 } from "../components/Wrapper";
-import { useMockWebsites } from "../lib/hooks/mocks/use-mock-websites";
+import { useWebsites } from "../lib/hooks/use-websites";
 
 export function Home() {
-  const { data, isLoading } = useMockWebsites();
+  const { data, isLoading, isError } = useWebsites();
+
+  console.log(isLoading, isError);
 
   return (
     <Wrapper>
@@ -25,7 +27,8 @@ export function Home() {
       </WrapperHeader>
 
       <WrapperContent isLoading={isLoading}>
-        <WebsitesList data={data} />
+        {isError && <div>Something went wrong ...</div>}
+        {!isLoading && !isError && <WebsitesList data={data} />}
       </WrapperContent>
     </Wrapper>
   );
