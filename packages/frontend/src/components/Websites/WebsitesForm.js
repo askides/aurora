@@ -8,9 +8,14 @@ import {
   Input,
   VStack,
 } from "@chakra-ui/react";
+import * as React from "react";
+import { useParams } from "react-router-dom";
+import { useAuroraLinks } from "../../lib/hooks/use-aurora-links";
 import { useForm } from "../../lib/hooks/use-form";
 
 export function WebsitesForm({ isNew, onSubmit: handleSubmit, values = {} }) {
+  const { id } = useParams();
+  const { sharedLink, generatedLink } = useAuroraLinks(id);
   // TODO: Fix checkboxes pre-fill. Maybe use a library?
   const { getFormProps, onSubmit, isSubmitting } = useForm(values);
 
@@ -46,12 +51,12 @@ export function WebsitesForm({ isNew, onSubmit: handleSubmit, values = {} }) {
         <>
           <FormControl>
             <FormLabel htmlFor="url">Link to Share</FormLabel>
-            <Code>https://useaurora.app/apps/29fh2ondkd</Code>
+            <Code>{sharedLink}</Code>
           </FormControl>
 
           <FormControl>
             <FormLabel>How to Connect Your Website</FormLabel>
-            <Code>Code to paste here</Code>
+            <Code>{generatedLink}</Code>
             <FormHelperText>
               Copy this line and paste it in your website&apos;s HEAD section:
             </FormHelperText>
@@ -60,7 +65,7 @@ export function WebsitesForm({ isNew, onSubmit: handleSubmit, values = {} }) {
       )}
 
       <Button width="100%" type="submit" isLoading={isSubmitting}>
-        Create Website!
+        {isNew ? "Create" : "Update"} Website!
       </Button>
     </VStack>
   );
