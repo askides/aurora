@@ -1,4 +1,4 @@
-import { Box, Button } from "@chakra-ui/react";
+import { Box, Button, useToast } from "@chakra-ui/react";
 import { Link, useParams } from "react-router-dom";
 import { WebsitesForm } from "../components/Websites/WebsitesForm";
 import {
@@ -8,20 +8,27 @@ import {
   WrapperHeader,
   WrapperTitle,
 } from "../components/Wrapper";
+import { ApiClient } from "../lib/api-client";
 import { useWebsite } from "../lib/hooks/use-website";
 
 export function EditWebsite() {
+  const toast = useToast();
   const { id } = useParams();
   const { data, isLoading, isError } = useWebsite(id);
 
-  const handleSubmit = (data) => {
-    console.log("Submitted Data", data);
+  const handleSubmit = async (data) => {
+    try {
+      await ApiClient.put(`/websites/${id}`, { ...data, is_public: false }); // XXX TODO: is_public
+      toast({ status: "success", title: "Website updated." });
+    } catch (err) {
+      toast({ status: "error", title: "An error has occurred.." });
+    }
   };
 
   return (
     <Wrapper>
       <WrapperHeader>
-        <WrapperTitle>Edit Website</WrapperTitle>
+        <WrapperTitle>Website Details</WrapperTitle>
         <WrapperActions>
           <Button as={Link} to="/">
             Back to Websites

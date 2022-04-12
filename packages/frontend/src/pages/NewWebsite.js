@@ -1,5 +1,5 @@
-import { Box, Button } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Box, Button, useToast } from "@chakra-ui/react";
+import { Link, useNavigate } from "react-router-dom";
 import { WebsitesForm } from "../components/Websites/WebsitesForm";
 import {
   Wrapper,
@@ -11,11 +11,16 @@ import {
 import { ApiClient } from "../lib/api-client";
 
 export function NewWebsite() {
+  const toast = useToast();
+  const navigate = useNavigate();
+
   const handleSubmit = async (data) => {
     try {
       await ApiClient.post("/websites", { ...data, is_public: false }); // XXX TODO: is_public
+      toast({ status: "success", title: "Website created." });
+      navigate("/");
     } catch (err) {
-      console.log(err);
+      toast({ status: "error", title: "An error has occurred.." });
     }
   };
 
