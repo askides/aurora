@@ -9,35 +9,33 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import * as React from "react";
+import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { useAuroraLinks } from "../../lib/hooks/use-aurora-links";
-import { useForm } from "../../lib/hooks/use-form";
 
-export function WebsitesForm({ isNew, onSubmit: handleSubmit, values = {} }) {
+export function WebsitesForm({ isNew, onSubmit, values = {} }) {
   const { id } = useParams();
   const { sharedLink, generatedLink } = useAuroraLinks(id);
-  // TODO: Fix checkboxes pre-fill. Maybe use a library?
-  const { getFormProps, onSubmit, isSubmitting } = useForm(values);
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm({ defaultValues: values });
 
   return (
-    <VStack
-      as="form"
-      spacing={5}
-      onSubmit={onSubmit(handleSubmit)}
-      {...getFormProps()}
-    >
+    <VStack as="form" spacing={5} onSubmit={handleSubmit(onSubmit)}>
       <FormControl>
         <FormLabel htmlFor="name">Website Name</FormLabel>
-        <Input name="name" id="name" type="text" />
+        <Input id="name" type="text" {...register("name")} />
       </FormControl>
 
       <FormControl>
         <FormLabel htmlFor="url">Website URL</FormLabel>
-        <Input name="url" id="url" type="text" />
+        <Input id="url" type="text" {...register("url")} />
       </FormControl>
 
       <FormControl>
-        <Checkbox name="is_public" id="is_public">
+        <Checkbox id="is_public" {...register("is_public")}>
           Share Statistics
         </Checkbox>
         <FormHelperText>

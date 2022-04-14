@@ -17,12 +17,13 @@ export function EditWebsite() {
   const { data, isLoading, isError } = useWebsite(id);
 
   const handleSubmit = async (data) => {
-    try {
-      await ApiClient.put(`/websites/${id}`, { ...data, is_public: false }); // XXX TODO: is_public
-      toast({ status: "success", title: "Website updated." });
-    } catch (err) {
-      toast({ status: "error", title: "An error has occurred.." });
-    }
+    await ApiClient.put(`/websites/${id}`, data)
+      .then(() => {
+        toast({ status: "success", title: "Website updated." });
+      })
+      .catch(() => {
+        toast({ status: "error", title: "An error has occurred.." });
+      });
   };
 
   return (
