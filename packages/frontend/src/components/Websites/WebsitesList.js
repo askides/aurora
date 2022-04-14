@@ -16,10 +16,13 @@ import {
   ModalOverlay,
   Portal,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import * as React from "react";
 import { Link } from "react-router-dom";
+import { mutate } from "swr";
 import { Dashboard, Trash } from "tabler-icons-react";
+import { ApiClient } from "../../lib/api-client";
 
 const ModalContext = React.createContext();
 
@@ -120,11 +123,24 @@ export function WebsitesList({ data }) {
 }
 
 export function DeleteWebsiteModal() {
+  const toast = useToast();
   const { isOpen, onClose, item, setItem } = useModal();
 
   const handleClose = () => {
     setItem(null);
     onClose();
+  };
+
+  const handleDelete = () => {
+    ApiClient.delete(`/websites/${item}`)
+      .then(() => {
+        mutate("/websites");
+        handleClose();
+        toast({ status: "success", title: "Website deleted." });
+      })
+      .catch(() =>
+        toast({ status: "error", title: "An error has occurred.." })
+      );
   };
 
   return (
@@ -139,7 +155,9 @@ export function DeleteWebsiteModal() {
         </ModalBody>
 
         <ModalFooter>
-          <Button colorScheme="red">Confirm</Button>
+          <Button colorScheme="red" onClick={handleDelete}>
+            Confirm
+          </Button>
         </ModalFooter>
       </ModalContent>
     </Modal>
