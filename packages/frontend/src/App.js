@@ -3,6 +3,7 @@ import * as React from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { Main } from "./layouts/Main";
 import { AuthProvider, useAuth } from "./lib/context/auth-context";
+import { Account } from "./pages/Account";
 import { EditWebsite } from "./pages/EditWebsite";
 import { Home } from "./pages/Home";
 import { NewWebsite } from "./pages/NewWebsite";
@@ -64,6 +65,7 @@ export function App() {
           }
         >
           <Route index element={<Home />} />
+          <Route path="account" element={<Account />} />
           <Route path="websites/new" element={<NewWebsite />} />
           <Route path="websites/:id/edit" element={<EditWebsite />} />
         </Route>
