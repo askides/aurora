@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../lib/hooks/use-auth";
+import { useAuth } from "../lib/context/auth-context";
 import { useForm } from "../lib/hooks/use-form";
 
 export function SigninForm() {
