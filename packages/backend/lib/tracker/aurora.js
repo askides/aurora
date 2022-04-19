@@ -117,7 +117,7 @@ const sum = (args = []) => args.reduce((acc, el) => acc + el, 0);
 
   const analyticsUrl = script
     .getAttribute("src")
-    .replace("/t/aurora.js", "/api/collect");
+    .replace("/tracker.js", "/collect");
 
   const wid = script.getAttribute("aurora-id");
 
