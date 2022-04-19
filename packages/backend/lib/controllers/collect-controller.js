@@ -102,4 +102,5 @@ export const CollectController = {
     });
 
     return res.status(201).json(event);
+  },
 };
