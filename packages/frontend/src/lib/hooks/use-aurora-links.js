@@ -5,9 +5,10 @@ export function useAuroraLinks(wid) {
   const [generatedLink, setGeneratedLink] = React.useState(null);
 
   React.useEffect(() => {
+    // TODO: this is no more the current url.
     const currentUrl = window.location.protocol + "//" + window.location.host;
     const sharedLink = `${currentUrl}/s/${wid}`;
-    const generatedLink = `<script async defer src="${currentUrl}/t/aurora.js" aurora-id="${wid}"></script>`;
+    const generatedLink = `<script async defer src="${currentUrl}/tracker.js" aurora-id="${wid}"></script>`;
 
     setSharedLink(sharedLink);
     setGeneratedLink(generatedLink);
