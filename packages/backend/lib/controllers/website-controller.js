@@ -81,7 +81,7 @@ export const WebsiteController = {
   },
 
   destroy: async ({ req, res }) => {
-    const deletedWebsite = await AuroraDB.deleteWebsite(req.params.id);
+    const deletedWebsite = await AuroraDB.deleteWebsite(req.query.id);
     return res.status(200).json({ data: deletedWebsite });
   },
 };
