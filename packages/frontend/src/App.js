@@ -4,6 +4,7 @@ import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { Main } from "./layouts/Main";
 import { AuthProvider, useAuth } from "./lib/context/auth-context";
 import { Account } from "./pages/Account";
+import { Dashboard } from "./pages/Dashboard";
 import { EditWebsite } from "./pages/EditWebsite";
 import { Home } from "./pages/Home";
 import { NewWebsite } from "./pages/NewWebsite";
@@ -68,6 +69,7 @@ export function App() {
           <Route path="account" element={<Account />} />
           <Route path="websites/new" element={<NewWebsite />} />
           <Route path="websites/:id/edit" element={<EditWebsite />} />
+          <Route path="websites/:id/dashboard" element={<Dashboard />} />
         </Route>
 
         <Route path="signin" element={<Signin />} />
