@@ -1,4 +1,9 @@
 {
+  "functions": {
+    "api/tracker.js": {
+      "includeFiles": "_files/**"
+    }
+  },
   "rewrites": [
     {
       "source": "/(.*)",

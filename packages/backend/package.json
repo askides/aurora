@@ -20,7 +20,8 @@
   "scripts": {
     "test": "jest --runInBand",
     "test:coverage": "jest --coverage --runInBand",
-    "test:watch": "jest --runInBand --watch"
+    "test:watch": "jest --runInBand --watch",
+    "build:tracker": "webpack --config tracker.config.js --mode production"
   },
   "bugs": {
     "url": "https://github.com/useaurora/aurora/issues"
@@ -34,7 +35,9 @@
     "jest-mock-extended": "^2.0.4",
     "node-mocks-http": "^1.11.0",
     "prettier": "^2.5.1",
-    "prisma": "^3.10.0"
+    "prisma": "^3.10.0",
+    "webpack": "^5.72.0",
+    "webpack-cli": "^4.9.2"
   },
   "dependencies": {
     "@prisma/client": "^3.10.0",
