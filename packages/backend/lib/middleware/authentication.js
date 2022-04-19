@@ -33,5 +33,6 @@ export const authentication = async ({ req }) => {
     throw new AuthenticationError();
   }
 
+  // TODO: Remove sensitive informations like password
   req.user = user;
 };
