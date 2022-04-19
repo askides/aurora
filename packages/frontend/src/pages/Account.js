@@ -5,6 +5,7 @@ import {
   FormHelperText,
   FormLabel,
   Input,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
 import * as React from "react";
@@ -15,6 +16,7 @@ import {
   WrapperHeader,
   WrapperTitle,
 } from "../components/Wrapper";
+import { ApiClient } from "../lib/api-client";
 import { useAccount } from "../lib/hooks/use-account";
 
 export function AccountForm({ onSubmit, values = {} }) {
@@ -65,10 +67,22 @@ export function AccountForm({ onSubmit, values = {} }) {
 }
 
 export function Account() {
+  const toast = useToast();
   const { data, isLoading, isError } = useAccount();
 
-  const handleSubmit = (data) => {
-    console.log(data);
+  const handleSubmit = async (data) => {
+    // Removing password fields if empty
+    const payload = Object.fromEntries(
+      Object.entries(data).filter(([_, v]) => v !== "")
+    );
+
+    await ApiClient.put(`/me`, payload)
+      .then(() => {
+        toast({ status: "success", title: "Account updated." });
+      })
+      .catch(() => {
+        toast({ status: "error", title: "An error has occurred.." });
+      });
   };
 
   return (
