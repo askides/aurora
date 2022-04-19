@@ -1,4 +1,12 @@
-import { Box, Flex, Grid, GridItem, Heading, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Grid,
+  GridItem,
+  Heading,
+  Spinner,
+  Text,
+} from "@chakra-ui/react";
 
 export const percentage = (n, t) => (n / t) * 100;
 
@@ -53,13 +61,27 @@ export function DatatableHead() {
   );
 }
 
-export function Datatable({ title, data = [] }) {
+export function Datatable({ title, isLoading = false, data = [] }) {
   const totalViews = data.reduce((acc, el) => acc + Number(el.views), 0);
 
   const rows = data.map((row, index) => {
     const perc = percentage(row.views, totalViews);
     return <DatatableRow {...row} percentage={perc} key={index} />;
   });
+
+  if (isLoading) {
+    return (
+      <Box flex={1} boxShadow="xs" p="6" rounded="md" bg="white">
+        <Flex gap={4} direction="column">
+          <Heading as="h3" size="sm">
+            {title}
+          </Heading>
+
+          <Spinner />
+        </Flex>
+      </Box>
+    );
+  }
 
   return (
     <Box flex={1} boxShadow="xs" p="6" rounded="md" bg="white">
@@ -70,7 +92,7 @@ export function Datatable({ title, data = [] }) {
 
         <DatatableHead />
 
-        {rows.length > 0 ? rows : <Text>No data available</Text>}
+        {!isLoading && rows.length > 0 ? rows : <Text>No data available</Text>}
       </Flex>
     </Box>
   );
