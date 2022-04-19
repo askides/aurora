@@ -38,7 +38,12 @@ export function Website({ id, name, is_public }) {
         <Button flex="1" as={Link} to={`/websites/${id}/edit`}>
           View Details
         </Button>
-        <Button flex="1" colorScheme="blue">
+        <Button
+          flex="1"
+          colorScheme="blue"
+          as={Link}
+          to={`/websites/${id}/dashboard`}
+        >
           View Analytics
         </Button>
       </HStack>
