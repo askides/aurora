@@ -15,6 +15,7 @@ import {
   WrapperHeader,
   WrapperTitle,
 } from "../components/Wrapper";
+import { useAccount } from "../lib/hooks/use-account";
 
 export function AccountForm({ onSubmit, values = {} }) {
   const {
@@ -64,16 +65,25 @@ export function AccountForm({ onSubmit, values = {} }) {
 }
 
 export function Account() {
+  const { data, isLoading, isError } = useAccount();
+
+  const handleSubmit = (data) => {
+    console.log(data);
+  };
+
   return (
     <Wrapper>
       <WrapperHeader>
         <WrapperTitle>Account</WrapperTitle>
       </WrapperHeader>
 
-      <WrapperContent>
-        <Box boxShadow="xs" p="6" rounded="md" bg="white">
-          <AccountForm />
-        </Box>
+      <WrapperContent isLoading={isLoading}>
+        {isError && <div>Something went wrong ...</div>}
+        {!isLoading && !isError && (
+          <Box boxShadow="xs" p="6" rounded="md" bg="white">
+            <AccountForm values={data} onSubmit={handleSubmit} />
+          </Box>
+        )}
       </WrapperContent>
     </Wrapper>
   );
