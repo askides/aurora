@@ -1,5 +1,6 @@
 import Chart from "react-apexcharts";
 
+// TODO: full width
 export function TimeseriesChart({ data = [] }) {
   return (
     <Chart
@@ -98,6 +99,7 @@ export function TimeseriesChart({ data = [] }) {
       ]}
       type="bar"
       height={500}
+      //width={1400}
     />
   );
 }
