@@ -1,6 +1,7 @@
 import { Flex, Select } from "@chakra-ui/react";
 import { subDays } from "date-fns";
 import * as React from "react";
+import { useStatistics } from "../lib/hooks/use-statistics";
 import { useTimeseries } from "../lib/hooks/use-timeseries";
 import { filtersReducer } from "../lib/reducers/filters-reducer";
 import { BrowserDatatable } from "./Charts/BrowserDatatable";
@@ -25,6 +26,7 @@ export function Analytics({ wid }) {
 
   // TODO: Move to the components
   const { data, isLoading, isError } = useTimeseries(filters);
+  const { data: statistics } = useStatistics(filters);
 
   const handleChange = (e) => {
     dispatch({ type: e.target.value });
