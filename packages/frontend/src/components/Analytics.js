@@ -1,7 +1,6 @@
 import { Flex, Select } from "@chakra-ui/react";
 import { subDays } from "date-fns";
 import * as React from "react";
-import { useStatistics } from "../lib/hooks/use-statistics";
 import { useTimeseries } from "../lib/hooks/use-timeseries";
 import { filtersReducer } from "../lib/reducers/filters-reducer";
 import { BrowserDatatable } from "./Charts/BrowserDatatable";
@@ -11,6 +10,7 @@ import { OsDatatable } from "./Charts/OsDatatable";
 import { PageDatatable } from "./Charts/PageDatatable";
 import { ReferrerDatatable } from "./Charts/ReferrerDatatable";
 import { TimeseriesChart } from "./Charts/TimeseriesChart";
+import { Statistics } from "./Statistics";
 
 export function Analytics({ wid }) {
   // Filters Logic
@@ -26,7 +26,6 @@ export function Analytics({ wid }) {
 
   // TODO: Move to the components
   const { data, isLoading, isError } = useTimeseries(filters);
-  const { data: statistics } = useStatistics(filters);
 
   const handleChange = (e) => {
     dispatch({ type: e.target.value });
@@ -44,20 +43,7 @@ export function Analytics({ wid }) {
           <option value="LAST_7_DAYS">Last 7 Days</option>
         </Select>
 
-        <Flex gap={5}>
-          <Flex flex={1} boxShadow="xs" p="6" rounded="md" bg="white">
-            Page Views
-          </Flex>
-          <Flex flex={1} boxShadow="xs" p="6" rounded="md" bg="white">
-            Unique Visitors
-          </Flex>
-          <Flex flex={1} boxShadow="xs" p="6" rounded="md" bg="white">
-            Bounce Rate
-          </Flex>
-          <Flex flex={1} boxShadow="xs" p="6" rounded="md" bg="white">
-            Average Visit Time
-          </Flex>
-        </Flex>
+        <Statistics filters={filters} />
 
         <Flex boxShadow="xs" p="6" rounded="md" bg="white">
           <TimeseriesChart data={data ?? []} />
