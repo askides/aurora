@@ -97,3 +97,127 @@ export async function deleteWebsite(wid) {
 
   return website;
 }
+
+export async function getWebsiteViewsByMetadata(
+  wid,
+  metadata = "os", // TODO: Better default value.
+  filters = {}
+) {
+  const { start, end } = filters;
+
+  const formattedDate = (date) => {
+    return new Date(Number(date)).toISOString();
+  };
+
+  const data = await prisma.metadata.findMany({
+    include: {
+      events: {
+        where: {
+          website_id: wid,
+          created_at: {
+            ...(start && { gte: formattedDate(start) }),
+            ...(end && { lte: formattedDate(end) }),
+          },
+        },
+      },
+    },
+    where: {
+      type: metadata,
+      events: {
+        some: {
+          website_id: wid,
+          created_at: {
+            ...(start && { gte: formattedDate(start) }),
+            ...(end && { lte: formattedDate(end) }),
+          },
+        },
+      },
+    },
+  });
+
+  return data;
+}
+
+export async function getWebsiteStatistics(wid, filters = {}) {
+  const { start, end } = filters;
+
+  const formattedDate = (date) => {
+    return new Date(Number(date)).toISOString();
+  };
+
+  const avgDuration = await prisma.event.aggregate({
+    _avg: {
+      duration: true,
+    },
+    where: {
+      website_id: wid,
+      created_at: {
+        ...(start && { gte: formattedDate(filters.start) }),
+        ...(end && { lte: formattedDate(filters.end) }),
+      },
+    },
+  });
+
+  const visits = await prisma.event.aggregate({
+    _count: {
+      _all: true,
+    },
+    where: {
+      website_id: wid,
+      created_at: {
+        ...(start && { gte: formattedDate(filters.start) }),
+        ...(end && { lte: formattedDate(filters.end) }),
+      },
+    },
+  });
+
+  const sessions = await prisma.event.aggregate({
+    _count: {
+      _all: true,
+    },
+    where: {
+      website_id: wid,
+      is_new_session: true,
+      created_at: {
+        ...(start && { gte: formattedDate(filters.start) }),
+        ...(end && { lte: formattedDate(filters.end) }),
+      },
+    },
+  });
+
+  const uniqueVisits = await prisma.event.aggregate({
+    _count: {
+      _all: true,
+    },
+    where: {
+      website_id: wid,
+      is_new_visitor: true,
+      created_at: {
+        ...(start && { gte: formattedDate(filters.start) }),
+        ...(end && { lte: formattedDate(filters.end) }),
+      },
+    },
+  });
+
+  const bounces = await prisma.event.aggregate({
+    _count: {
+      _all: true,
+    },
+    where: {
+      website_id: wid,
+      is_a_bounce: true,
+      created_at: {
+        ...(start && { gte: formattedDate(filters.start) }),
+        ...(end && { lte: formattedDate(filters.end) }),
+      },
+    },
+  });
+
+  return {
+    visits,
+    bounces,
+    sessions,
+    avgDuration,
+    uniqueVisits,
+  };
+}
