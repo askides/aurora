@@ -1,5 +1,5 @@
 import { Button } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Analytics } from "../components/Analytics";
 import {
   Wrapper,
@@ -10,6 +10,8 @@ import {
 } from "../components/Wrapper";
 
 export function Dashboard() {
+  const { id } = useParams();
+
   return (
     <Wrapper>
       <WrapperHeader>
@@ -22,7 +24,7 @@ export function Dashboard() {
       </WrapperHeader>
 
       <WrapperContent>
-        <Analytics wid={1234} />
+        <Analytics wid={id} />
       </WrapperContent>
     </Wrapper>
   );
