@@ -27,7 +27,7 @@ export class Router {
   async fallback() {
     if (this.error) {
       return this.res
-        .status(this.error.statusCode)
+        .status(this.error.statusCode ?? 500)
         .json({ message: this.error.message });
     }
 
