@@ -10,12 +10,7 @@ import {
 } from "@chakra-ui/react";
 import * as React from "react";
 import { useForm } from "react-hook-form";
-import {
-  Wrapper,
-  WrapperContent,
-  WrapperHeader,
-  WrapperTitle,
-} from "../components/Wrapper";
+import { Wrapper } from "../components/Wrapper";
 import { ApiClient } from "../lib/api-client";
 import { useAccount } from "../lib/hooks/use-account";
 
@@ -87,18 +82,18 @@ export function Account() {
 
   return (
     <Wrapper>
-      <WrapperHeader>
-        <WrapperTitle>Account</WrapperTitle>
-      </WrapperHeader>
+      <Wrapper.Header>
+        <Wrapper.Title>Account</Wrapper.Title>
+      </Wrapper.Header>
 
-      <WrapperContent isLoading={isLoading}>
+      <Wrapper.Content isLoading={isLoading}>
         {isError && <div>Something went wrong ...</div>}
         {!isLoading && !isError && (
           <Box boxShadow="xs" p="6" rounded="md" bg="white">
             <AccountForm values={data} onSubmit={handleSubmit} />
           </Box>
         )}
-      </WrapperContent>
+      </Wrapper.Content>
     </Wrapper>
   );
 }

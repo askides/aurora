@@ -1,16 +1,16 @@
 import { Flex, Select } from "@chakra-ui/react";
 import { subDays } from "date-fns";
 import * as React from "react";
-import { useTimeseries } from "../lib/hooks/use-timeseries";
-import { filtersReducer } from "../lib/reducers/filters-reducer";
-import { BrowserDatatable } from "./Charts/BrowserDatatable";
-import { CountryDatatable } from "./Charts/CountryDatatable";
-import { DeviceDatatable } from "./Charts/DeviceDatatable";
-import { OsDatatable } from "./Charts/OsDatatable";
-import { PageDatatable } from "./Charts/PageDatatable";
-import { ReferrerDatatable } from "./Charts/ReferrerDatatable";
-import { TimeseriesChart } from "./Charts/TimeseriesChart";
-import { Statistics } from "./Statistics";
+import { Statistics } from "../../components/Statistics";
+import { useTimeseries } from "../../lib/hooks/use-timeseries";
+import { filtersReducer } from "../../lib/reducers/filters-reducer";
+import { BrowserTable } from "../Charts/BrowserTable";
+import { CountryTable } from "../Charts/CountryTable";
+import { DeviceTable } from "../Charts/DeviceTable";
+import { OsTable } from "../Charts/OsTable";
+import { PageTable } from "../Charts/PageTable";
+import { ReferrerTable } from "../Charts/ReferrerTable";
+import { TimeseriesChart } from "../Charts/TimeseriesChart";
 
 export function Analytics({ wid }) {
   // Filters Logic
@@ -50,15 +50,15 @@ export function Analytics({ wid }) {
         </Flex>
 
         <Flex gap={5}>
-          <PageDatatable filters={filters} />
-          <ReferrerDatatable filters={filters} />
-          <DeviceDatatable filters={filters} />
+          <PageTable filters={filters} />
+          <ReferrerTable filters={filters} />
+          <DeviceTable filters={filters} />
         </Flex>
 
         <Flex gap={5}>
-          <OsDatatable filters={filters} />
-          <BrowserDatatable filters={filters} />
-          <CountryDatatable filters={filters} />
+          <OsTable filters={filters} />
+          <BrowserTable filters={filters} />
+          <CountryTable filters={filters} />
         </Flex>
       </Flex>
     </div>

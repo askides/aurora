@@ -12,14 +12,8 @@ import {
 } from "@chakra-ui/react";
 import * as React from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { WebsitesForm } from "../components/Websites/WebsitesForm";
-import {
-  Wrapper,
-  WrapperActions,
-  WrapperContent,
-  WrapperHeader,
-  WrapperTitle,
-} from "../components/Wrapper";
+import { Wrapper } from "../components/Wrapper";
+import { WebsitesForm } from "../feature/Websites/WebsitesForm";
 import { ApiClient } from "../lib/api-client";
 import { useWebsite } from "../lib/hooks/use-website";
 
@@ -58,9 +52,9 @@ export function EditWebsite() {
 
   return (
     <Wrapper>
-      <WrapperHeader>
-        <WrapperTitle>Website Details</WrapperTitle>
-        <WrapperActions>
+      <Wrapper.Header>
+        <Wrapper.Title>Website Details</Wrapper.Title>
+        <Wrapper.Actions>
           <Button as={Link} to="/">
             Back to Websites
           </Button>
@@ -68,17 +62,17 @@ export function EditWebsite() {
           <Button colorScheme="red" onClick={onOpen}>
             Delete Website
           </Button>
-        </WrapperActions>
-      </WrapperHeader>
+        </Wrapper.Actions>
+      </Wrapper.Header>
 
-      <WrapperContent isLoading={isLoading}>
+      <Wrapper.Content isLoading={isLoading}>
         {isError && <div>Something went wrong ...</div>}
         {!isLoading && !isError && (
           <Box boxShadow="xs" p="6" rounded="md" bg="white">
             <WebsitesForm isNew={false} values={data} onSubmit={handleSubmit} />
           </Box>
         )}
-      </WrapperContent>
+      </Wrapper.Content>
 
       <AlertDialog
         isOpen={isOpen}

@@ -1,31 +1,25 @@
 import { Box, Button } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { NewWebsiteForm } from "../components/Websites/NewWebsiteForm";
-import {
-  Wrapper,
-  WrapperActions,
-  WrapperContent,
-  WrapperHeader,
-  WrapperTitle,
-} from "../components/Wrapper";
+import { Wrapper } from "../components/Wrapper";
+import { NewWebsiteForm } from "../feature/Websites/NewWebsiteForm";
 
 export function NewWebsite() {
   return (
     <Wrapper>
-      <WrapperHeader>
-        <WrapperTitle>Create Website</WrapperTitle>
-        <WrapperActions>
+      <Wrapper.Header>
+        <Wrapper.Title>Create Website</Wrapper.Title>
+        <Wrapper.Actions>
           <Button as={Link} to="/">
             Back to Websites
           </Button>
-        </WrapperActions>
-      </WrapperHeader>
+        </Wrapper.Actions>
+      </Wrapper.Header>
 
-      <WrapperContent>
+      <Wrapper.Content>
         <Box boxShadow="xs" p="6" rounded="md" bg="white">
           <NewWebsiteForm />
         </Box>
-      </WrapperContent>
+      </Wrapper.Content>
     </Wrapper>
   );
 }

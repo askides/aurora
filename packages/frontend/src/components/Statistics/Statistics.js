@@ -1,6 +1,6 @@
 import { Flex, Heading, Spinner, Text } from "@chakra-ui/react";
 import * as React from "react";
-import { useStatistics } from "../lib/hooks/use-statistics";
+import { useStatistics } from "../../lib/hooks/use-statistics";
 
 export function Statistic({ label, value, isLoading, isError }) {
   return (

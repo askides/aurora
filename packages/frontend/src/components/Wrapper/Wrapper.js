@@ -1,30 +1,30 @@
 import { Flex, Heading, HStack, Spinner } from "@chakra-ui/react";
 
-export function Wrapper({ children }) {
+const Wrapper = ({ children }) => {
   return (
     <Flex width="100%" direction="column" gap={6}>
       {children}
     </Flex>
   );
-}
+};
 
-export function WrapperHeader({ children }) {
+const WrapperHeader = ({ children }) => {
   return (
     <Flex direction="row" justifyContent="space-between">
       {children}
     </Flex>
   );
-}
+};
 
-export function WrapperTitle({ children }) {
+const WrapperTitle = ({ children }) => {
   return <Heading as="h1">{children}</Heading>;
-}
+};
 
-export function WrapperActions({ children }) {
+const WrapperActions = ({ children }) => {
   return <HStack spacing={4}>{children}</HStack>;
-}
+};
 
-export function WrapperContent({ children, isLoading = false }) {
+const WrapperContent = ({ children, isLoading = false }) => {
   if (isLoading) {
     return (
       <Spinner
@@ -38,4 +38,12 @@ export function WrapperContent({ children, isLoading = false }) {
   }
 
   return children;
-}
+};
+
+// Assignements
+Wrapper.Header = WrapperHeader;
+Wrapper.Title = WrapperTitle;
+Wrapper.Actions = WrapperActions;
+Wrapper.Content = WrapperContent;
+
+export { Wrapper };

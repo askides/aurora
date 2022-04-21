@@ -2,7 +2,7 @@ import { Flex, IconButton, VStack } from "@chakra-ui/react";
 import * as React from "react";
 import { Link } from "react-router-dom";
 import { Home2, Logout, User } from "tabler-icons-react";
-import { useAuth } from "../lib/context/auth-context";
+import { useAuth } from "../../lib/context/auth-context";
 
 const MENU_ITEMS = [
   { icon: Home2, label: "Home", to: "/" },

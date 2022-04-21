@@ -1,31 +1,25 @@
 import { Button } from "@chakra-ui/react";
 import { Link, useParams } from "react-router-dom";
-import { Analytics } from "../components/Analytics";
-import {
-  Wrapper,
-  WrapperActions,
-  WrapperContent,
-  WrapperHeader,
-  WrapperTitle,
-} from "../components/Wrapper";
+import { Wrapper } from "../components/Wrapper";
+import { Analytics } from "../feature/Analytics";
 
 export function Dashboard() {
   const { id } = useParams();
 
   return (
     <Wrapper>
-      <WrapperHeader>
-        <WrapperTitle>Dashboard</WrapperTitle>
-        <WrapperActions>
+      <Wrapper.Header>
+        <Wrapper.Title>Dashboard</Wrapper.Title>
+        <Wrapper.Actions>
           <Button as={Link} to="/">
             Back to Websites
           </Button>
-        </WrapperActions>
-      </WrapperHeader>
+        </Wrapper.Actions>
+      </Wrapper.Header>
 
-      <WrapperContent>
+      <Wrapper.Content>
         <Analytics wid={id} />
-      </WrapperContent>
+      </Wrapper.Content>
     </Wrapper>
   );
 }
