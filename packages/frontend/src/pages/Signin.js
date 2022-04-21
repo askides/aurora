@@ -1,82 +1,65 @@
 import {
   Button,
+  Center,
   Flex,
   FormControl,
   FormLabel,
   Heading,
-  Image,
   Input,
-  Text,
   useToast,
-  VStack,
 } from "@chakra-ui/react";
 import * as React from "react";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { Panel } from "../components/Panel";
 import { useAuth } from "../lib/context/auth-context";
-import { useForm } from "../lib/hooks/use-form";
 
 export function SigninForm() {
   const toast = useToast();
   const navigate = useNavigate();
   const { signIn } = useAuth();
-  const { getFormProps, onSubmit, isSubmitting } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm();
 
-  const handleSubmit = async (data) => {
-    try {
-      await signIn(data.email, data.password);
-      navigate("/", { replace: true });
-    } catch (err) {
-      toast({
-        title: "Error",
-        description: err.message,
-        status: "error",
+  const onSubmit = async (data) => {
+    await signIn(data.email, data.password)
+      .then(() => navigate("/", { replace: true }))
+      .catch(() => {
+        toast({ status: "error", title: "An error has occurred.." });
       });
-    }
   };
 
   return (
-    <VStack
-      as="form"
-      spacing={5}
-      onSubmit={onSubmit(handleSubmit)}
-      {...getFormProps()}
-    >
+    <Panel as="form" onSubmit={handleSubmit(onSubmit)} width="100%">
       <FormControl>
         <FormLabel htmlFor="email">Email address</FormLabel>
-        <Input name="email" id="email" type="email" />
+        <Input id="email" type="email" {...register("email")} />
       </FormControl>
 
       <FormControl>
         <FormLabel htmlFor="password">Password</FormLabel>
-        <Input name="password" id="password" type="password" />
+        <Input id="password" type="password" {...register("password")} />
       </FormControl>
 
       <Button width="100%" type="submit" isLoading={isSubmitting}>
         Sign In!
       </Button>
-    </VStack>
+    </Panel>
   );
 }
 
 export function Signin() {
   return (
-    <Flex
-      maxWidth="7xl"
-      marginX="auto"
-      minHeight="100vh"
-      justifyContent="center"
-      alignItems="center"
-    >
-      <Flex direction="column" flex={1} gap={10} padding={10}>
-        <Image src="./aurora_mini_blue.svg" boxSize="100px" alt="Aurora Logo" />
-        <Flex direction="column" gap={3}>
-          <Heading as="h1">Sign In</Heading>
-          <Text fontSize="xl">Use your email and password to sign in.</Text>
-        </Flex>
+    <Center height="100vh">
+      <Flex direction="column" alignItems="center" gap={10} width="md">
+        <Heading as="h1" size="xl">
+          Please Sign In
+        </Heading>
+        <SigninForm />
       </Flex>
-      <Flex direction="column" flex={1} gap={5} padding={10}>
-        <SigninForm onSubmit={(data) => console.log(data)} />
-      </Flex>
-    </Flex>
+    </Center>
   );
 }
