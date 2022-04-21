@@ -1,6 +1,6 @@
 import { Flex, Spinner } from "@chakra-ui/react";
-import { Panel } from "../../components/Panel";
-import { useMetadata } from "../../lib/hooks/use-metadata";
+import { Panel } from "../../../components/Panel";
+import { useMetadata } from "../../../lib/hooks/use-metadata";
 
 const PageTableContainer = ({ filters }) => {
   const { data, isLoading, isError } = useMetadata("device", filters); // TODO: Needs to change

@@ -1,9 +1,9 @@
 import { Flex, Spinner } from "@chakra-ui/react";
-import { Panel } from "../../components/Panel";
-import { useMetadata } from "../../lib/hooks/use-metadata";
+import { Panel } from "../../../components/Panel";
+import { useMetadata } from "../../../lib/hooks/use-metadata";
 
-const ReferrerTableContainer = ({ filters }) => {
-  const { data, isLoading, isError } = useMetadata("referrer", filters);
+const CountryTableContainer = ({ filters }) => {
+  const { data, isLoading, isError } = useMetadata("country", filters);
 
   if (isLoading) {
     return <Spinner />;
@@ -37,13 +37,13 @@ const ReferrerTableContainer = ({ filters }) => {
   );
 };
 
-export function ReferrerTable({ filters }) {
+export const CountryTable = ({ filters }) => {
   return (
     <Panel flex={1}>
-      <Panel.Title>Referrer</Panel.Title>
+      <Panel.Title>Country</Panel.Title>
       <Panel.Body>
-        <ReferrerTableContainer filters={filters} />
+        <CountryTableContainer filters={filters} />
       </Panel.Body>
     </Panel>
   );
-}
+};

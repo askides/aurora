@@ -4,15 +4,15 @@ import * as React from "react";
 import { Statistics } from "../../components/Statistics";
 import { useTimeseries } from "../../lib/hooks/use-timeseries";
 import { filtersReducer } from "../../lib/reducers/filters-reducer";
-import { BrowserTable } from "../Charts/BrowserTable";
-import { CountryTable } from "../Charts/CountryTable";
-import { DeviceTable } from "../Charts/DeviceTable";
-import { OsTable } from "../Charts/OsTable";
-import { PageTable } from "../Charts/PageTable";
-import { ReferrerTable } from "../Charts/ReferrerTable";
-import { TimeseriesChart } from "../Charts/TimeseriesChart";
+import { BrowserTable } from "./Charts/BrowserTable";
+import { CountryTable } from "./Charts/CountryTable";
+import { DeviceTable } from "./Charts/DeviceTable";
+import { OsTable } from "./Charts/OsTable";
+import { PageTable } from "./Charts/PageTable";
+import { ReferrerTable } from "./Charts/ReferrerTable";
+import { TimeseriesChart } from "./Charts/TimeseriesChart";
 
-export function Analytics({ wid }) {
+export function AnalyticsDashboard({ wid }) {
   // Filters Logic
   const initialState = {
     wid: wid,

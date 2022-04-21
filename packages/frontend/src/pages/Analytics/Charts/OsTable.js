@@ -1,9 +1,9 @@
 import { Flex, Spinner } from "@chakra-ui/react";
-import { Panel } from "../../components/Panel";
-import { useMetadata } from "../../lib/hooks/use-metadata";
+import { Panel } from "../../../components/Panel";
+import { useMetadata } from "../../../lib/hooks/use-metadata";
 
-const DeviceTableContainer = ({ filters }) => {
-  const { data, isLoading, isError } = useMetadata("device", filters);
+const OsTableContainer = ({ filters }) => {
+  const { data, isLoading, isError } = useMetadata("os", filters);
 
   if (isLoading) {
     return <Spinner />;
@@ -37,12 +37,12 @@ const DeviceTableContainer = ({ filters }) => {
   );
 };
 
-export function DeviceTable({ filters }) {
+export function OsTable({ filters }) {
   return (
     <Panel flex={1}>
-      <Panel.Title>Device</Panel.Title>
+      <Panel.Title>Os</Panel.Title>
       <Panel.Body>
-        <DeviceTableContainer filters={filters} />
+        <OsTableContainer filters={filters} />
       </Panel.Body>
     </Panel>
   );
