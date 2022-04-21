@@ -1,8 +1,8 @@
 import { Flex } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
-import { Navbar } from "../components/Navbar";
+import { Navbar } from "../Navbar";
 
-export function Main({ children }) {
+export function MainLayout() {
   return (
     <>
       <Navbar />
