@@ -1,18 +1,13 @@
 import {
-  Box,
   Button,
   FormControl,
   FormHelperText,
   FormLabel,
   Input,
-  useToast,
   VStack,
 } from "@chakra-ui/react";
 import * as React from "react";
 import { useForm } from "react-hook-form";
-import { Wrapper } from "../components/Wrapper";
-import { ApiClient } from "../lib/api-client";
-import { useAccount } from "../lib/hooks/use-account";
 
 export function AccountForm({ onSubmit, values = {} }) {
   const {
@@ -58,42 +53,5 @@ export function AccountForm({ onSubmit, values = {} }) {
         Update Informations!
       </Button>
     </VStack>
-  );
-}
-
-export function Account() {
-  const toast = useToast();
-  const { data, isLoading, isError } = useAccount();
-
-  const handleSubmit = async (data) => {
-    // Removing password fields if empty
-    const payload = Object.fromEntries(
-      Object.entries(data).filter(([_, v]) => v !== "")
-    );
-
-    await ApiClient.put(`/me`, payload)
-      .then(() => {
-        toast({ status: "success", title: "Account updated." });
-      })
-      .catch(() => {
-        toast({ status: "error", title: "An error has occurred.." });
-      });
-  };
-
-  return (
-    <Wrapper>
-      <Wrapper.Header>
-        <Wrapper.Title>Account</Wrapper.Title>
-      </Wrapper.Header>
-
-      <Wrapper.Content isLoading={isLoading}>
-        {isError && <div>Something went wrong ...</div>}
-        {!isLoading && !isError && (
-          <Box boxShadow="xs" p="6" rounded="md" bg="white">
-            <AccountForm values={data} onSubmit={handleSubmit} />
-          </Box>
-        )}
-      </Wrapper.Content>
-    </Wrapper>
   );
 }
