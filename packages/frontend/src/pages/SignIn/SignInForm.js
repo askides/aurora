@@ -1,20 +1,17 @@
 import {
   Button,
-  Center,
-  Flex,
   FormControl,
   FormLabel,
-  Heading,
   Input,
   useToast,
 } from "@chakra-ui/react";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { Panel } from "../components/Panel";
-import { useAuth } from "../lib/context/auth-context";
+import { Panel } from "../../components/Panel";
+import { useAuth } from "../../lib/context/auth-context";
 
-export function SigninForm() {
+export function SignInForm() {
   const toast = useToast();
   const navigate = useNavigate();
   const { signIn } = useAuth();
@@ -48,18 +45,5 @@ export function SigninForm() {
         Sign In!
       </Button>
     </Panel>
-  );
-}
-
-export function Signin() {
-  return (
-    <Center height="100vh">
-      <Flex direction="column" alignItems="center" gap={10} width="md">
-        <Heading as="h1" size="xl">
-          Please Sign In
-        </Heading>
-        <SigninForm />
-      </Flex>
-    </Center>
   );
 }
