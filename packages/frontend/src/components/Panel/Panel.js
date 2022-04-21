@@ -1,9 +1,9 @@
 import { Box, Flex, Heading } from "@chakra-ui/react";
 
-const Panel = ({ children, ...rest }) => {
+const Panel = ({ children, direction = "column", ...rest }) => {
   return (
     <Flex
-      direction="column"
+      direction={direction}
       boxShadow="xs"
       p="6"
       rounded="md"
