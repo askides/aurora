@@ -6,12 +6,12 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Button,
-  Spinner,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import * as React from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { Loader } from "../../components/Loader/Loader";
 import { WebsitesForm } from "../../components/WebsitesForm";
 import { Wrapper } from "../../components/Wrapper";
 import { client } from "../../lib/client";
@@ -68,7 +68,7 @@ export function EditWebsite() {
       </Wrapper.Header>
 
       <Wrapper.Content>
-        {isLoading && <Spinner />}
+        {isLoading && <Loader />}
         {isError && <div>Something went wrong ...</div>}
         {!isLoading && !isError && (
           <WebsitesForm isNew={false} values={data} onSubmit={handleSubmit} />

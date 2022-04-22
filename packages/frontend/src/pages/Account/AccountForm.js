@@ -4,10 +4,10 @@ import {
   FormHelperText,
   FormLabel,
   Input,
-  VStack,
 } from "@chakra-ui/react";
 import * as React from "react";
 import { useForm } from "react-hook-form";
+import { Panel } from "../../components/Panel";
 
 export function AccountForm({ onSubmit, values = {} }) {
   const {
@@ -17,7 +17,7 @@ export function AccountForm({ onSubmit, values = {} }) {
   } = useForm({ defaultValues: values });
 
   return (
-    <VStack as="form" spacing={5} onSubmit={handleSubmit(onSubmit)}>
+    <Panel as="form" spacing={5} onSubmit={handleSubmit(onSubmit)}>
       <FormControl>
         <FormLabel htmlFor="firstname">Firstname</FormLabel>
         <Input id="firstname" type="text" {...register("firstname")} />
@@ -52,6 +52,6 @@ export function AccountForm({ onSubmit, values = {} }) {
       <Button width="100%" type="submit" isLoading={isSubmitting}>
         Update Informations!
       </Button>
-    </VStack>
+    </Panel>
   );
 }

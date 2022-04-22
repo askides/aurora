@@ -1,6 +1,6 @@
-import { Spinner, useToast } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 import * as React from "react";
-import { Panel } from "../../components/Panel";
+import { Loader } from "../../components/Loader/Loader";
 import { Wrapper } from "../../components/Wrapper";
 import { client } from "../../lib/client";
 import { useAccount } from "../../lib/hooks/use-account";
@@ -31,13 +31,11 @@ export function Account() {
       </Wrapper.Header>
 
       <Wrapper.Content>
-        <Panel>
-          {isLoading && <Spinner />}
-          {isError && <div>Something went wrong ...</div>}
-          {!isLoading && !isError && (
-            <AccountForm values={data} onSubmit={handleSubmit} />
-          )}
-        </Panel>
+        {isLoading && <Loader />}
+        {isError && <div>Something went wrong ...</div>}
+        {!isLoading && !isError && (
+          <AccountForm values={data} onSubmit={handleSubmit} />
+        )}
       </Wrapper.Content>
     </Wrapper>
   );

@@ -1,5 +1,6 @@
-import { Button, Spinner } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
+import { Loader } from "../../components/Loader/Loader";
 import { Wrapper } from "../../components/Wrapper";
 import { useWebsites } from "../../lib/hooks/use-websites";
 import { WebsitesList } from "./WebsitesList";
@@ -19,7 +20,7 @@ export function Websites() {
       </Wrapper.Header>
 
       <Wrapper.Content>
-        {isLoading && <Spinner />}
+        {isLoading && <Loader />}
         {isError && <p>There was an error processing your request.</p>}
         {!isLoading && !isError && <WebsitesList data={data} />}
       </Wrapper.Content>
