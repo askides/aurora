@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ApiClient } from "../api-client";
+import { client } from "../client";
 
 const AuthContext = React.createContext();
 
@@ -11,9 +11,10 @@ export const AuthProvider = ({ children }) => {
     const token = localStorage.getItem("aurora_access_token");
 
     if (token) {
-      ApiClient.defaults.headers.common.Authorization = `Bearer ${token}`;
+      client.defaults.headers.common.Authorization = `Bearer ${token}`;
 
-      ApiClient.get("/me")
+      client
+        .get("/me")
         .then((res) => setUser(res.data))
         .finally(() => setIsLoading(false));
     } else {
@@ -22,15 +23,15 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const signIn = async (email, password) => {
-    const res = await ApiClient.post("/signin", { email, password });
+    const res = await client.post("/signin", { email, password });
     const { user, accessToken } = res.data;
-    ApiClient.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+    client.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
     localStorage.setItem("aurora_access_token", accessToken);
     setUser(user);
   };
 
   const signOut = async () => {
-    ApiClient.defaults.headers.common.Authorization = null;
+    client.defaults.headers.common.Authorization = null;
     localStorage.removeItem("aurora_access_token");
     setUser(null);
   };

@@ -14,7 +14,7 @@ import * as React from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { WebsitesForm } from "../../components/WebsitesForm";
 import { Wrapper } from "../../components/Wrapper";
-import { ApiClient } from "../../lib/api-client";
+import { client } from "../../lib/client";
 import { useWebsite } from "../../lib/hooks/use-website";
 
 export function EditWebsite() {
@@ -28,7 +28,8 @@ export function EditWebsite() {
   const [isDeleting, setIsDeleting] = React.useState(false);
 
   const handleSubmit = async (data) => {
-    await ApiClient.put(`/websites/${id}`, data)
+    await client
+      .put(`/websites/${id}`, data)
       .then(() => {
         toast({ status: "success", title: "Website updated." });
       })
@@ -39,7 +40,8 @@ export function EditWebsite() {
 
   const handleDelete = () => {
     setIsDeleting(true);
-    ApiClient.delete(`/websites/${id}`)
+    client
+      .delete(`/websites/${id}`)
       .then(() => {
         navigate("/");
         toast({ status: "success", title: "Website deleted." });

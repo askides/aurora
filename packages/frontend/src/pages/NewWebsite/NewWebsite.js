@@ -2,14 +2,15 @@ import { Box, Button, useToast } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { WebsitesForm } from "../../components/WebsitesForm";
 import { Wrapper } from "../../components/Wrapper";
-import { ApiClient } from "../../lib/api-client";
+import { client } from "../../lib/client";
 
 export function NewWebsite() {
   const toast = useToast();
   const navigate = useNavigate();
 
   const handleSubmit = async (data) => {
-    await ApiClient.post("/websites", data)
+    await client
+      .post("/websites", data)
       .then(() => {
         toast({ status: "success", title: "Website created." });
         navigate("/");

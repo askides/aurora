@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ApiClient } from "../api-client";
+import { client } from "../client";
 
 export function useSetup() {
   const [isLoading, setIsLoading] = React.useState(true);
@@ -12,7 +12,8 @@ export function useSetup() {
       setSetupDone(true);
       setIsLoading(false);
     } else {
-      ApiClient.get("/setup")
+      client
+        .get("/setup")
         .catch(() => {
           localStorage.setItem("aurora_setup_done", 1);
           setSetupDone(true);

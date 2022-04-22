@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import * as React from "react";
 import { useForm } from "react-hook-form";
-import { ApiClient } from "../../lib/api-client";
+import { client } from "../../lib/client";
 
 export function SetupForm() {
   const toast = useToast();
@@ -20,7 +20,8 @@ export function SetupForm() {
   } = useForm();
 
   const onSubmit = async (data) => {
-    await ApiClient.post("/setup", data)
+    await client
+      .post("/setup", data)
       .then(() => toast({ status: "success", title: "Account Created." }))
       .catch(() => {
         toast({ status: "error", title: "An error has occurred.." });

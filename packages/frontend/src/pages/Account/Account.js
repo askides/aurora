@@ -2,7 +2,7 @@ import { Spinner, useToast } from "@chakra-ui/react";
 import * as React from "react";
 import { Panel } from "../../components/Panel";
 import { Wrapper } from "../../components/Wrapper";
-import { ApiClient } from "../../lib/api-client";
+import { client } from "../../lib/client";
 import { useAccount } from "../../lib/hooks/use-account";
 import { AccountForm } from "./AccountForm";
 
@@ -16,7 +16,8 @@ export function Account() {
       Object.entries(data).filter(([_, v]) => v !== "")
     );
 
-    await ApiClient.put(`/me`, payload)
+    await client
+      .put(`/me`, payload)
       .then(() => toast({ status: "success", title: "Account updated." }))
       .catch(() => {
         toast({ status: "error", title: "An error has occurred.." });

@@ -1,7 +1,7 @@
 import useSWR from "swr";
-import { ApiClient } from "../api-client";
+import { client } from "../client";
 
-const fetcher = (url) => ApiClient.get(url).then((res) => res.data);
+const fetcher = (url) => client.get(url).then((res) => res.data);
 
 export function useMetadata(metadata, filters) {
   const qs = new URLSearchParams(filters).toString();
