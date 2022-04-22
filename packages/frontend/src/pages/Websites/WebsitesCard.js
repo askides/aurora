@@ -23,7 +23,7 @@ export function WebsitesCard({ id, name, is_public }) {
           flex={1}
           as={Link}
           colorScheme="blue"
-          to={`/websites/${id}/dashboard`}
+          to={`/websites/${id}/analytics`}
         >
           View Analytics
         </Button>
