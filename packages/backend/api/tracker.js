@@ -12,5 +12,6 @@ export default function handler(req, res) {
   });
 
   const readStream = fs.createReadStream(filePath);
+
   readStream.pipe(res);
 }

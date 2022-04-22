@@ -221,3 +221,29 @@ export async function getWebsiteStatistics(wid, filters = {}) {
     uniqueVisits,
   };
 }
+
+export async function getWebsiteViewsTimeSeries(wid, filters = {}) {
+  const { start, end, unit, tz } = filters;
+  const isNotHour = unit !== "hour";
+
+  // TODO: Real function
+  const formattedDate = (arg) => arg;
+
+  return [];
+
+  // TODO: Mysql Support
+  const sql = `
+    SELECT date_trunc('${unit}', created_at AT TIME ZONE '${tz}')
+      ${isNotHour ? `AT TIME ZONE '${tz}'` : ""} as ts, count(*)
+    FROM events
+    WHERE
+      website_id = '${wid}'
+    AND
+      created_at BETWEEN '${formattedDate(start)}' AND '${formattedDate(end)}'
+    GROUP BY ts
+  `;
+
+  const data = await prisma.$queryRawUnsafe(sql);
+
+  return data;
+}
