@@ -1,16 +1,16 @@
 import { Center, Loader } from "@mantine/core";
 import * as React from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
-import { Main } from "./layouts/Main";
+import { MainLayout } from "./components/MainLayout";
 import { AuthProvider, useAuth } from "./lib/context/auth-context";
 import { Account } from "./pages/Account";
-import { Dashboard } from "./pages/Dashboard";
+import { Analytics } from "./pages/Analytics";
 import { EditWebsite } from "./pages/EditWebsite";
-import { Home } from "./pages/Home";
-import { NewWebsite } from "./pages/NewWebsite";
+import { NewWebsite } from "./pages/NewWebsite/NewWebsite";
 import { NotFound } from "./pages/NotFound";
 import { Setup } from "./pages/Setup";
-import { Signin } from "./pages/Signin";
+import { SignIn } from "./pages/SignIn";
+import { Websites } from "./pages/Websites/Websites";
 
 export function AuthenticatedRoute({ children }) {
   const location = useLocation();
@@ -61,18 +61,18 @@ export function App() {
           path="/"
           element={
             <AuthenticatedRoute>
-              <Main />
+              <MainLayout />
             </AuthenticatedRoute>
           }
         >
-          <Route index element={<Home />} />
+          <Route index element={<Websites />} />
           <Route path="account" element={<Account />} />
           <Route path="websites/new" element={<NewWebsite />} />
           <Route path="websites/:id/edit" element={<EditWebsite />} />
-          <Route path="websites/:id/dashboard" element={<Dashboard />} />
+          <Route path="websites/:id/analytics" element={<Analytics />} />
         </Route>
 
-        <Route path="signin" element={<Signin />} />
+        <Route path="signin" element={<SignIn />} />
         <Route path="setup" element={<Setup />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
