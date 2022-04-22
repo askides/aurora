@@ -3,6 +3,7 @@ import * as React from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { MainLayout } from "./components/MainLayout";
 import { AuthProvider, useAuth } from "./lib/context/auth-context";
+import { useSetup } from "./lib/hooks/use-setup";
 import { Account } from "./pages/Account";
 import { Analytics } from "./pages/Analytics";
 import { EditWebsite } from "./pages/EditWebsite";
@@ -31,29 +32,22 @@ export function AuthenticatedRoute({ children }) {
   return children;
 }
 
-// TODO: I wanna fix this.
-// export function SetupRoute({ children }) {
-//   const location = useLocation();
-//   const { setupDone, isLoading } = useSetup();
-
-//   if (isLoading) {
-//     return (
-//       <Center style={{ height: "100vh" }}>
-//         <Loader size="xl" variant="bars" />
-//       </Center>
-//     );
-//   }
-
-//   if (!setupDone) {
-//     return <Navigate to="/setup" state={{ from: location }} replace />;
-//   }
-
-//   console.log("children", children);
-
-//   return children;
-// }
-
 export function App() {
+  const location = useLocation();
+  const { setupDone, isLoading } = useSetup();
+
+  if (isLoading) {
+    return (
+      <Center style={{ height: "100vh" }}>
+        <Spinner size="sm" />
+      </Center>
+    );
+  }
+
+  if (!setupDone) {
+    return <Navigate to="/setup" state={{ from: location }} replace />;
+  }
+
   return (
     <AuthProvider>
       <Routes>
