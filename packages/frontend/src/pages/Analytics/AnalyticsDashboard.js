@@ -1,7 +1,6 @@
 import { Flex, Select } from "@chakra-ui/react";
 import { subDays } from "date-fns";
 import * as React from "react";
-import { Statistics } from "../../components/Statistics";
 import { useTimeseries } from "../../lib/hooks/use-timeseries";
 import { filtersReducer } from "../../lib/reducers/filters-reducer";
 import { BrowserTable } from "./Charts/BrowserTable";
@@ -10,6 +9,7 @@ import { DeviceTable } from "./Charts/DeviceTable";
 import { OsTable } from "./Charts/OsTable";
 import { PageTable } from "./Charts/PageTable";
 import { ReferrerTable } from "./Charts/ReferrerTable";
+import { Stats } from "./Charts/Stats";
 import { TimeseriesChart } from "./Charts/TimeseriesChart";
 
 export function AnalyticsDashboard({ wid }) {
@@ -43,7 +43,7 @@ export function AnalyticsDashboard({ wid }) {
           <option value="LAST_7_DAYS">Last 7 Days</option>
         </Select>
 
-        <Statistics filters={filters} />
+        <Stats filters={filters} />
 
         <Flex boxShadow="xs" p="6" rounded="md" bg="white">
           <TimeseriesChart data={data ?? []} />
