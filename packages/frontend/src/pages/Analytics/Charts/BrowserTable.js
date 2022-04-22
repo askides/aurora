@@ -2,6 +2,7 @@ import { Flex, Spinner } from "@chakra-ui/react";
 import { Panel } from "../../../components/Panel";
 import { useMetadata } from "../../../lib/hooks/use-metadata";
 
+// TODO: Fix Grid Components
 const BrowserTableContainer = ({ filters }) => {
   const { data, isLoading, isError } = useMetadata("browser", filters);
 

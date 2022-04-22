@@ -27,6 +27,7 @@ export function AnalyticsDashboard({ wid }) {
     dispatch({ type: e.target.value });
   };
 
+  // TODO: Remove this debug.
   return (
     <div>
       <pre>
