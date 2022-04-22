@@ -1,7 +1,6 @@
 import { Flex, Select } from "@chakra-ui/react";
 import { subDays } from "date-fns";
 import * as React from "react";
-import { useTimeseries } from "../../lib/hooks/use-timeseries";
 import { filtersReducer } from "../../lib/reducers/filters-reducer";
 import { BrowserTable } from "./Charts/BrowserTable";
 import { CountryTable } from "./Charts/CountryTable";
@@ -24,9 +23,6 @@ export function AnalyticsDashboard({ wid }) {
 
   const [filters, dispatch] = React.useReducer(filtersReducer, initialState);
 
-  // TODO: Move to the components
-  const { data, isLoading, isError } = useTimeseries(filters);
-
   const handleChange = (e) => {
     dispatch({ type: e.target.value });
   };
@@ -45,9 +41,7 @@ export function AnalyticsDashboard({ wid }) {
 
         <Stats filters={filters} />
 
-        <Flex boxShadow="xs" p="6" rounded="md" bg="white">
-          <TimeseriesChart data={data ?? []} />
-        </Flex>
+        <TimeseriesChart filters={filters} />
 
         <Flex gap={5}>
           <PageTable filters={filters} />
