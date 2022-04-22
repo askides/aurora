@@ -4,13 +4,12 @@ import { verify } from "../../utils/hash";
 import * as AuroraDB from "../database";
 import { AuthenticationError, ValidationError } from "../error";
 
-export const AUTH_COOKIE = "aurorasession";
-export const AUTH_COOKIE_LIFETIME = 60 * 60 * 24 * 1;
-const JWT_SECRET = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"; // TODO: Move to env
+const JWT_EXPIRES = 60 * 60 * 24 * 1;
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const makeJwt = (data) => {
   return JWT.sign({ data: data }, JWT_SECRET, {
-    expiresIn: AUTH_COOKIE_LIFETIME,
+    expiresIn: JWT_EXPIRES,
   });
 };
 
