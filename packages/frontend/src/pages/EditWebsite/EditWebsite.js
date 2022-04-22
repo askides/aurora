@@ -5,8 +5,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
-  Box,
   Button,
+  Spinner,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -67,12 +67,11 @@ export function EditWebsite() {
         </Wrapper.Actions>
       </Wrapper.Header>
 
-      <Wrapper.Content isLoading={isLoading}>
+      <Wrapper.Content>
+        {isLoading && <Spinner />}
         {isError && <div>Something went wrong ...</div>}
         {!isLoading && !isError && (
-          <Box boxShadow="xs" p="6" rounded="md" bg="white">
-            <WebsitesForm isNew={false} values={data} onSubmit={handleSubmit} />
-          </Box>
+          <WebsitesForm isNew={false} values={data} onSubmit={handleSubmit} />
         )}
       </Wrapper.Content>
 

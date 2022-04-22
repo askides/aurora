@@ -6,12 +6,12 @@ import {
   FormHelperText,
   FormLabel,
   Input,
-  VStack,
 } from "@chakra-ui/react";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { useAuroraLinks } from "../../lib/hooks/use-aurora-links";
+import { Panel } from "../Panel";
 
 export function WebsitesForm({ isNew, onSubmit, values = {} }) {
   const { id } = useParams();
@@ -23,7 +23,7 @@ export function WebsitesForm({ isNew, onSubmit, values = {} }) {
   } = useForm({ defaultValues: values });
 
   return (
-    <VStack as="form" spacing={5} onSubmit={handleSubmit(onSubmit)}>
+    <Panel as="form" spacing={5} onSubmit={handleSubmit(onSubmit)}>
       <FormControl>
         <FormLabel htmlFor="name">Website Name</FormLabel>
         <Input id="name" type="text" {...register("name")} />
@@ -65,6 +65,6 @@ export function WebsitesForm({ isNew, onSubmit, values = {} }) {
       <Button width="100%" type="submit" isLoading={isSubmitting}>
         {isNew ? "Create" : "Update"} Website!
       </Button>
-    </VStack>
+    </Panel>
   );
 }

@@ -1,4 +1,4 @@
-import { Box, Button, useToast } from "@chakra-ui/react";
+import { Button, useToast } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { WebsitesForm } from "../../components/WebsitesForm";
 import { Wrapper } from "../../components/Wrapper";
@@ -32,9 +32,7 @@ export function NewWebsite() {
       </Wrapper.Header>
 
       <Wrapper.Content>
-        <Box boxShadow="xs" p="6" rounded="md" bg="white">
-          <WebsitesForm isNew={true} onSubmit={handleSubmit} />
-        </Box>
+        <WebsitesForm isNew={true} onSubmit={handleSubmit} />
       </Wrapper.Content>
     </Wrapper>
   );
