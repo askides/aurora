@@ -12,10 +12,10 @@ import {
 } from "@chakra-ui/react";
 import * as React from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { Wrapper } from "../components/Wrapper";
-import { WebsitesForm } from "../feature/Websites/WebsitesForm";
-import { ApiClient } from "../lib/api-client";
-import { useWebsite } from "../lib/hooks/use-website";
+import { WebsitesForm } from "../../components/WebsitesForm";
+import { Wrapper } from "../../components/Wrapper";
+import { ApiClient } from "../../lib/api-client";
+import { useWebsite } from "../../lib/hooks/use-website";
 
 export function EditWebsite() {
   const toast = useToast();
