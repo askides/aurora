@@ -1,4 +1,4 @@
-import { Center, Loader } from "@mantine/core";
+import { Center, Spinner } from "@chakra-ui/react";
 import * as React from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { MainLayout } from "./components/MainLayout";
@@ -19,7 +19,7 @@ export function AuthenticatedRoute({ children }) {
   if (isLoading) {
     return (
       <Center style={{ height: "100vh" }}>
-        <Loader size="xl" variant="bars" />
+        <Spinner size="xl" />
       </Center>
     );
   }
