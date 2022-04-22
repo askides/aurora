@@ -34,6 +34,7 @@ export function Navbar() {
       position="fixed"
       top={0}
       left={0}
+      boxShadow="base"
     >
       <VStack spacing={4}>
         {items}
