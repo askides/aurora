@@ -1,60 +1,60 @@
 import Joi from "joi";
 import * as AuroraDB from "../database";
-import { NotFoundError, UnhauthorizedError, ValidationError } from "../error";
+import { authentication } from "../middleware/authentication";
+import { Controller } from "./controller";
 
-export const WebsiteController = {
-  index: async ({ req, res }) => {
-    const websites = await AuroraDB.getUserWebsites(req.user.id);
-    return res.status(200).json(websites);
-  },
+export class WebsiteController extends Controller {
+  constructor(request, response) {
+    super(request, response);
+    this.middleware(authentication);
+  }
 
-  show: async ({ req, res }) => {
-    const website = await AuroraDB.getWebsite(req.query.id);
+  async index() {
+    const { id } = this.req.user;
+    const websites = await AuroraDB.getUserWebsites(id);
+    return this.res.status(200).json(websites);
+  }
+
+  async show() {
+    const website = await AuroraDB.getWebsite(this.req.query.id);
 
     if (!website) {
-      throw new NotFoundError();
+      this.abort(404);
     }
 
-    if (website.user_id !== req.user.id) {
-      throw new UnhauthorizedError();
+    if (website.user_id !== this.req.user.id) {
+      this.abort(403);
     }
 
-    return res.status(200).json(website);
-  },
+    return this.res.status(200).json(website);
+  }
 
-  store: async ({ req, res }) => {
+  async store() {
     const rules = Joi.object({
       name: Joi.string().required(),
       url: Joi.string().required(),
       is_public: Joi.boolean().required(),
     });
 
-    const { error, value: validated } = rules.validate(req.body, {
-      stripUnknown: true,
-    });
+    const validated = this.validate(this.req.body, rules);
 
-    if (error) {
-      throw new ValidationError(422, error.message);
-    }
-
-    const createdWebsite = await AuroraDB.createWebsite({
-      user_id: req.user.id,
+    const website = await AuroraDB.createWebsite({
+      user_id: this.req.user.id,
       ...validated,
     });
 
-    return res.status(201).json(createdWebsite);
-  },
+    return this.res.status(201).json(website);
+  }
 
-  update: async ({ req, res }) => {
-    // Check if website exists
-    const website = await AuroraDB.getWebsite(req.query.id);
+  async update() {
+    const website = await AuroraDB.getWebsite(this.req.query.id);
 
     if (!website) {
-      throw new NotFoundError();
+      this.abort(404);
     }
 
-    if (website.user_id !== req.user.id) {
-      throw new UnhauthorizedError();
+    if (website.user_id !== this.req.user.id) {
+      this.abort(403);
     }
 
     const rules = Joi.object({
@@ -63,25 +63,19 @@ export const WebsiteController = {
       is_public: Joi.boolean().required(),
     });
 
-    // TODO: Find a way to apply validation in a concise way
-    const { error, value: validated } = rules.validate(req.body, {
-      stripUnknown: true,
-    });
-
-    if (error) {
-      throw new ValidationError(422, error.message);
-    }
+    const validated = this.validate(this.req.body, rules);
 
     const updatedWebsite = await AuroraDB.updateWebsite(
-      req.query.id,
+      this.req.query.id,
       validated
     );
 
-    return res.status(200).json(updatedWebsite);
-  },
+    return this.res.status(200).json(updatedWebsite);
+  }
 
-  destroy: async ({ req, res }) => {
-    const deletedWebsite = await AuroraDB.deleteWebsite(req.query.id);
-    return res.status(200).json({ data: deletedWebsite });
-  },
-};
+  async destroy() {
+    const { id } = this.req.query;
+    const website = await AuroraDB.deleteWebsite(id);
+    return this.res.status(200).json(website);
+  }
+}

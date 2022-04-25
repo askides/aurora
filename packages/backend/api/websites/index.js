@@ -1,13 +1,14 @@
 import { WebsiteController } from "../../lib/controllers/website-controller";
-import { authentication } from "../../lib/middleware/authentication";
-import { Router } from "../../lib/router";
 
 export default async function handler(request, response) {
-  const router = new Router(request, response);
+  const website = new WebsiteController(request, response);
 
-  await router.use(authentication);
-  await router.route("GET", WebsiteController.index);
-  await router.route("POST", WebsiteController.store);
-
-  router.fallback();
+  switch (request.method) {
+    case "GET":
+      return await website.run("index");
+    case "POST":
+      return await website.run("store");
+    default:
+      return response.status(405).json({ error: "Method not allowed" });
+  }
 }

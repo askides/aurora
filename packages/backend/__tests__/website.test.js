@@ -107,7 +107,7 @@ describe("GET /websites/:id", () => {
     expect(res._getStatusCode()).toBe(403);
     expect(res._getJSONData()).toMatchInlineSnapshot(`
       Object {
-        "message": "Unhauthorized",
+        "message": "Unauthorized",
       }
     `);
   });
@@ -225,7 +225,7 @@ describe("PUT /websites/:id", () => {
     expect(res._getStatusCode()).toBe(403);
     expect(res._getJSONData()).toMatchInlineSnapshot(`
       Object {
-        "message": "Unhauthorized",
+        "message": "Unauthorized",
       }
     `);
   });
