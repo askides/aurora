@@ -41,10 +41,10 @@ it("should return that the setup is not needed", async () => {
   await AuroraDB.createUser(buildUser());
   await handler(req, res);
 
-  expect(res._getStatusCode()).toBe(400);
+  expect(res._getStatusCode()).toBe(200);
   expect(res._getJSONData()).toMatchInlineSnapshot(`
     Object {
-      "message": "The setup is already done",
+      "needsSetup": false,
     }
   `);
 });
@@ -62,13 +62,13 @@ it("should create an user", async () => {
   await handler(req, res);
 
   expect(res._getStatusCode()).toBe(201);
-  expect(res._getJSONData().data).toMatchObject({
+  expect(res._getJSONData()).toMatchObject({
     ...user,
     password: expect.any(String),
   });
 
   // Ensure that the user is created
-  const createdUser = await AuroraDB.getUser(res._getJSONData().data.id);
+  const createdUser = await AuroraDB.getUser(res._getJSONData().id);
   expect(createdUser).toBeDefined();
 });
 

@@ -1,13 +1,19 @@
 import Joi from "joi";
 import * as AuroraDB from "../database";
-import { ValidationError } from "../error";
+import { Controller } from "./controller";
 
-export const SetupController = {
-  index: async ({ res }) => {
-    return res.status(200).json({ needsSetup: true });
-  },
+export class SetupController extends Controller {
+  async index() {
+    const users = await AuroraDB.getUsers();
 
-  store: async ({ req, res }) => {
+    if (users.length > 0) {
+      return this.res.status(200).json({ needsSetup: false });
+    }
+
+    return this.res.status(200).json({ needsSetup: true });
+  }
+
+  async store() {
     const rules = Joi.object({
       firstname: Joi.string().required(),
       lastname: Joi.string().required(),
@@ -16,19 +22,13 @@ export const SetupController = {
       confirmPassword: Joi.string().valid(Joi.ref("password")).required(),
     });
 
-    const {
-      error,
-      value: { confirmPassword, ...validated },
-    } = rules.validate(req.body, {
-      stripUnknown: true,
-    });
+    const { confirmPassword, ...validated } = this.validate(
+      this.req.body,
+      rules
+    );
 
-    if (error) {
-      throw new ValidationError(422, error.message);
-    }
+    const user = await AuroraDB.createUser(validated);
 
-    const createdUser = await AuroraDB.createUser(validated);
-
-    return res.status(201).json({ data: createdUser });
-  },
-};
+    return this.res.status(201).json(user);
+  }
+}
