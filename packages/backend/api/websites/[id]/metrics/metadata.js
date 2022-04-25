@@ -1,12 +1,12 @@
 import { MetadataController } from "../../../../lib/controllers/metadata-controller";
-import { authentication } from "../../../../lib/middleware/authentication";
-import { Router } from "../../../../lib/router";
 
 export default async function handler(request, response) {
-  const router = new Router(request, response);
+  const metadata = new MetadataController(request, response);
 
-  await router.use(authentication);
-  await router.route("GET", MetadataController.index);
-
-  router.fallback();
+  switch (request.method) {
+    case "GET":
+      return await metadata.run("index");
+    default:
+      return response.status(405).json({ error: "Method not allowed" });
+  }
 }

@@ -1,13 +1,20 @@
 import Joi from "joi";
 import * as AuroraDB from "../database";
-import { UnhauthorizedError, ValidationError } from "../error";
+import { UnhauthorizedError } from "../error";
+import { authentication } from "../middleware/authentication";
+import { Controller } from "./controller";
 
-export const MetadataController = {
-  index: async ({ req, res }) => {
-    const website = await AuroraDB.getWebsite(req.query.id);
+export class MetadataController extends Controller {
+  constructor(request, response) {
+    super(request, response);
+    this.middleware(authentication);
+  }
+
+  async index() {
+    const website = await AuroraDB.getWebsite(this.req.query.id);
 
     // TODO: This route will be also public.
-    if (!website.is_public && website.user_id !== req.user.id) {
+    if (!website.is_public && website.user_id !== this.req.user.id) {
       throw new UnhauthorizedError();
     }
 
@@ -17,18 +24,12 @@ export const MetadataController = {
       //unit: Joi.string().required().valid("hour", "day", "month", "year"),
     });
 
-    const { error, value: validated } = rules.validate(req.query, {
-      stripUnknown: true,
-    });
-
-    if (error) {
-      throw new ValidationError(422, error.message);
-    }
+    const validated = this.validate(this.req.query, rules);
 
     const { meta, ...filters } = req.query;
 
     const data = await AuroraDB.getWebsiteViewsByMetadata(
-      req.query.id,
+      this.req.query.id,
       meta,
       filters
     );
@@ -45,5 +46,5 @@ export const MetadataController = {
     });
 
     return res.status(200).json(mapped);
-  },
-};
+  }
+}
