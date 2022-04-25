@@ -2,7 +2,7 @@ import JWT from "jsonwebtoken";
 import * as AuroraDB from "../database";
 import { AuthenticationError } from "../error";
 
-const JWT_SECRET = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"; // TODO: Move to env
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const verifyJwt = (accessToken) => {
   try {
@@ -12,7 +12,7 @@ const verifyJwt = (accessToken) => {
   }
 };
 
-export const authentication = async ({ req }) => {
+export const authentication = async (req, res) => {
   const { authorization } = req.headers;
 
   if (!authorization) {
