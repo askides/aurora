@@ -1,14 +1,20 @@
 import Joi from "joi";
 import * as AuroraDB from "../database";
-import { ValidationError } from "../error";
+import { authentication } from "../middleware/authentication";
+import { Controller } from "./controller";
 
-export const MeController = {
-  index: async ({ req, res }) => {
-    const { id, password, ...rest } = req.user;
-    return res.status(200).json(rest);
-  },
+export class MeController extends Controller {
+  constructor(request, response) {
+    super(request, response);
+    this.middleware(authentication);
+  }
 
-  update: async ({ req, res }) => {
+  async index() {
+    const { id, password, ...rest } = this.req.user;
+    return this.res.status(200).json(rest);
+  }
+
+  async update() {
     const rules = Joi.object({
       firstname: Joi.string().required(),
       lastname: Joi.string().required(),
@@ -17,19 +23,13 @@ export const MeController = {
       confirmPassword: Joi.string().valid(Joi.ref("password")),
     });
 
-    const {
-      error,
-      value: { confirmPassword, ...validated },
-    } = rules.validate(req.body, {
-      stripUnknown: true,
-    });
+    const { confirmPassword, ...validated } = this.validate(
+      this.req.body,
+      rules
+    );
 
-    if (error) {
-      throw new ValidationError(422, error.message);
-    }
+    const user = await AuroraDB.updateUser(this.req.user.id, validated);
 
-    const updatedUser = await AuroraDB.updateUser(req.user.id, validated);
-
-    return res.status(200).json(updatedUser);
-  },
-};
+    return this.res.status(200).json(user);
+  }
+}
