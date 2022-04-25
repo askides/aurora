@@ -1,10 +1,12 @@
 import { AuthController } from "../lib/controllers/auth-controller";
-import { Router } from "../lib/router";
 
 export default async function handler(request, response) {
-  const router = new Router(request, response);
+  const auth = new AuthController(request, response);
 
-  await router.route("POST", AuthController.signin);
-
-  router.fallback();
+  switch (request.method) {
+    case "POST":
+      return await auth.run("signin");
+    default:
+      return response.status(405).json({ message: "Method not allowed" });
+  }
 }

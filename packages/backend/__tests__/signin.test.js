@@ -30,7 +30,7 @@ it("should return 401 because there are no users", async () => {
   expect(res._getStatusCode()).toBe(401);
   expect(res._getJSONData()).toMatchInlineSnapshot(`
     Object {
-      "message": "Invalid credentials",
+      "message": "Unauthenticated",
     }
   `);
 });
@@ -47,7 +47,7 @@ it("should return 401 because the password is wrong", async () => {
   expect(res._getStatusCode()).toBe(401);
   expect(res._getJSONData()).toMatchInlineSnapshot(`
     Object {
-      "message": "Invalid credentials",
+      "message": "Unauthenticated",
     }
   `);
 });
