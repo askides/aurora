@@ -1,11 +1,11 @@
 import Joi from "joi";
 import * as AuroraDB from "../database";
-import { NotFoundError, ValidationError } from "../error";
 import { tag } from "../utils/tag";
 import { parse } from "../utils/ua";
+import { Controller } from "./controller";
 
-export const CollectController = {
-  store: async ({ req, res }) => {
+export class CollectController extends Controller {
+  async store() {
     const rules = Joi.object({
       type: Joi.string(),
       element: Joi.string().required(),
@@ -22,21 +22,15 @@ export const CollectController = {
       expires: Joi.number(),
     });
 
-    const { error, value: validated } = rules.validate(req.body, {
-      stripUnknown: true,
-    });
+    const validated = this.validate(this.req.body, rules);
 
-    if (error) {
-      throw new ValidationError(422, error.message);
-    }
-
-    const website = await AuroraDB.getWebsite(req.body.wid);
+    const website = await AuroraDB.getWebsite(this.req.body.wid);
 
     if (!website) {
-      throw new NotFoundError();
+      this.abor(404);
     }
 
-    const ua = parse(req.headers["user-agent"]);
+    const ua = parse(this.req.headers["user-agent"]);
     const locale = tag(validated.language);
 
     const elements = [...ua.elements];
@@ -102,6 +96,6 @@ export const CollectController = {
       },
     });
 
-    return res.status(201).json(event);
-  },
-};
+    return this.res.status(201).json(event);
+  }
+}
