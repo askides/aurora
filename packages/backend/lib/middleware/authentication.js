@@ -1,6 +1,6 @@
 import JWT from "jsonwebtoken";
+import { AuroraError } from "../controllers/controller";
 import * as AuroraDB from "../database";
-import { AuthenticationError } from "../error";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -8,7 +8,7 @@ const verifyJwt = (accessToken) => {
   try {
     return JWT.verify(accessToken, JWT_SECRET);
   } catch (err) {
-    throw new AuthenticationError(401, "Invalid bearer token");
+    throw new AuroraError(401, "Unauthenticated");
   }
 };
 
@@ -16,13 +16,13 @@ export const authentication = async (req, res) => {
   const { authorization } = req.headers;
 
   if (!authorization) {
-    throw new AuthenticationError(401, "No authorization header found");
+    throw new AuroraError(401, "Unauthenticated");
   }
 
   const [type, accessToken] = authorization.split(" ");
 
   if (type !== "Bearer") {
-    throw new AuthenticationError(401, "Invalid authorization header");
+    throw new AuroraError(401, "Unauthenticated");
   }
 
   const tokenPayload = verifyJwt(accessToken);
@@ -30,7 +30,7 @@ export const authentication = async (req, res) => {
   const user = await AuroraDB.getUser(tokenPayload.data.id);
 
   if (!user) {
-    throw new AuthenticationError();
+    throw new AuroraError(401, "Unauthenticated");
   }
 
   // TODO: Remove sensitive informations like password

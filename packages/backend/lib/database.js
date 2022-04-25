@@ -1,4 +1,4 @@
-import { hash } from "../utils/hash";
+import { hash } from "../lib/utils/hash";
 import prisma from "./client";
 
 export { prisma as client };

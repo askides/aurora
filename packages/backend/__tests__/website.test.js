@@ -2,7 +2,7 @@ import { createMocks } from "node-mocks-http";
 import handler from "../api/websites/[id]";
 import * as AuroraDB from "../lib/database";
 import { signInMock } from "../lib/jest";
-import { buildUser, buildWebsite } from "../utils/generate";
+import { buildUser, buildWebsite } from "../lib/utils/generate";
 
 const user = buildUser({
   id: "FAKE_USER_ID",
@@ -25,7 +25,7 @@ describe("GET /websites/:id", () => {
     expect(res._getStatusCode()).toBe(401);
     expect(res._getJSONData()).toMatchInlineSnapshot(`
       Object {
-        "message": "No authorization header found",
+        "message": "Unauthenticated",
       }
     `);
   });
@@ -43,7 +43,7 @@ describe("GET /websites/:id", () => {
     expect(res._getStatusCode()).toBe(401);
     expect(res._getJSONData()).toMatchInlineSnapshot(`
       Object {
-        "message": "Invalid authorization header",
+        "message": "Unauthenticated",
       }
     `);
   });
@@ -61,7 +61,7 @@ describe("GET /websites/:id", () => {
     expect(res._getStatusCode()).toBe(401);
     expect(res._getJSONData()).toMatchInlineSnapshot(`
       Object {
-        "message": "Invalid bearer token",
+        "message": "Unauthenticated",
       }
     `);
   });
@@ -143,7 +143,7 @@ describe("PUT /websites/:id", () => {
     expect(res._getStatusCode()).toBe(401);
     expect(res._getJSONData()).toMatchInlineSnapshot(`
       Object {
-        "message": "No authorization header found",
+        "message": "Unauthenticated",
       }
     `);
   });
@@ -161,7 +161,7 @@ describe("PUT /websites/:id", () => {
     expect(res._getStatusCode()).toBe(401);
     expect(res._getJSONData()).toMatchInlineSnapshot(`
       Object {
-        "message": "Invalid authorization header",
+        "message": "Unauthenticated",
       }
     `);
   });
@@ -179,7 +179,7 @@ describe("PUT /websites/:id", () => {
     expect(res._getStatusCode()).toBe(401);
     expect(res._getJSONData()).toMatchInlineSnapshot(`
       Object {
-        "message": "Invalid bearer token",
+        "message": "Unauthenticated",
       }
     `);
   });

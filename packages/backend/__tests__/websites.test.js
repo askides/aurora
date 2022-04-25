@@ -2,7 +2,7 @@ import { createMocks } from "node-mocks-http";
 import handler from "../api/websites/index";
 import * as AuroraDB from "../lib/database";
 import { signInMock } from "../lib/jest";
-import { buildUser, buildWebsite } from "../utils/generate";
+import { buildUser, buildWebsite } from "../lib/utils/generate";
 
 const user = buildUser({
   id: "FAKE_USER_ID",
@@ -24,7 +24,7 @@ it("should return 401 if we not pass the correct header", async () => {
   expect(res._getStatusCode()).toBe(401);
   expect(res._getJSONData()).toMatchInlineSnapshot(`
     Object {
-      "message": "No authorization header found",
+      "message": "Unauthenticated",
     }
   `);
 });
@@ -42,7 +42,7 @@ it("should return 401 if we not pass the correct authorization header", async ()
   expect(res._getStatusCode()).toBe(401);
   expect(res._getJSONData()).toMatchInlineSnapshot(`
     Object {
-      "message": "Invalid authorization header",
+      "message": "Unauthenticated",
     }
   `);
 });
@@ -60,7 +60,7 @@ it("should return 401 if we not pass the correct authorization token", async () 
   expect(res._getStatusCode()).toBe(401);
   expect(res._getJSONData()).toMatchInlineSnapshot(`
     Object {
-      "message": "Invalid bearer token",
+      "message": "Unauthenticated",
     }
   `);
 });

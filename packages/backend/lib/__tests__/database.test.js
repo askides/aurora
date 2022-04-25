@@ -1,5 +1,5 @@
-import { buildUser, buildWebsite } from "../../utils/generate";
-import { verify } from "../../utils/hash";
+import { buildUser, buildWebsite } from "../../lib/utils/generate";
+import { verify } from "../../lib/utils/hash";
 import * as AuroraDB from "../database";
 
 beforeEach(async () => {

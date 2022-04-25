@@ -1,6 +1,6 @@
 import Joi from "joi";
 import JWT from "jsonwebtoken";
-import { verify } from "../../utils/hash";
+import { verify } from "../../lib/utils/hash";
 import * as AuroraDB from "../database";
 import { Controller } from "./controller";
 

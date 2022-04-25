@@ -2,8 +2,8 @@ import { createMocks } from "node-mocks-http";
 import handler from "../api/me";
 import * as AuroraDB from "../lib/database";
 import { signInMock } from "../lib/jest";
-import { buildUser } from "../utils/generate";
-import { verify } from "../utils/hash";
+import { buildUser } from "../lib/utils/generate";
+import { verify } from "../lib/utils/hash";
 
 beforeEach(async () => {
   await AuroraDB.client.user.deleteMany();
@@ -17,7 +17,7 @@ it("should return 401 if is not authenticated", async () => {
   expect(res._getStatusCode()).toBe(401);
   expect(res._getJSONData()).toMatchInlineSnapshot(`
     Object {
-      "message": "No authorization header found",
+      "message": "Unauthenticated",
     }
   `);
 });
@@ -54,7 +54,7 @@ it("should return 401 if is not authenticated", async () => {
   expect(res._getStatusCode()).toBe(401);
   expect(res._getJSONData()).toMatchInlineSnapshot(`
     Object {
-      "message": "No authorization header found",
+      "message": "Unauthenticated",
     }
   `);
 });

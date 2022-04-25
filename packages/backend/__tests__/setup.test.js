@@ -1,7 +1,7 @@
 import { createMocks } from "node-mocks-http";
 import handler from "../api/setup";
 import * as AuroraDB from "../lib/database";
-import { buildUser } from "../utils/generate";
+import { buildUser } from "../lib/utils/generate";
 
 beforeEach(async () => {
   await AuroraDB.client.user.deleteMany();
