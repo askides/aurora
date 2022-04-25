@@ -1,12 +1,12 @@
 import { StatisticsController } from "../../../../lib/controllers/statistics-controller";
-import { authentication } from "../../../../lib/middleware/authentication";
-import { Router } from "../../../../lib/router";
 
 export default async function handler(request, response) {
-  const router = new Router(request, response);
+  const statistic = new StatisticsController(request, response);
 
-  await router.use(authentication);
-  await router.route("GET", StatisticsController.index);
-
-  router.fallback();
+  switch (request.method) {
+    case "GET":
+      return await statistic.run("index");
+    default:
+      return response.status(405).json({ error: "Method not allowed" });
+  }
 }
