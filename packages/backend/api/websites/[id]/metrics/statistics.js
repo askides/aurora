@@ -7,6 +7,6 @@ export default async function handler(request, response) {
     case "GET":
       return await statistic.run("index");
     default:
-      return response.status(405).json({ error: "Method not allowed" });
+      return response.status(405).json({ message: "Method not allowed" });
   }
 }
