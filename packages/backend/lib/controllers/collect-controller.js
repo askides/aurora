@@ -27,7 +27,7 @@ export class CollectController extends Controller {
     const website = await AuroraDB.getWebsite(this.req.body.wid);
 
     if (!website) {
-      this.abor(404);
+      this.abort(404);
     }
 
     const ua = parse(this.req.headers["user-agent"]);
