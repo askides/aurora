@@ -100,7 +100,7 @@ export async function deleteWebsite(wid) {
 
 export async function getWebsiteViewsByMetadata(
   wid,
-  metadata = "os", // TODO: Better default value.
+  metadata = "os",
   filters = {}
 ) {
   const { start, end } = filters;
