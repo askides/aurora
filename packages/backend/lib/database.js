@@ -228,11 +228,8 @@ export async function getWebsiteViewsTimeSeries(wid, filters = {}) {
   const isNotHour = unit !== "hour";
 
   // TODO: Real function
-  const formattedDate = (arg) => arg;
+  const formattedDate = (date) => new Date(Number(date)).toISOString();
 
-  return [];
-
-  // TODO: Mysql Support
   const sql = `
     SELECT date_trunc('${unit}', created_at AT TIME ZONE '${tz}')
       ${isNotHour ? `AT TIME ZONE '${tz}'` : ""} as ts, count(*)

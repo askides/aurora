@@ -1,54 +1,56 @@
 import Joi from "joi";
 import * as AuroraDB from "../database";
-import { NotFoundError, UnhauthorizedError, ValidationError } from "../error";
+import { authentication } from "../middleware/authentication";
+import { Controller } from "./controller";
 
-export const TimeseriesController = {
-  index: async ({ req, res }) => {
-    const website = await AuroraDB.getWebsite(req.query.id);
+export class TimeseriesController extends Controller {
+  async index() {
+    const { id } = this.req.query;
+    const website = await AuroraDB.getWebsite(id);
 
     if (!website) {
-      throw new NotFoundError();
+      this.abort(404);
     }
 
-    // TODO: This route will be also public.
-    if (!website.is_public && website.user_id !== req.user.id) {
-      throw new UnhauthorizedError();
+    if (!website.is_public) {
+      await authentication(this.req, this.res);
+
+      if (this.req.user.id !== website.user_id) {
+        this.abort(403);
+      }
     }
 
     const rules = Joi.object({
       start: Joi.string().required(),
       end: Joi.string().required(),
       unit: Joi.string().required().valid("hour", "day", "month", "year"),
-      // tz: Joi.string().required(),
+      tz: Joi.string().required(),
     });
 
-    const { error, value: validated } = rules.validate(req.query, {
-      stripUnknown: true,
-    });
-
-    if (error) {
-      throw new ValidationError(422, error.message);
-    }
+    this.validate(this.req.query, rules);
 
     const filters = {
-      start: req.query.start,
-      end: req.query.end,
-      unit: req.query.unit,
-      tz: req.query.tz || "UTC",
+      start: this.req.query.start,
+      end: this.req.query.end,
+      unit: this.req.query.unit,
+      tz: this.req.query.tz || "UTC",
     };
 
-    const data = await AuroraDB.getWebsiteViewsTimeSeries(
-      req.query.wid,
-      filters
-    );
+    const data = await AuroraDB.getWebsiteViewsTimeSeries(id, filters);
 
-    // const formattedData = data.map((item) => {
-    //   return {
-    //     timeseries: dropTime(new Date(item.ts)),
-    //     count: item.count,
-    //   };
-    // });
+    const dropTime = (date) => {
+      return date.toISOString().split("T")[0];
+    };
 
-    return res.status(200).json([]);
-  },
-};
+    const timeseries = data.map((element) => {
+      const date = dropTime(new Date(element.ts));
+
+      return {
+        timeseries: date,
+        count: element.count,
+      };
+    });
+
+    return this.res.status(200).json(timeseries);
+  }
+}
