@@ -1,32 +1,37 @@
 import Joi from "joi";
 import * as AuroraDB from "../database";
-import { UnhauthorizedError } from "../error";
+import { authentication } from "../middleware/authentication";
 import { Controller } from "./controller";
 
 export class StatisticsController extends Controller {
   async index() {
-    const website = await AuroraDB.getWebsite(this.req.query.id);
+    const { id } = this.req.query;
+    const website = await AuroraDB.getWebsite(id);
 
-    // TODO: This route will be also public.
-    if (!website.is_public && website.user_id !== this.req.user.id) {
-      throw new UnhauthorizedError();
+    if (!website) {
+      this.abort(404);
+    }
+
+    if (!website.is_public) {
+      await authentication(this.req, this.res);
+
+      if (this.req.user.id !== website.user_id) {
+        this.abort(403);
+      }
     }
 
     const rules = Joi.object({
       start: Joi.string().required(),
       end: Joi.string().required(),
-      //unit: Joi.string().required().valid("hour", "day", "month", "year"),
     });
 
-    const validated = this.validate(this.req.query, rules);
+    this.validate(this.req.query, rules);
 
-    const { meta, ...filters } = req.query;
+    const { meta, ...filters } = this.req.query;
 
-    const data = await AuroraDB.getWebsiteStatistics(
-      this.req.query.id,
-      filters
-    );
+    const data = await AuroraDB.getWebsiteStatistics(id, filters);
 
+    // TODO: Refactor this as well as the getWebsiteStatistics function
     return this.res.status(200).json({
       visits: data.visits._count._all,
       uniqueVisits: data.uniqueVisits._count._all,
