@@ -1,6 +1,17 @@
 import { Box, Flex, Heading } from "@chakra-ui/react";
+import * as React from "react";
 
-const Panel = ({ children, direction = "column", ...rest }) => {
+interface Props {
+  direction?: "row" | "column";
+}
+
+type TitleComponent = React.FC;
+type BodyComponent = React.FC;
+type PanelComponent = React.FC<Props> & { Title: TitleComponent } & {
+  Body: BodyComponent;
+};
+
+const Panel: PanelComponent = ({ direction = "column", children, ...rest }) => {
   return (
     <Flex
       direction={direction}
@@ -16,7 +27,7 @@ const Panel = ({ children, direction = "column", ...rest }) => {
   );
 };
 
-const PanelTitle = ({ children }) => {
+const PanelTitle: React.FC = ({ children }) => {
   return (
     <Heading as="h3" size="sm">
       {children}
@@ -24,7 +35,7 @@ const PanelTitle = ({ children }) => {
   );
 };
 
-const PanelBody = (props) => {
+const PanelBody: React.FC = (props) => {
   return <Box {...props} />;
 };
 
