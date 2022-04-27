@@ -24,7 +24,7 @@ export function Setup() {
       </Flex>
 
       <Flex direction="column" flex={1} gap={5} padding={10}>
-        <SetupForm onSubmit={(data) => console.log(data)} />
+        <SetupForm />
       </Flex>
     </Flex>
   );

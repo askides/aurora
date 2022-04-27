@@ -1,6 +1,6 @@
 import { useToast } from "@chakra-ui/react";
 import * as React from "react";
-import { Loader } from "../../components/Loader/Loader";
+import { Loader } from "../../components/Loader";
 import { Wrapper } from "../../components/Wrapper";
 import { client } from "../../lib/client";
 import { useAccount } from "../../lib/hooks/use-account";

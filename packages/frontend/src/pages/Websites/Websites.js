@@ -1,6 +1,6 @@
 import { Button } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { Loader } from "../../components/Loader/Loader";
+import { Loader } from "../../components/Loader";
 import { Wrapper } from "../../components/Wrapper";
 import { useWebsites } from "../../lib/hooks/use-websites";
 import { WebsitesList } from "./WebsitesList";

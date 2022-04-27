@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import * as React from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { Loader } from "../../components/Loader/Loader";
+import { Loader } from "../../components/Loader";
 import { WebsitesForm } from "../../components/WebsitesForm";
 import { Wrapper } from "../../components/Wrapper";
 import { client } from "../../lib/client";

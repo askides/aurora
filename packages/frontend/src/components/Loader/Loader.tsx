@@ -1,7 +1,8 @@
 import { Center, Spinner } from "@chakra-ui/react";
+import * as React from "react";
 import { Panel } from "../Panel";
 
-const Loader = (props) => {
+const Loader: React.FC = (props) => {
   return (
     <Panel {...props}>
       <Center>
