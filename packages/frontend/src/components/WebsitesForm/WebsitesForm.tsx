@@ -20,9 +20,9 @@ interface WebsiteFormProps {
 }
 
 type FormData = {
-  name: string;
-  url: string;
-  is_public: boolean;
+  name?: string;
+  url?: string;
+  is_public?: boolean;
 };
 
 export function WebsitesForm({
