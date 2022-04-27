@@ -1,7 +1,7 @@
 import { Button, Center, Flex, Heading } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
-export function NotFound() {
+const NotFound = () => {
   return (
     <Center as={Flex} gap={5} height="100vh" direction="column">
       <Heading as="h1" size="lg">
@@ -13,4 +13,6 @@ export function NotFound() {
       </Button>
     </Center>
   );
-}
+};
+
+export { NotFound };
