@@ -6,7 +6,9 @@ interface PanelProps extends SystemProps {
   direction?: SystemProps["flexDirection"];
 }
 
-const Panel = ({ direction = "column", children, ...rest }: PanelProps) => {
+const Panel = ({ children, ...props }: PanelProps) => {
+  const { direction = "column", ...rest } = props;
+
   return (
     <Flex
       direction={direction}
