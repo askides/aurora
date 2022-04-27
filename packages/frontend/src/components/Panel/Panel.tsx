@@ -1,4 +1,4 @@
-import { Flex, SystemProps } from "@chakra-ui/react";
+import { Flex, forwardRef, SystemProps } from "@chakra-ui/react";
 import * as React from "react";
 
 interface PanelProps extends SystemProps {
@@ -6,7 +6,7 @@ interface PanelProps extends SystemProps {
   direction?: SystemProps["flexDirection"];
 }
 
-const Panel = ({ children, ...props }: PanelProps) => {
+const Panel = forwardRef<PanelProps, "div">(({ children, ...props }, ref) => {
   const { direction = "column", ...rest } = props;
 
   return (
@@ -17,11 +17,12 @@ const Panel = ({ children, ...props }: PanelProps) => {
       rounded="md"
       bg="white"
       gap={5}
+      ref={ref}
       {...rest}
     >
       {children}
     </Flex>
   );
-};
+});
 
 export { Panel };
