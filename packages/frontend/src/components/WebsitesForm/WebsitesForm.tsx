@@ -15,7 +15,7 @@ import { Panel } from "../Panel";
 
 interface WebsiteFormProps {
   isNew?: boolean;
-  values: FormData;
+  values?: FormData;
   onSubmit: (values: FormData) => void;
 }
 
