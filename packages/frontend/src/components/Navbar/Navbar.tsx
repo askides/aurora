@@ -4,25 +4,8 @@ import { Link } from "react-router-dom";
 import { Home2, Logout, User } from "tabler-icons-react";
 import { useAuth } from "../../lib/context/auth-context";
 
-const MENU_ITEMS = [
-  { icon: Home2, label: "Home", to: "/" },
-  { icon: User, label: "Account", to: "/account" },
-];
-
-const Navbar: React.FC = () =>{
+const Navbar: React.FC = () => {
   const { signOut } = useAuth();
-
-  const items = MENU_ITEMS.map(({ icon: Icon, label, to }, index) => {
-    return (
-      <IconButton
-        as={Link}
-        to={to}
-        aria-label={label}
-        key={index}
-        icon={<Icon />}
-      />
-    );
-  });
 
   return (
     <Flex
@@ -37,11 +20,17 @@ const Navbar: React.FC = () =>{
       boxShadow="base"
     >
       <VStack spacing={4}>
-        {items}
+        <IconButton as={Link} to="/" aria-label="Home" icon={<Home2 />} />
+        <IconButton
+          as={Link}
+          to="/account"
+          aria-label="Account"
+          icon={<User />}
+        />
         <IconButton aria-label="Logout" icon={<Logout />} onClick={signOut} />
       </VStack>
     </Flex>
   );
-}
+};
 
 export { Navbar };
