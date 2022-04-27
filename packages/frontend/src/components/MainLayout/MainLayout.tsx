@@ -1,9 +1,8 @@
 import { Flex } from "@chakra-ui/react";
-import * as React from "react";
 import { Outlet } from "react-router-dom";
 import { Navbar } from "../Navbar";
 
-const MainLayout: React.FC = () => {
+const MainLayout = () => {
   return (
     <>
       <Navbar />
@@ -18,6 +17,6 @@ const MainLayout: React.FC = () => {
       </Flex>
     </>
   );
-}
+};
 
 export { MainLayout };
