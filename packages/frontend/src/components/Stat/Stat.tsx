@@ -1,7 +1,12 @@
 import { Heading, Text } from "@chakra-ui/react";
 import { Panel } from "../Panel";
 
-const Stat = ({ label, value }) => {
+interface StatProps {
+  label: string;
+  value: string;
+}
+
+const Stat = ({ label, value }: StatProps) => {
   return (
     <Panel flex={1} gap={2}>
       <Text fontSize="md">{label}</Text>
