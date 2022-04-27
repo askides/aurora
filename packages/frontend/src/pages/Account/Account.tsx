@@ -1,7 +1,12 @@
 import { useToast } from "@chakra-ui/react";
 import * as React from "react";
 import { Loader } from "../../components/Loader";
-import { Wrapper } from "../../components/Wrapper";
+import {
+  Wrapper,
+  WrapperContent,
+  WrapperHeader,
+  WrapperTitle,
+} from "../../components/Wrapper";
 import { client } from "../../lib/client";
 import { useAccount } from "../../lib/hooks/use-account";
 import { AccountForm } from "./AccountForm";
@@ -10,7 +15,8 @@ export function Account() {
   const toast = useToast();
   const { data, isLoading, isError } = useAccount();
 
-  const handleSubmit = async (data) => {
+  // TODO: Remove the any
+  const handleSubmit = async (data: any) => {
     // Removing password fields if empty
     const payload = Object.fromEntries(
       Object.entries(data).filter(([_, v]) => v !== "")
@@ -26,17 +32,17 @@ export function Account() {
 
   return (
     <Wrapper>
-      <Wrapper.Header>
-        <Wrapper.Title>Account</Wrapper.Title>
-      </Wrapper.Header>
+      <WrapperHeader>
+        <WrapperTitle>Account</WrapperTitle>
+      </WrapperHeader>
 
-      <Wrapper.Content>
+      <WrapperContent>
         {isLoading && <Loader />}
         {isError && <div>Something went wrong ...</div>}
         {!isLoading && !isError && (
           <AccountForm values={data} onSubmit={handleSubmit} />
         )}
-      </Wrapper.Content>
+      </WrapperContent>
     </Wrapper>
   );
 }
