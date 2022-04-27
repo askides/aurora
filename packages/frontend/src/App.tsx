@@ -1,5 +1,4 @@
 import { Center, Spinner } from "@chakra-ui/react";
-import * as React from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { MainLayout } from "./components/MainLayout";
 import { AuthProvider, useAuth } from "./lib/context/auth-context";
@@ -13,7 +12,11 @@ import { Setup } from "./pages/Setup";
 import { SignIn } from "./pages/SignIn";
 import { Websites } from "./pages/Websites/Websites";
 
-export function AuthenticatedRoute({ children }) {
+interface AuthenticatedRouteProps {
+  children: JSX.Element;
+}
+
+export function AuthenticatedRoute({ children }: AuthenticatedRouteProps) {
   const location = useLocation();
   const { user, isLoading } = useAuth();
 
@@ -32,7 +35,7 @@ export function AuthenticatedRoute({ children }) {
   return children;
 }
 
-export function App() {
+const App = () => {
   const location = useLocation();
   const { setupDone, isLoading } = useSetup();
 
@@ -72,4 +75,6 @@ export function App() {
       </Routes>
     </AuthProvider>
   );
-}
+};
+
+export { App };
