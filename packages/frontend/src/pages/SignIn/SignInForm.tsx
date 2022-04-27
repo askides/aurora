@@ -5,11 +5,15 @@ import {
   Input,
   useToast,
 } from "@chakra-ui/react";
-import * as React from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { Panel } from "../../components/Panel";
 import { useAuth } from "../../lib/context/auth-context";
+
+type SignInFormFields = {
+  email: string;
+  password: string;
+};
 
 export function SignInForm() {
   const toast = useToast();
@@ -19,18 +23,23 @@ export function SignInForm() {
     register,
     handleSubmit,
     formState: { isSubmitting },
-  } = useForm();
+  } = useForm<SignInFormFields>();
 
-  const onSubmit = async (data) => {
-    await signIn(data.email, data.password)
-      .then(() => navigate("/", { replace: true }))
-      .catch(() => {
-        toast({ status: "error", title: "An error has occurred.." });
-      });
+  const onSuccess = () => {
+    navigate("/", { replace: true });
+  };
+
+  const onError = () => {
+    toast({ status: "error", title: "An error has occurred.." });
+  };
+
+  // TODO: Fix this any
+  const onSubmit = async (data: any) => {
+    await signIn(data.email, data.password).then(onSuccess).catch(onError);
   };
 
   return (
-    <Panel as="form" onSubmit={handleSubmit(onSubmit)} width="100%">
+    <Panel as="form" width="100%" onSubmit={handleSubmit(onSubmit)}>
       <FormControl>
         <FormLabel htmlFor="email">Email address</FormLabel>
         <Input id="email" type="email" {...register("email")} />

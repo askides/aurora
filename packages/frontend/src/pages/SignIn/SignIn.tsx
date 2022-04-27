@@ -1,7 +1,7 @@
 import { Center, Flex, Heading } from "@chakra-ui/react";
 import { SignInForm } from "./SignInForm";
 
-export function SignIn() {
+const SignIn = () => {
   return (
     <Center height="100vh">
       <Flex direction="column" alignItems="center" gap={10} width="md">
@@ -12,4 +12,6 @@ export function SignIn() {
       </Flex>
     </Center>
   );
-}
+};
+
+export { SignIn };
