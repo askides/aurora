@@ -62,7 +62,9 @@ export class Controller {
 
       await this[method]();
     } catch (err) {
-      return this.res.status(err.statusCode).json({ message: err.message });
+      return this.res
+        .status(err.statusCode ?? 500)
+        .json({ message: err.message });
     }
   }
 }
