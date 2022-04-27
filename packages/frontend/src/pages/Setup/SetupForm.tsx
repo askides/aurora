@@ -7,25 +7,36 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import * as React from "react";
 import { useForm } from "react-hook-form";
 import { client } from "../../lib/client";
 
-export function SetupForm() {
+type SetupFormFields = {
+  firstname: string;
+  lastname: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+
+const SetupForm = () => {
   const toast = useToast();
   const {
     register,
     handleSubmit,
     formState: { isSubmitting },
-  } = useForm();
+  } = useForm<SetupFormFields>();
 
-  const onSubmit = async (data) => {
-    await client
-      .post("/setup", data)
-      .then(() => toast({ status: "success", title: "Account Created." }))
-      .catch(() => {
-        toast({ status: "error", title: "An error has occurred.." });
-      });
+  const onSuccess = () => {
+    toast({ status: "success", title: "Account Created." });
+  };
+
+  const onError = () => {
+    toast({ status: "error", title: "An error has occurred.." });
+  };
+
+  // TODO: Fix this any
+  const onSubmit = async (data: any) => {
+    await client.post("/setup", data).then(onSuccess).catch(onError);
   };
 
   return (
@@ -66,4 +77,6 @@ export function SetupForm() {
       </Button>
     </VStack>
   );
-}
+};
+
+export { SetupForm };

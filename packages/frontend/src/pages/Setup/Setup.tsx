@@ -1,7 +1,7 @@
 import { Flex, Heading, Image, Text } from "@chakra-ui/react";
 import { SetupForm } from "./SetupForm";
 
-export function Setup() {
+const Setup = () => {
   return (
     <Flex
       maxWidth="7xl"
@@ -28,4 +28,6 @@ export function Setup() {
       </Flex>
     </Flex>
   );
-}
+};
+
+export { Setup };
