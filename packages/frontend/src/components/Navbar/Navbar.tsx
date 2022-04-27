@@ -1,10 +1,9 @@
 import { Flex, IconButton, VStack } from "@chakra-ui/react";
-import * as React from "react";
-import { Link } from "react-router-dom";
 import { Home2, Logout, User } from "tabler-icons-react";
 import { useAuth } from "../../lib/context/auth-context";
+import { NavbarLink } from "./NavbarLink";
 
-const Navbar: React.FC = () => {
+const Navbar = () => {
   const { signOut } = useAuth();
 
   return (
@@ -20,13 +19,8 @@ const Navbar: React.FC = () => {
       boxShadow="base"
     >
       <VStack spacing={4}>
-        <IconButton as={Link} to="/" aria-label="Home" icon={<Home2 />} />
-        <IconButton
-          as={Link}
-          to="/account"
-          aria-label="Account"
-          icon={<User />}
-        />
+        <NavbarLink to="/" icon={<Home2 />} label="Home" />
+        <NavbarLink to="/account" icon={<User />} label="Account" />
         <IconButton aria-label="Logout" icon={<Logout />} onClick={signOut} />
       </VStack>
     </Flex>
