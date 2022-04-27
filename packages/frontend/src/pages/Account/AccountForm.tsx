@@ -4,20 +4,63 @@ import {
   FormHelperText,
   FormLabel,
   Input,
+  useToast,
 } from "@chakra-ui/react";
 import * as React from "react";
 import { useForm } from "react-hook-form";
+import { Loader } from "../../components/Loader";
 import { Panel } from "../../components/Panel";
+import { client } from "../../lib/client";
+import { useAccount } from "../../lib/hooks/use-account";
 
-export function AccountForm({ onSubmit, values = {} }) {
+type AccountFormFields = {
+  firstname: string;
+  lastname: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+
+export function AccountForm() {
+  const toast = useToast();
+  const { data, isLoading, isError } = useAccount();
+
   const {
+    reset,
     register,
     handleSubmit,
     formState: { isSubmitting },
-  } = useForm({ defaultValues: values });
+  } = useForm<AccountFormFields>();
+
+  React.useEffect(() => {
+    if (data) {
+      reset(data);
+    }
+  }, [isLoading, data, isError, reset]);
+
+  const onSuccess = () => {
+    toast({ status: "success", title: "Account updated!" });
+  };
+
+  const onError = () => {
+    toast({ status: "error", title: "An error has occurred.." });
+  };
+
+  const onSubmit = async (data: any) => {
+    // Removing password fields if empty
+    const payload = Object.fromEntries(
+      Object.entries(data).filter(([_, v]) => v !== "")
+    );
+
+    await client.put(`/me`, payload).then(onSuccess).catch(onError);
+  };
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
-    <Panel as="form" spacing={5} onSubmit={handleSubmit(onSubmit)}>
+    <Panel as="form" onSubmit={handleSubmit(onSubmit)}>
       <FormControl>
         <FormLabel htmlFor="firstname">Firstname</FormLabel>
         <Input id="firstname" type="text" {...register("firstname")} />
