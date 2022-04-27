@@ -9,7 +9,7 @@ const MENU_ITEMS = [
   { icon: User, label: "Account", to: "/account" },
 ];
 
-export function Navbar() {
+const Navbar: React.FC = () =>{
   const { signOut } = useAuth();
 
   const items = MENU_ITEMS.map(({ icon: Icon, label, to }, index) => {
@@ -43,3 +43,5 @@ export function Navbar() {
     </Flex>
   );
 }
+
+export { Navbar };
