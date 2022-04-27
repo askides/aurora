@@ -13,17 +13,33 @@ import { useParams } from "react-router-dom";
 import { useAuroraLinks } from "../../lib/hooks/use-aurora-links";
 import { Panel } from "../Panel";
 
-export function WebsitesForm({ isNew, onSubmit, values = {} }) {
+interface WebsiteFormProps {
+  isNew?: boolean;
+  values: FormData;
+  onSubmit: (values: FormData) => void;
+}
+
+type FormData = {
+  name: string;
+  url: string;
+  is_public: boolean;
+};
+
+export function WebsitesForm({
+  isNew,
+  onSubmit,
+  values = {},
+}: WebsiteFormProps) {
   const { id } = useParams();
   const { sharedLink, generatedLink } = useAuroraLinks(id);
   const {
     register,
     handleSubmit,
     formState: { isSubmitting },
-  } = useForm({ defaultValues: values });
+  } = useForm<FormData>({ defaultValues: values });
 
   return (
-    <Panel as="form" spacing={5} onSubmit={handleSubmit(onSubmit)}>
+    <Panel as="form" onSubmit={handleSubmit(onSubmit)}>
       <FormControl>
         <FormLabel htmlFor="name">Website Name</FormLabel>
         <Input id="name" type="text" {...register("name")} />
