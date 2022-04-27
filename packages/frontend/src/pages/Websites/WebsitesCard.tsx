@@ -1,9 +1,14 @@
 import { Badge, Button, Flex, Heading } from "@chakra-ui/react";
-import * as React from "react";
 import { Link } from "react-router-dom";
 import { Panel } from "../../components/Panel";
 
-export function WebsitesCard({ id, name, is_public }) {
+interface WebsitesCardProps {
+  id: string;
+  name: string;
+  is_public: boolean;
+}
+
+const WebsitesCard = ({ id, name, is_public }: WebsitesCardProps) => {
   const colorScheme = is_public ? "green" : "red";
   const label = is_public ? "Public" : "Private";
 
@@ -30,4 +35,6 @@ export function WebsitesCard({ id, name, is_public }) {
       </Flex>
     </Panel>
   );
-}
+};
+
+export { WebsitesCard };

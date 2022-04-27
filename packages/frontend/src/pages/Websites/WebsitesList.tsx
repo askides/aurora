@@ -1,17 +1,17 @@
-import { Button, Grid, GridItem, Text } from "@chakra-ui/react";
-import * as React from "react";
-import { Link } from "react-router-dom";
+import { Grid, GridItem, Text } from "@chakra-ui/react";
 import { Panel } from "../../components/Panel";
+import { IWebsite } from "../../lib/models";
 import { WebsitesCard } from "./WebsitesCard";
 
-const WebsitesList = ({ data = [] }) => {
+interface WebsitesListProps {
+  data: IWebsite[];
+}
+
+const WebsitesList = ({ data }: WebsitesListProps) => {
   if (data.length === 0) {
     return (
       <Panel direction="row" alignItems="center" justifyContent="space-between">
         <Text>Here is absolute emptiness..</Text>
-        <Button as={Link} to="/websites/new">
-          Create New!
-        </Button>
       </Panel>
     );
   }
