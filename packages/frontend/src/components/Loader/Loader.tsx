@@ -1,8 +1,9 @@
-import { Center, Spinner } from "@chakra-ui/react";
-import * as React from "react";
+import { Center, Spinner, SystemProps } from "@chakra-ui/react";
 import { Panel } from "../Panel";
 
-const Loader: React.FC = (props) => {
+interface LoaderProps extends SystemProps {}
+
+const Loader = (props: LoaderProps) => {
   return (
     <Panel {...props}>
       <Center>
