@@ -3,26 +3,22 @@ import { client } from "../client";
 
 export function useSetup() {
   const [isLoading, setIsLoading] = React.useState(true);
-  const [setupDone, setSetupDone] = React.useState(false);
+  const [needsSetup, setNeedsSetup] = React.useState(true);
 
   React.useEffect(() => {
-    const isFlagPresent = localStorage.getItem("aurora_setup_done");
+    const isFlagPresent = localStorage.getItem("aurora_needsSetup");
 
     if (isFlagPresent) {
-      setSetupDone(true);
+      setNeedsSetup(true);
       setIsLoading(false);
     } else {
-      // TODO: check this out
-      client
-        .get("/setup")
-        .then((res) => {
-          const sd = !res.data.needsSetup;
-          setSetupDone(sd);
-          localStorage.setItem("aurora_setup_done", Number(sd));
-        })
-        .finally(() => setIsLoading(false));
+      client.get("/setup").then((res) => {
+        setNeedsSetup(res.data.needsSetup);
+        localStorage.setItem("aurora_needsSetup", Number(res.data.needsSetup));
+        setIsLoading(false);
+      });
     }
   }, []);
 
-  return { isLoading, setupDone };
+  return { isLoading, needsSetup };
 }

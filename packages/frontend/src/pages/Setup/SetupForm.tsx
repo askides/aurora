@@ -28,6 +28,7 @@ const SetupForm = () => {
 
   const onSuccess = () => {
     toast({ status: "success", title: "Account Created." });
+    localStorage.removeItem("aurora_needsSetup");
   };
 
   const onError = () => {

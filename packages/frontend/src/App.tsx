@@ -37,17 +37,18 @@ export function AuthenticatedRoute({ children }: AuthenticatedRouteProps) {
 
 const App = () => {
   const location = useLocation();
-  const { setupDone, isLoading } = useSetup();
+  const { needsSetup, isLoading } = useSetup();
 
   if (isLoading) {
     return (
       <Center style={{ height: "100vh" }}>
-        <Spinner size="sm" />
+        <Spinner size="xl" />
       </Center>
     );
   }
 
-  if (!setupDone) {
+  console.log(needsSetup, "aaa");
+  if (needsSetup && location.pathname !== "/setup") {
     return <Navigate to="/setup" state={{ from: location }} replace />;
   }
 
