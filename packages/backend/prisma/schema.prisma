@@ -46,8 +46,8 @@ model Event {
   is_new_session Boolean    @default(false)
   is_a_bounce    Boolean    @default(false)
   website_id     String
-  created_at     DateTime   @default(now())
-  updated_at     DateTime   @updatedAt
+  created_at     DateTime   @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime   @updatedAt @db.Timestamptz(6)
   metadata       Metadata[]
 
   @@map("events")
