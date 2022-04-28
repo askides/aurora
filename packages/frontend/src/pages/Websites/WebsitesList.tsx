@@ -1,7 +1,19 @@
-import { Grid, GridItem, Text } from "@chakra-ui/react";
+import {
+  Badge,
+  Button,
+  Flex,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+} from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 import { Panel } from "../../components/Panel";
 import { IWebsite } from "../../lib/models";
-import { WebsitesCard } from "./WebsitesCard";
 
 interface WebsitesListProps {
   data: IWebsite[];
@@ -18,16 +30,47 @@ const WebsitesList = ({ data }: WebsitesListProps) => {
 
   const items = data.map((website) => {
     return (
-      <GridItem w="100%" key={website.id}>
-        <WebsitesCard {...website} />
-      </GridItem>
+      <Tr key={website.id}>
+        <Td fontWeight={600}>{website.name}</Td>
+        <Td>{website.url}</Td>
+        <Td>
+          <Badge>{website.is_public ? "Public" : "Private"}</Badge>
+        </Td>
+        <Td isNumeric>
+          <Flex gap={2} justifyContent="flex-end">
+            <Button size="sm" as={Link} to={`/websites/${website.id}/edit`}>
+              View Details
+            </Button>
+            <Button
+              size="sm"
+              as={Link}
+              colorScheme="blue"
+              to={`/websites/${website.id}/analytics`}
+            >
+              View Analytics
+            </Button>
+          </Flex>
+        </Td>
+      </Tr>
     );
   });
 
   return (
-    <Grid templateColumns="repeat(3, 1fr)" gap={6}>
-      {items}
-    </Grid>
+    <Panel p={0}>
+      <TableContainer>
+        <Table variant="simple">
+          <Thead>
+            <Tr>
+              <Th>Name</Th>
+              <Th>Url</Th>
+              <Th>Status</Th>
+              <Th isNumeric>Actions</Th>
+            </Tr>
+          </Thead>
+          <Tbody>{items}</Tbody>
+        </Table>
+      </TableContainer>
+    </Panel>
   );
 };
 
