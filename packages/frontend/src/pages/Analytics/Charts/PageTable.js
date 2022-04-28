@@ -1,4 +1,4 @@
-import { Flex, Spinner } from "@chakra-ui/react";
+import { Grid, GridItem, Spinner } from "@chakra-ui/react";
 import { Panel, PanelBody, PanelTitle } from "../../../components/Panel";
 import { useMetadata } from "../../../lib/hooks/use-metadata";
 
@@ -14,26 +14,26 @@ const PageTableContainer = ({ filters }) => {
   }
 
   const heading = (
-    <Flex gap={5}>
-      <Flex flex={1}>Name</Flex>
-      <Flex>Views</Flex>
-      <Flex>Unique</Flex>
-    </Flex>
+    <>
+      <GridItem colSpan={2}>Name</GridItem>
+      <GridItem textAlign="right">Views</GridItem>
+      <GridItem textAlign="right">Unique</GridItem>
+    </>
   );
 
   const rows = data.map((row) => (
-    <Flex>
-      <Flex flex={1}>{row.element}</Flex>
-      <Flex>{row.views}</Flex>
-      <Flex>{row.unique}</Flex>
-    </Flex>
+    <>
+      <GridItem colSpan={2}>{row.element}</GridItem>
+      <GridItem textAlign="right">{row.views}</GridItem>
+      <GridItem textAlign="right">{row.unique}</GridItem>
+    </>
   ));
 
   return (
-    <>
+    <Grid templateColumns="repeat(4, 1fr)" gap={2}>
       {heading}
       {rows}
-    </>
+    </Grid>
   );
 };
 
