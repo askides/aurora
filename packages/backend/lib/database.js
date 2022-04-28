@@ -225,14 +225,11 @@ export async function getWebsiteStatistics(wid, filters = {}) {
 
 export async function getWebsiteViewsTimeSeries(wid, filters = {}) {
   const { start, end, unit, tz } = filters;
-  const isNotHour = unit !== "hour";
 
-  // TODO: Real function
   const formattedDate = (date) => new Date(Number(date)).toISOString();
 
   const sql = `
-    SELECT date_trunc('${unit}', created_at AT TIME ZONE '${tz}')
-      ${isNotHour ? `AT TIME ZONE '${tz}'` : ""} as ts, count(*)
+    SELECT date_trunc('${unit}', created_at AT TIME ZONE '${tz}') as ts, count(*)
     FROM events
     WHERE
       website_id = '${wid}'
@@ -241,7 +238,7 @@ export async function getWebsiteViewsTimeSeries(wid, filters = {}) {
     GROUP BY ts
   `;
 
-  const data = await prisma.$queryRawUnsafe(sql);
+  const rows = await prisma.$queryRawUnsafe(sql);
 
-  return data;
+  return rows;
 }
