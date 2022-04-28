@@ -12,11 +12,13 @@ export function useSetup() {
       setSetupDone(true);
       setIsLoading(false);
     } else {
+      // TODO: check this out
       client
         .get("/setup")
-        .catch(() => {
-          localStorage.setItem("aurora_setup_done", 1);
-          setSetupDone(true);
+        .then((res) => {
+          const sd = !res.data.needsSetup;
+          setSetupDone(sd);
+          localStorage.setItem("aurora_setup_done", Number(sd));
         })
         .finally(() => setIsLoading(false));
     }
