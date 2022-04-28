@@ -13,7 +13,13 @@ import * as React from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Loader } from "../../components/Loader";
 import { WebsitesForm } from "../../components/WebsitesForm";
-import { Wrapper } from "../../components/Wrapper";
+import {
+  Wrapper,
+  WrapperActions,
+  WrapperContent,
+  WrapperHeader,
+  WrapperTitle,
+} from "../../components/Wrapper";
 import { client } from "../../lib/client";
 import { useWebsite } from "../../lib/hooks/use-website";
 
@@ -54,9 +60,9 @@ export function EditWebsite() {
 
   return (
     <Wrapper>
-      <Wrapper.Header>
-        <Wrapper.Title>Website Details</Wrapper.Title>
-        <Wrapper.Actions>
+      <WrapperHeader>
+        <WrapperTitle>Website Details</WrapperTitle>
+        <WrapperActions>
           <Button as={Link} to="/">
             Back to Websites
           </Button>
@@ -64,16 +70,16 @@ export function EditWebsite() {
           <Button colorScheme="red" onClick={onOpen}>
             Delete Website
           </Button>
-        </Wrapper.Actions>
-      </Wrapper.Header>
+        </WrapperActions>
+      </WrapperHeader>
 
-      <Wrapper.Content>
+      <WrapperContent>
         {isLoading && <Loader />}
         {isError && <div>Something went wrong ...</div>}
         {!isLoading && !isError && (
           <WebsitesForm isNew={false} values={data} onSubmit={handleSubmit} />
         )}
-      </Wrapper.Content>
+      </WrapperContent>
 
       <AlertDialog
         isOpen={isOpen}
