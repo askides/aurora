@@ -27,35 +27,29 @@ export function AnalyticsDashboard({ wid }) {
     dispatch({ type: e.target.value });
   };
 
-  // TODO: Remove this debug.
   return (
-    <div>
-      <pre>
-        <code>{JSON.stringify(filters, null, 2)}</code>
-      </pre>
+    <Flex direction="column" gap={5}>
+      <Select onChange={handleChange}>
+        <option value="LAST_24_HOURS">Last 24 Hours</option>
+        <option value="LAST_7_DAYS">Last 7 Days</option>
+        <option value="LAST_30_DAYS">Last 30 Days</option>
+      </Select>
 
-      <Flex direction="column" gap={5}>
-        <Select onChange={handleChange}>
-          <option value="LAST_24_HOURS">Last 24 Hours</option>
-          <option value="LAST_7_DAYS">Last 7 Days</option>
-        </Select>
+      <Stats filters={filters} />
 
-        <Stats filters={filters} />
+      <TimeseriesChart filters={filters} />
 
-        <TimeseriesChart filters={filters} />
-
-        <Flex gap={5}>
-          <PageTable filters={filters} />
-          <ReferrerTable filters={filters} />
-          <DeviceTable filters={filters} />
-        </Flex>
-
-        <Flex gap={5}>
-          <OsTable filters={filters} />
-          <BrowserTable filters={filters} />
-          <CountryTable filters={filters} />
-        </Flex>
+      <Flex gap={5}>
+        <PageTable filters={filters} />
+        <ReferrerTable filters={filters} />
+        <DeviceTable filters={filters} />
       </Flex>
-    </div>
+
+      <Flex gap={5}>
+        <OsTable filters={filters} />
+        <BrowserTable filters={filters} />
+        <CountryTable filters={filters} />
+      </Flex>
+    </Flex>
   );
 }
