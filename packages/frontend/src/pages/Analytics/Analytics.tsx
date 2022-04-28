@@ -1,6 +1,12 @@
 import { Button } from "@chakra-ui/react";
 import { Link, useParams } from "react-router-dom";
-import { Wrapper } from "../../components/Wrapper";
+import {
+  Wrapper,
+  WrapperActions,
+  WrapperContent,
+  WrapperHeader,
+  WrapperTitle,
+} from "../../components/Wrapper";
 import { AnalyticsDashboard } from "./AnalyticsDashboard";
 
 export function Analytics() {
@@ -8,18 +14,18 @@ export function Analytics() {
 
   return (
     <Wrapper>
-      <Wrapper.Header>
-        <Wrapper.Title>Dashboard</Wrapper.Title>
-        <Wrapper.Actions>
+      <WrapperHeader>
+        <WrapperTitle>Dashboard</WrapperTitle>
+        <WrapperActions>
           <Button as={Link} to="/">
             Back to Websites
           </Button>
-        </Wrapper.Actions>
-      </Wrapper.Header>
+        </WrapperActions>
+      </WrapperHeader>
 
-      <Wrapper.Content>
+      <WrapperContent>
         <AnalyticsDashboard wid={id} />
-      </Wrapper.Content>
+      </WrapperContent>
     </Wrapper>
   );
 }

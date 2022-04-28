@@ -1,6 +1,6 @@
 import { Spinner } from "@chakra-ui/react";
 import Chart from "react-apexcharts";
-import { Panel } from "../../../components/Panel";
+import { Panel, PanelBody, PanelTitle } from "../../../components/Panel";
 import { useTimeseries } from "../../../lib/hooks/use-timeseries";
 
 export function TimeseriesChart({ filters }) {
@@ -9,18 +9,18 @@ export function TimeseriesChart({ filters }) {
   if (isLoading || isError) {
     return (
       <Panel>
-        <Panel.Title>Number of Page Visits</Panel.Title>
-        <Panel.Body>
+        <PanelTitle>Number of Page Visits</PanelTitle>
+        <PanelBody>
           <Spinner />
-        </Panel.Body>
+        </PanelBody>
       </Panel>
     );
   }
 
   return (
     <Panel>
-      <Panel.Title>Number of Page Visits</Panel.Title>
-      <Panel.Body>
+      <PanelTitle>Number of Page Visits</PanelTitle>
+      <PanelBody>
         <Chart
           options={{
             chart: {
@@ -119,7 +119,7 @@ export function TimeseriesChart({ filters }) {
           height={500}
           //width={1400}
         />
-      </Panel.Body>
+      </PanelBody>
     </Panel>
   );
 }

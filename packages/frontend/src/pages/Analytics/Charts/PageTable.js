@@ -1,5 +1,5 @@
 import { Flex, Spinner } from "@chakra-ui/react";
-import { Panel } from "../../../components/Panel";
+import { Panel, PanelBody, PanelTitle } from "../../../components/Panel";
 import { useMetadata } from "../../../lib/hooks/use-metadata";
 
 const PageTableContainer = ({ filters }) => {
@@ -40,10 +40,10 @@ const PageTableContainer = ({ filters }) => {
 export function PageTable({ filters }) {
   return (
     <Panel flex={1}>
-      <Panel.Title>Page</Panel.Title>
-      <Panel.Body>
+      <PanelTitle>Page</PanelTitle>
+      <PanelBody>
         <PageTableContainer filters={filters} />
-      </Panel.Body>
+      </PanelBody>
     </Panel>
   );
 }

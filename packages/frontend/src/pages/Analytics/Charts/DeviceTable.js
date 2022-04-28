@@ -1,5 +1,5 @@
 import { Flex, Spinner } from "@chakra-ui/react";
-import { Panel } from "../../../components/Panel";
+import { Panel, PanelBody, PanelTitle } from "../../../components/Panel";
 import { useMetadata } from "../../../lib/hooks/use-metadata";
 
 const DeviceTableContainer = ({ filters }) => {
@@ -40,10 +40,10 @@ const DeviceTableContainer = ({ filters }) => {
 export function DeviceTable({ filters }) {
   return (
     <Panel flex={1}>
-      <Panel.Title>Device</Panel.Title>
-      <Panel.Body>
+      <PanelTitle>Device</PanelTitle>
+      <PanelBody>
         <DeviceTableContainer filters={filters} />
-      </Panel.Body>
+      </PanelBody>
     </Panel>
   );
 }

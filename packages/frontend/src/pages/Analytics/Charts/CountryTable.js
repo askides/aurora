@@ -1,5 +1,5 @@
 import { Flex, Spinner } from "@chakra-ui/react";
-import { Panel } from "../../../components/Panel";
+import { Panel, PanelBody, PanelTitle } from "../../../components/Panel";
 import { useMetadata } from "../../../lib/hooks/use-metadata";
 
 const CountryTableContainer = ({ filters }) => {
@@ -40,10 +40,10 @@ const CountryTableContainer = ({ filters }) => {
 export const CountryTable = ({ filters }) => {
   return (
     <Panel flex={1}>
-      <Panel.Title>Country</Panel.Title>
-      <Panel.Body>
+      <PanelTitle>Country</PanelTitle>
+      <PanelBody>
         <CountryTableContainer filters={filters} />
-      </Panel.Body>
+      </PanelBody>
     </Panel>
   );
 };

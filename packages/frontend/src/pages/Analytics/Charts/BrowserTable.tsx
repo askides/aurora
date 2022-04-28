@@ -1,9 +1,9 @@
 import { Flex, Spinner } from "@chakra-ui/react";
-import { Panel } from "../../../components/Panel";
+import { Panel, PanelBody, PanelTitle } from "../../../components/Panel";
 import { useMetadata } from "../../../lib/hooks/use-metadata";
 
-// TODO: Fix Grid Components
-const BrowserTableContainer = ({ filters }) => {
+// TODO: Fix Grid Components and any
+const BrowserTableContainer = ({ filters }: any) => {
   const { data, isLoading, isError } = useMetadata("browser", filters);
 
   if (isLoading) {
@@ -22,7 +22,8 @@ const BrowserTableContainer = ({ filters }) => {
     </Flex>
   );
 
-  const rows = data.map((row) => (
+  // TODO: Fix this any
+  const rows = data.map((row: any) => (
     <Flex>
       <Flex flex={1}>{row.element}</Flex>
       <Flex>{row.views}</Flex>
@@ -38,13 +39,14 @@ const BrowserTableContainer = ({ filters }) => {
   );
 };
 
-export function BrowserTable({ filters }) {
+// TODO: Fix this any
+export function BrowserTable({ filters }: any) {
   return (
     <Panel flex={1}>
-      <Panel.Title>Browser</Panel.Title>
-      <Panel.Body>
+      <PanelTitle>Browser</PanelTitle>
+      <PanelBody>
         <BrowserTableContainer filters={filters} />
-      </Panel.Body>
+      </PanelBody>
     </Panel>
   );
 }

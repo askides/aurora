@@ -1,5 +1,5 @@
 import { Flex, Spinner } from "@chakra-ui/react";
-import { Panel } from "../../../components/Panel";
+import { Panel, PanelBody, PanelTitle } from "../../../components/Panel";
 import { useMetadata } from "../../../lib/hooks/use-metadata";
 
 const ReferrerTableContainer = ({ filters }) => {
@@ -40,10 +40,10 @@ const ReferrerTableContainer = ({ filters }) => {
 export function ReferrerTable({ filters }) {
   return (
     <Panel flex={1}>
-      <Panel.Title>Referrer</Panel.Title>
-      <Panel.Body>
+      <PanelTitle>Referrer</PanelTitle>
+      <PanelBody>
         <ReferrerTableContainer filters={filters} />
-      </Panel.Body>
+      </PanelBody>
     </Panel>
   );
 }

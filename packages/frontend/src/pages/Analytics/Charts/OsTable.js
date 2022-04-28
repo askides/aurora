@@ -1,5 +1,5 @@
 import { Flex, Spinner } from "@chakra-ui/react";
-import { Panel } from "../../../components/Panel";
+import { Panel, PanelBody, PanelTitle } from "../../../components/Panel";
 import { useMetadata } from "../../../lib/hooks/use-metadata";
 
 const OsTableContainer = ({ filters }) => {
@@ -40,10 +40,10 @@ const OsTableContainer = ({ filters }) => {
 export function OsTable({ filters }) {
   return (
     <Panel flex={1}>
-      <Panel.Title>Os</Panel.Title>
-      <Panel.Body>
+      <PanelTitle>Os</PanelTitle>
+      <PanelBody>
         <OsTableContainer filters={filters} />
-      </Panel.Body>
+      </PanelBody>
     </Panel>
   );
 }
