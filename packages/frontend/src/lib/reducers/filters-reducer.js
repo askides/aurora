@@ -26,10 +26,6 @@ export function filtersReducer(state, action) {
         unit: "day",
       };
 
-    // TODO: Remove this
-    case "CHANGE_TIMEZONE":
-      return { ...state, tz: action.tz };
-
     default:
       return state;
   }
