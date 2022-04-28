@@ -1,4 +1,5 @@
 import { Grid, GridItem, Spinner } from "@chakra-ui/react";
+import React from "react";
 import { Panel, PanelBody, PanelTitle } from "../../../components/Panel";
 import { useMetadata } from "../../../lib/hooks/use-metadata";
 
@@ -23,12 +24,12 @@ const BrowserTableContainer = ({ filters }: any) => {
   );
 
   // TODO: Fix this any
-  const rows = data.map((row: any) => (
-    <>
+  const rows = data.map((row: any, index: number) => (
+    <React.Fragment key={index}>
       <GridItem colSpan={2}>{row.element}</GridItem>
       <GridItem textAlign="right">{row.views}</GridItem>
       <GridItem textAlign="right">{row.unique}</GridItem>
-    </>
+    </React.Fragment>
   ));
 
   return (
