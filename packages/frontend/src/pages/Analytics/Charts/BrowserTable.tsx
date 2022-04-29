@@ -1,4 +1,4 @@
-import { Grid, GridItem, Spinner } from "@chakra-ui/react";
+import { Flex, Grid, GridItem, Spinner } from "@chakra-ui/react";
 import React from "react";
 import { Panel, PanelBody, PanelTitle } from "../../../components/Panel";
 import { useMetadata } from "../../../lib/hooks/use-metadata";
@@ -13,6 +13,10 @@ const BrowserTableContainer = ({ filters }: any) => {
 
   if (isError) {
     return <div>Whoops.. Something bad happened!</div>;
+  }
+
+  if (data.length === 0) {
+    return <Flex>No Data Available</Flex>;
   }
 
   const heading = (
