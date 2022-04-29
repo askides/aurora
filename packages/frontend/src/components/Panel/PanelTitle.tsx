@@ -6,7 +6,7 @@ interface PanelTitleProps {
 
 const PanelTitle = ({ children }: PanelTitleProps) => {
   return (
-    <Heading as="h3" size="sm">
+    <Heading as="h3" size="md">
       {children}
     </Heading>
   );
