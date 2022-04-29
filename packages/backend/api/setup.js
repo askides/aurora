@@ -1,14 +1,7 @@
 import { SetupController } from "../lib/controllers/setup-controller";
+import { withPreflight } from "../lib/middleware/with-preflight";
 
-const withPreflight = (fn) => async (request, response) => {
-  if (request.method === "OPTIONS") {
-    return response.status(200).json({
-      body: "OK",
-    });
-  }
-
-  return await fn(request, response);
-};
+// TODO: Redirect to signin after setup completed (to be moved to frontend)
 
 const handler = async (request, response) => {
   const setup = new SetupController(request, response);
