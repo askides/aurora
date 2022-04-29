@@ -8,6 +8,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { client } from "../../lib/client";
 
 type SetupFormFields = {
@@ -20,6 +21,7 @@ type SetupFormFields = {
 
 const SetupForm = () => {
   const toast = useToast();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -29,6 +31,7 @@ const SetupForm = () => {
   const onSuccess = () => {
     toast({ status: "success", title: "Account Created." });
     localStorage.removeItem("aurora_needsSetup");
+    navigate("/signin", { replace: true });
   };
 
   const onError = () => {
