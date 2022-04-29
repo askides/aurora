@@ -20,9 +20,15 @@ const DeviceTableContainer = ({ filters }) => {
 
   const heading = (
     <>
-      <GridItem colSpan={2}>Name</GridItem>
-      <GridItem textAlign="right">Views</GridItem>
-      <GridItem textAlign="right">Unique</GridItem>
+      <GridItem colSpan={2} fontWeight={500}>
+        Name
+      </GridItem>
+      <GridItem textAlign="right" fontWeight={500}>
+        Views
+      </GridItem>
+      <GridItem textAlign="right" fontWeight={500}>
+        Unique
+      </GridItem>
     </>
   );
 
