@@ -1,6 +1,6 @@
 import JWT from "jsonwebtoken";
-import { AuroraError } from "../controllers/controller";
 import * as AuroraDB from "../database";
+import { AuroraError } from "../errors";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 

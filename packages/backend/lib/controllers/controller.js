@@ -1,10 +1,4 @@
-// TODO: Move to directory
-export class AuroraError extends Error {
-  constructor(statusCode = 500, message = "Internal server error") {
-    super(message);
-    this.statusCode = statusCode;
-  }
-}
+import { AuroraError } from "../errors";
 
 export class Controller {
   constructor(request, response) {
