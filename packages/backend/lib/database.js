@@ -98,6 +98,27 @@ export async function deleteWebsite(wid) {
   return website;
 }
 
+export async function getWebsiteViewsByPage(wid, filters = {}) {
+  const { start, end } = filters;
+
+  const formattedDate = (date) => {
+    return new Date(Number(date)).toISOString();
+  };
+
+  const data = await prisma.event.findMany({
+    where: {
+      type: "pageView",
+      website_id: wid,
+      created_at: {
+        ...(start && { gte: formattedDate(start) }),
+        ...(end && { lte: formattedDate(end) }),
+      },
+    },
+  });
+
+  return data;
+}
+
 export async function getWebsiteViewsByMetadata(
   wid,
   metadata = "os",
