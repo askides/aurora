@@ -143,6 +143,9 @@ const sum = (args = []) => args.reduce((acc, el) => acc + el, 0);
 
       const resJson = await res.json();
       data.lastPageViewID = resJson.id;
+
+      // XXX Need to do a workaround because of the duplicated data
+      lastPageViewID = resJson.id;
     } catch (err) {
       console.log("Err");
     }
@@ -175,7 +178,6 @@ const sum = (args = []) => args.reduce((acc, el) => acc + el, 0);
           { type: "application/json; charset=UTF-8" }
         );
 
-        // TODO: lastPageViewID is not working
         navigator.sendBeacon(`${analyticsUrl}/${lastPageViewID}`, blob);
       } else {
         start = performance.now();
