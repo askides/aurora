@@ -1,4 +1,4 @@
-import { Flex, Grid, GridItem, Spinner } from "@chakra-ui/react";
+import { Divider, Flex, Grid, GridItem, Spinner } from "@chakra-ui/react";
 import React from "react";
 import { Panel, PanelBody, PanelTitle } from "../../../components/Panel";
 import { useMetadata } from "../../../lib/hooks/use-metadata";
@@ -26,6 +26,12 @@ const PageTableContainer = ({ filters }) => {
     </>
   );
 
+  const divider = (
+    <GridItem colSpan={4} py={2}>
+      <Divider variant="dashed" />
+    </GridItem>
+  );
+
   const rows = data.map((row, index) => (
     <React.Fragment key={index}>
       <GridItem colSpan={2}>{row.element}</GridItem>
@@ -35,8 +41,9 @@ const PageTableContainer = ({ filters }) => {
   ));
 
   return (
-    <Grid templateColumns="repeat(4, 1fr)" gap={2}>
+    <Grid templateColumns="repeat(4, 1fr)" gap={1}>
       {heading}
+      {divider}
       {rows}
     </Grid>
   );

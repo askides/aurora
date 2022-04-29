@@ -1,4 +1,4 @@
-import { Flex, Grid, GridItem, Spinner } from "@chakra-ui/react";
+import { Divider, Flex, Grid, GridItem, Spinner } from "@chakra-ui/react";
 import React from "react";
 import { Panel, PanelBody, PanelTitle } from "../../../components/Panel";
 import { useMetadata } from "../../../lib/hooks/use-metadata";
@@ -27,6 +27,12 @@ const BrowserTableContainer = ({ filters }: any) => {
     </>
   );
 
+  const divider = (
+    <GridItem colSpan={4} py={2}>
+      <Divider variant="dashed" />
+    </GridItem>
+  );
+
   // TODO: Fix this any
   const rows = data.map((row: any, index: number) => (
     <React.Fragment key={index}>
@@ -37,8 +43,9 @@ const BrowserTableContainer = ({ filters }: any) => {
   ));
 
   return (
-    <Grid templateColumns="repeat(4, 1fr)" gap={2}>
+    <Grid templateColumns="repeat(4, 1fr)" gap={1}>
       {heading}
+      {divider}
       {rows}
     </Grid>
   );

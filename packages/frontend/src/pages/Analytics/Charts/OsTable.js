@@ -1,4 +1,4 @@
-import { Flex, Grid, GridItem, Spinner } from "@chakra-ui/react";
+import { Divider, Flex, Grid, GridItem, Spinner } from "@chakra-ui/react";
 import React from "react";
 import { Panel, PanelBody, PanelTitle } from "../../../components/Panel";
 import { useMetadata } from "../../../lib/hooks/use-metadata";
@@ -20,10 +20,22 @@ const OsTableContainer = ({ filters }) => {
 
   const heading = (
     <>
-      <GridItem colSpan={2}>Name</GridItem>
-      <GridItem textAlign="right">Views</GridItem>
-      <GridItem textAlign="right">Unique</GridItem>
+      <GridItem colSpan={2} fontWeight={500}>
+        Name
+      </GridItem>
+      <GridItem textAlign="right" fontWeight={500}>
+        Views
+      </GridItem>
+      <GridItem textAlign="right" fontWeight={500}>
+        Unique
+      </GridItem>
     </>
+  );
+
+  const divider = (
+    <GridItem colSpan={4} py={2}>
+      <Divider variant="dashed" />
+    </GridItem>
   );
 
   const rows = data.map((row, index) => (
@@ -35,8 +47,9 @@ const OsTableContainer = ({ filters }) => {
   ));
 
   return (
-    <Grid templateColumns="repeat(4, 1fr)" gap={2}>
+    <Grid templateColumns="repeat(4, 1fr)" gap={1}>
       {heading}
+      {divider}
       {rows}
     </Grid>
   );
