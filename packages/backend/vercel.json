@@ -10,5 +10,10 @@
       "destination": "/api/$1"
     }
   ],
-  "headers": []
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [{ "key": "Access-Control-Allow-Origin", "value": "*" }]
+    }
+  ]
 }
