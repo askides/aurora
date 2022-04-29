@@ -35,6 +35,7 @@ export class MetadataController extends Controller {
 
     const data = await AuroraDB.getWebsiteViewsByMetadata(id, meta, filters);
 
+    // TODO: Extract Countries from locale tags
     const metadata = data.map((element) => {
       const { value, events } = element;
       const unique = events.filter((event) => event.is_new_visitor);
