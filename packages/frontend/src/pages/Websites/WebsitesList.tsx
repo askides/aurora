@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { Panel } from "../../components/Panel";
-import { IWebsite } from "../../lib/models";
+import { IWebsite } from "../../lib/types";
 
 interface WebsitesListProps {
   data: IWebsite[];
