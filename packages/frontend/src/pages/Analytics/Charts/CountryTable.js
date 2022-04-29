@@ -4,7 +4,7 @@ import { Panel, PanelBody, PanelTitle } from "../../../components/Panel";
 import { useMetadata } from "../../../lib/hooks/use-metadata";
 
 const CountryTableContainer = ({ filters }) => {
-  const { data, isLoading, isError } = useMetadata("country", filters);
+  const { data, isLoading, isError } = useMetadata("locale", filters);
 
   if (isLoading) {
     return <Spinner />;
