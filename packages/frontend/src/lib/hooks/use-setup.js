@@ -8,7 +8,7 @@ export function useSetup() {
   React.useEffect(() => {
     const isFlagPresent = localStorage.getItem("aurora_needsSetup");
 
-    if (isFlagPresent) {
+    if (isFlagPresent && isFlagPresent === "1") {
       setNeedsSetup(true);
       setIsLoading(false);
     } else {
