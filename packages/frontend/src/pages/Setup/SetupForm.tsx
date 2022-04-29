@@ -31,7 +31,8 @@ const SetupForm = () => {
   const onSuccess = () => {
     toast({ status: "success", title: "Account Created." });
     localStorage.removeItem("aurora_needsSetup");
-    navigate("/signin", { replace: true });
+    navigate("/signin", { replace: true }); // TODO: This not working
+    console.log("Navigo");
   };
 
   const onError = () => {

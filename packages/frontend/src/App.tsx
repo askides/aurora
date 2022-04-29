@@ -47,6 +47,7 @@ const App = () => {
     );
   }
 
+  // // TODO: Remove console.logs
   console.log(needsSetup, "aaa");
   if (needsSetup && location.pathname !== "/setup") {
     return <Navigate to="/setup" state={{ from: location }} replace />;
