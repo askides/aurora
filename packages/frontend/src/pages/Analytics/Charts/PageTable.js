@@ -1,10 +1,10 @@
 import { Divider, Flex, Grid, GridItem, Spinner } from "@chakra-ui/react";
 import React from "react";
 import { Panel, PanelBody, PanelTitle } from "../../../components/Panel";
-import { useMetadata } from "../../../lib/hooks/use-metadata";
+import { usePages } from "../../../lib/hooks/use-pages";
 
 const PageTableContainer = ({ filters }) => {
-  const { data, isLoading, isError } = useMetadata("device", filters); // TODO: Needs to change
+  const { data, isLoading, isError } = usePages(filters);
 
   if (isLoading) {
     return <Spinner />;
