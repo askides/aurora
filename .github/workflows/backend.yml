@@ -6,10 +6,6 @@ on:
   pull_request:
     branches: [v2]
 
-defaults:
-  run:
-    working-directory: ./packages/backend
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -41,7 +37,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
       - run: npm ci
+        working-directory: ./packages/backend
       - run: npm run build --if-present
+        working-directory: ./packages/backend
       - run: npm test
+        working-directory: ./packages/backend
         env:
           DATABASE_URL: postgres://root:password@postgres/aurora
