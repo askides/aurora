@@ -6,7 +6,7 @@ export function useAuroraLinks(wid) {
 
   React.useEffect(() => {
     const currentUrl = process.env.REACT_APP_BACKEND_URL;
-    const sharedLink = `${currentUrl}/s/${wid}`;
+    const sharedLink = `${window.location.protocol}//${window.location.host}/websites/${wid}/s/analytics`;
     const generatedLink = `<script async defer src="${currentUrl}/tracker.js" aurora-id="${wid}"></script>`;
 
     setSharedLink(sharedLink);
