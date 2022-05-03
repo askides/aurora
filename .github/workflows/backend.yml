@@ -9,10 +9,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     defaults:
       run:
-        working-directory: packages/backend
+        working-directory: ./packages/backend
 
     strategy:
       matrix:
