@@ -45,6 +45,7 @@ jobs:
           cache-dependency-path: "./packages/backend/package-lock.json"
       - run: npm ci
       - run: npm run build --if-present
+      - run: npm run db:migrate
       - run: npm test
         env:
           DATABASE_URL: postgres://root:password@localhost:5432/aurora

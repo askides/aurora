@@ -25,6 +25,7 @@
     "test:coverage": "jest --coverage --runInBand",
     "test:watch": "jest --runInBand --watch",
     "build:tracker": "webpack --config tracker.config.js --mode production",
+    "db:migrate": "prisma migrate deploy",
     "db:reset": "npx prisma migrate reset --force"
   },
   "bugs": {
