@@ -2,7 +2,6 @@ import { Center, Spinner } from "@chakra-ui/react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { MainLayout } from "./components/MainLayout";
 import { AuthProvider, useAuth } from "./lib/context/auth-context";
-import { useSetup } from "./lib/hooks/use-setup";
 import { Account } from "./pages/Account";
 import { Analytics } from "./pages/Analytics";
 import { EditWebsite } from "./pages/EditWebsite";
@@ -36,23 +35,6 @@ export function AuthenticatedRoute({ children }: AuthenticatedRouteProps) {
 }
 
 const App = () => {
-  const location = useLocation();
-  const { needsSetup, isLoading } = useSetup();
-
-  if (isLoading) {
-    return (
-      <Center style={{ height: "100vh" }}>
-        <Spinner size="xl" />
-      </Center>
-    );
-  }
-
-  // // TODO: Remove console.logs
-  console.log(needsSetup, "aaa");
-  if (needsSetup && location.pathname !== "/setup") {
-    return <Navigate to="/setup" state={{ from: location }} replace />;
-  }
-
   return (
     <AuthProvider>
       <Routes>
