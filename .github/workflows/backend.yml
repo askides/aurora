@@ -50,4 +50,5 @@ jobs:
           DATABASE_URL: postgres://root:password@localhost:5432/aurora
       - run: npm test
         env:
+          JWT_SECRET: impossibletoguess
           DATABASE_URL: postgres://root:password@localhost:5432/aurora
