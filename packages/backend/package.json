@@ -17,11 +17,15 @@
     "type": "git",
     "url": "git+https://github.com/useaurora/aurora.git"
   },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
   "scripts": {
     "test": "jest --runInBand",
     "test:coverage": "jest --coverage --runInBand",
     "test:watch": "jest --runInBand --watch",
-    "build:tracker": "webpack --config tracker.config.js --mode production"
+    "build:tracker": "webpack --config tracker.config.js --mode production",
+    "db:reset": "npx prisma migrate reset --force"
   },
   "bugs": {
     "url": "https://github.com/useaurora/aurora/issues"
