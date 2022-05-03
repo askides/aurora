@@ -53,6 +53,13 @@ const App = () => {
           <Route path="websites/:id/analytics" element={<Analytics />} />
         </Route>
 
+        <Route
+          path="websites/:id/s/analytics"
+          element={<MainLayout isPublic />}
+        >
+          <Route index element={<Analytics isPublic />} />
+        </Route>
+
         <Route path="signin" element={<SignIn />} />
         <Route path="setup" element={<Setup />} />
         <Route path="*" element={<NotFound />} />
