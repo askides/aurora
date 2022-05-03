@@ -46,6 +46,8 @@ jobs:
       - run: npm ci
       - run: npm run build --if-present
       - run: npm run db:migrate
+        env:
+          DATABASE_URL: postgres://root:password@localhost:5432/aurora
       - run: npm test
         env:
           DATABASE_URL: postgres://root:password@localhost:5432/aurora
