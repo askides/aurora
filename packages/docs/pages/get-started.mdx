@@ -1,0 +1,116 @@
+import Callout from "nextra-theme-docs/callout";
+
+# Get Started
+
+## Requirements
+
+- A Vercel account to deploy the services.
+- A PostgreSQL instance to be used as data storage.
+
+## Manual Deployment
+
+Clone the repository:
+
+```bash
+git clone TODO
+```
+
+<Callout>
+  You will also need the [Vercel CLI](https://vercel.com/cli) to deploy the
+  services on the edge network.
+</Callout>
+
+### Backend Service
+
+In the main repository the backend service can be found at `packages/backend`.
+All you need to do is to run the following command:
+
+```bash
+cd packages/backend && vercel
+```
+
+The CLI will ask you some questions to configure the service, here's an example
+with all the answers:
+
+```bash
+Vercel CLI 24.0.0
+? Set up and deploy “~/projects/aurora/packages/backend”? [Y/n] y
+? Which scope do you want to deploy to? John Doe
+? Link to existing project? [y/N] n
+? What’s your project’s name? aurora-backend
+? In which directory is your code located? ./
+No framework detected. Default Project Settings:
+- Build Command: `npm run vercel-build` or `npm run build`
+- Output Directory: `public` if it exists, or `.`
+- Development Command: None
+? Want to override the settings? [y/N] n
+```
+
+Once the service is running, you need to configure the following
+[environment variables](https://vercel.com/docs/concepts/projects/environment-variables):
+
+- **JWT_SECRET** - The secret used to sign the JWT tokens.
+- **DATABASE_URL** - The URL of the PostgreSQL instance.
+
+<Callout>
+  A redeployment of the service is required after changing the environment
+  variables.
+</Callout>
+
+### Frontend Service
+
+In the main repository the frontend service can be found at `packages/frontend`.
+All you need to do is to run the following command:
+
+```bash
+cd packages/frontend && vercel
+```
+
+The CLI will ask you some questions to configure the service, here's an example
+with all the answers:
+
+```bash
+Vercel CLI 24.0.0
+? Set up and deploy “~/projects/aurora/packages/frontend”? [Y/n] y
+? Which scope do you want to deploy to? John Doe
+? Link to existing project? [y/N] n
+? What’s your project’s name? aurora-frontend
+? In which directory is your code located? ./
+Auto-detected Project Settings (Create React App):
+- Build Command: react-scripts build
+- Output Directory: build
+- Development Command: react-scripts start
+? Want to override the settings? [y/N] n
+```
+
+Once the service is running, you need to configure the following
+[environment variables](https://vercel.com/docs/concepts/projects/environment-variables):
+
+- **REACT_APP_BACKEND_URL** - The URL of the backend service.
+
+<Callout>
+  A redeployment of the service is required after changing the environment
+  variables.
+</Callout>
+
+## Run the Database Migrations
+
+The last operation needed to get the services running is to run the database
+migrations. You can do it following these steps:
+
+- Open the terminal and navigate to the `packages/backend` directory.
+- Make a copy of the `.env.example` file and rename it to `.env`.
+- Fullfill the `.env` file with the DATABASE_URL environment variable.
+- Run the following command:
+
+```bash
+npm run db:migrate
+```
+
+All the migrations will be run and the database will be populated with the
+schema.
+
+<Callout>
+  I know this process is a bit weird, currently it's the only way i know to
+  migrate a new schema.
+</Callout>
