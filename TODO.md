@@ -6,7 +6,6 @@
 - Adding Multi Language Support
 - Implement a Better Authentication Flow
 - Remove all TODOs
-- Add DarkMode
 
 ## Docs ToDo
 
