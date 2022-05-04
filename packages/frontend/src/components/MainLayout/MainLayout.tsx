@@ -1,9 +1,11 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex, useColorModeValue } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
 import { Footer } from "../Footer";
 import { Navbar } from "../Navbar";
 
 const MainLayout = ({ isPublic = false }) => {
+  const bg = useColorModeValue("#f8f9fa", "gray.800");
+
   return (
     <>
       {!isPublic && <Navbar />}
@@ -12,7 +14,7 @@ const MainLayout = ({ isPublic = false }) => {
         maxWidth="8xl"
         padding={10}
         minHeight="100vh"
-        backgroundColor="#f8f9fa"
+        bg={bg}
         marginLeft={isPublic ? 0 : 20}
       >
         <Outlet />

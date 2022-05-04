@@ -1,4 +1,9 @@
-import { Flex, forwardRef, SystemProps } from "@chakra-ui/react";
+import {
+  Flex,
+  forwardRef,
+  SystemProps,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import * as React from "react";
 
 interface PanelProps extends SystemProps {
@@ -9,6 +14,7 @@ interface PanelProps extends SystemProps {
 
 const Panel = forwardRef<PanelProps, "div">(({ children, ...props }, ref) => {
   const { direction = "column", p = 6, ...rest } = props;
+  const bg = useColorModeValue("white", "gray.700");
 
   return (
     <Flex
@@ -16,7 +22,7 @@ const Panel = forwardRef<PanelProps, "div">(({ children, ...props }, ref) => {
       p={p}
       boxShadow="xs"
       rounded="md"
-      bg="white"
+      bg={bg}
       gap={5}
       ref={ref}
       {...rest}
