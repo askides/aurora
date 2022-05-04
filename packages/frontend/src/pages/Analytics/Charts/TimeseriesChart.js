@@ -1,9 +1,11 @@
-import { Spinner } from "@chakra-ui/react";
+import { Spinner, useColorModeValue } from "@chakra-ui/react";
 import Chart from "react-apexcharts";
 import { Panel, PanelBody, PanelTitle } from "../../../components/Panel";
 import { useTimeseries } from "../../../lib/hooks/use-timeseries";
 
 export function TimeseriesChart({ filters }) {
+  const foreColor = useColorModeValue("black", "white");
+  const barColor = useColorModeValue("#555de3", "#bfe399");
   const { data, isLoading, isError } = useTimeseries(filters);
 
   if (isLoading || isError) {
@@ -33,6 +35,10 @@ export function TimeseriesChart({ filters }) {
                 enabled: true,
               },
               stacked: true,
+              foreColor: foreColor,
+              zoom: {
+                enabled: false,
+              },
             },
             plotOptions: {
               bar: {
@@ -81,10 +87,10 @@ export function TimeseriesChart({ filters }) {
                 const data = w.globals.initialSeries[seriesIndex];
 
                 return `
-              <div class="bg-black opacity-75 text-white px-6 py-4 font-medium">
-                <span>${data.name}: ${series[seriesIndex][dataPointIndex]}</span>
-              </div>
-            `;
+                  <span style="background-color: #000; color: #fff; padding: 4px 8px;font-weight:500">
+                    ${data.name}: ${series[seriesIndex][dataPointIndex]}
+                  </span>
+                `;
               },
             },
             yaxis: {
@@ -93,7 +99,7 @@ export function TimeseriesChart({ filters }) {
               },
             },
             labels: data.map((item) => item.timeseries),
-            colors: ["#555de3", "#bfe399"],
+            colors: [barColor],
             legend: {
               show: true,
               fontSize: "16px",
