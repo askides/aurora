@@ -4,14 +4,6 @@ import { tag } from "../utils/tag";
 import { parse } from "../utils/ua";
 import { Controller } from "./controller";
 
-// TODO: Move into a separate file
-export const dropProtocol = (url) => {
-  return url
-    .replace(/(^\w+:|^)\/\//, "")
-    .replace(/\/$/, "")
-    .replace("www.", "");
-};
-
 export class CollectController extends Controller {
   async store() {
     const rules = Joi.object({
@@ -47,7 +39,7 @@ export class CollectController extends Controller {
     if (validated.referrer && validated.referrer !== "") {
       elements.push({
         type: "referrer",
-        value: dropProtocol(validated.referrer),
+        value: validated.referrer,
       });
     }
 
