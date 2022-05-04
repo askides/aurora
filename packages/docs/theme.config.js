@@ -1,7 +1,8 @@
 export default {
   projectLink: "https://github.com/itsrennyman/aurora",
-  docsRepositoryBase: "https://github.com/itsrennyman/aurora", // base URL for the docs repository
-  titleSuffix: " – Nextra",
+  docsRepositoryBase:
+    "https://github.com/itsrennyman/aurora/tree/main/packages/docs", // base URL for the docs repository
+  titleSuffix: " – Aurora",
   nextLinks: true,
   prevLinks: true,
   search: true,
@@ -28,8 +29,14 @@ export default {
   head: (
     <>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <meta name="description" content="Nextra: the next docs builder" />
-      <meta name="og:title" content="Nextra: the next docs builder" />
+      <meta name="description" content="Aurora - Open Website Analytics" />
+      <meta name="og:title" content="Aurora - Open Website Analytics" />
+      <script
+        async
+        defer
+        src="https://aurora-backend.vercel.app/tracker.js"
+        aurora-id="cl2re5iw6000809l843fb61jr"
+      ></script>
     </>
   ),
 };
