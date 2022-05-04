@@ -1,5 +1,5 @@
-import { CollectController } from "../lib/controllers/collect-controller";
-import { withPreflight } from "../lib/middleware/with-preflight";
+import { CollectController } from "../../lib/controllers/collect-controller";
+import { withPreflight } from "../../lib/middleware/with-preflight";
 
 const handler = async (request, response) => {
   const collect = new CollectController(request, response);

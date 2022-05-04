@@ -98,4 +98,24 @@ export class CollectController extends Controller {
 
     return this.res.status(201).json(event);
   }
+
+  async update() {
+    const { id } = this.req.query;
+    const { duration, seed } = JSON.parse(this.req.body);
+
+    const website = await AuroraDB.getWebsite(seed);
+
+    if (!website) {
+      this.abort(404);
+    }
+
+    const event = await AuroraDB.client.event.update({
+      where: { id },
+      data: {
+        duration,
+      },
+    });
+
+    return this.res.status(200).json(event);
+  }
 }
