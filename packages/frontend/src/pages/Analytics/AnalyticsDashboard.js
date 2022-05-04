@@ -42,11 +42,14 @@ export function AnalyticsDashboard({ wid }) {
       <Flex gap={5}>
         <PageTable filters={filters} />
         <ReferrerTable filters={filters} />
-        <DeviceTable filters={filters} />
       </Flex>
 
       <Flex gap={5}>
+        <DeviceTable filters={filters} />
         <OsTable filters={filters} />
+      </Flex>
+
+      <Flex gap={5}>
         <BrowserTable filters={filters} />
         <CountryTable filters={filters} />
       </Flex>
