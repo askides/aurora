@@ -37,7 +37,7 @@ export class StatisticsController extends Controller {
       uniqueVisits: data.uniqueVisits._count._all,
       bounces: data.bounces._count._all,
       sessions: data.sessions._count._all,
-      avgDuration: data.avgDuration._avg._all || 0,
+      avgDuration: data.avgDuration._avg.duration || 0,
     });
   }
 }
