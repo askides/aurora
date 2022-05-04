@@ -1,6 +1,6 @@
 # ToDo List
 
-- Tables in Analytics Text Overflow
+- Tables in Analytics Text Overflow (Fixed in referrer table)
 - Add "View All Time" Stats to Analytics
 - Adding Multiple Users (Without roles)
 - Adding Multi Language Support
