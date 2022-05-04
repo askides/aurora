@@ -22,7 +22,10 @@ export function Stats({ filters }) {
       <Stat label="Page Views" value={data.visits} />
       <Stat label="Unique Visitors" value={data.uniqueVisits} />
       <Stat label="Bounce Rate" value={data.bounces} />
-      <Stat label="Average Visit Time" value={data.avgDuration} />
+      <Stat
+        label="Average Visit Time"
+        value={Math.ceil(data.avgDuration / 1000) + "s"}
+      />
     </Flex>
   );
 }
