@@ -1,4 +1,12 @@
-import { Divider, Flex, Grid, GridItem, Spinner, Text } from "@chakra-ui/react";
+import {
+  Divider,
+  Flex,
+  Grid,
+  GridItem,
+  Link,
+  Spinner,
+  Text,
+} from "@chakra-ui/react";
 import React from "react";
 import { Panel, PanelBody, PanelTitle } from "../../../components/Panel";
 import { useMetadata } from "../../../lib/hooks/use-metadata";
@@ -48,8 +56,10 @@ const ReferrerTableContainer = ({ filters }) => {
 
   const rows = data.map((row, index) => (
     <React.Fragment key={index}>
-      <GridItem colSpan={2} as={Text} isTruncated>
-        {dropProtocol(row.element)}
+      <GridItem colSpan={2}>
+        <Link href={row.element} isExternal color="blue.500">
+          <Text isTruncated>{row.element}</Text>
+        </Link>
       </GridItem>
       <GridItem textAlign="right">{row.views}</GridItem>
       <GridItem textAlign="right">{row.unique}</GridItem>

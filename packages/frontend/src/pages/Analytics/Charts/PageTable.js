@@ -1,4 +1,4 @@
-import { Divider, Flex, Grid, GridItem, Spinner } from "@chakra-ui/react";
+import { Divider, Flex, Grid, GridItem, Spinner, Text } from "@chakra-ui/react";
 import React from "react";
 import { Panel, PanelBody, PanelTitle } from "../../../components/Panel";
 import { usePages } from "../../../lib/hooks/use-pages";
@@ -40,7 +40,9 @@ const PageTableContainer = ({ filters }) => {
 
   const rows = data.map((row, index) => (
     <React.Fragment key={index}>
-      <GridItem colSpan={2}>{row.element}</GridItem>
+      <GridItem colSpan={2}>
+        <Text isTruncated>{row.element}</Text>
+      </GridItem>
       <GridItem textAlign="right">{row.views}</GridItem>
       <GridItem textAlign="right">{row.unique}</GridItem>
     </React.Fragment>
