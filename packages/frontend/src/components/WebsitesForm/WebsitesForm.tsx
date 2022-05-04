@@ -7,7 +7,6 @@ import {
   FormLabel,
   Input,
 } from "@chakra-ui/react";
-import * as React from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { useAuroraLinks } from "../../lib/hooks/use-aurora-links";
