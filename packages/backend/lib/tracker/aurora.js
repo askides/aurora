@@ -168,15 +168,10 @@ const sum = (args = []) => args.reduce((acc, el) => acc + el, 0);
         // Push current duration in timings
         timings.push(performance.now() - start);
 
-        const blob = new Blob(
-          [
-            JSON.stringify({
-              wid: wid,
-              duration: sum(timings),
-            }),
-          ],
-          { type: "application/json; charset=UTF-8" }
-        );
+        const blob = JSON.stringify({
+          wid: wid,
+          duration: sum(timings),
+        });
 
         navigator.sendBeacon(`${analyticsUrl}/${lastPageViewID}`, blob);
       } else {
