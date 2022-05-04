@@ -57,7 +57,7 @@ const ReferrerTableContainer = ({ filters }) => {
   const rows = data.map((row, index) => (
     <React.Fragment key={index}>
       <GridItem colSpan={2}>
-        <Link href={row.element} isExternal color="blue.500">
+        <Link href={row.element} isExternal>
           <Text isTruncated>{row.element}</Text>
         </Link>
       </GridItem>
