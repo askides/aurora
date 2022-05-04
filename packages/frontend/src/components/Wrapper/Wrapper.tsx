@@ -7,7 +7,7 @@ interface WrapperProps {
 
 const Wrapper = ({ children }: WrapperProps) => {
   return (
-    <Flex width="100%" direction="column" gap={6}>
+    <Flex width="100%" direction="column" gap={6} flex={1}>
       {children}
     </Flex>
   );
