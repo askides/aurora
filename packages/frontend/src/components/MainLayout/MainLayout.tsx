@@ -8,14 +8,14 @@ const MainLayout = ({ isPublic = false }) => {
 
   return (
     <>
-      {!isPublic && <Navbar />}
+      <Navbar isPublic={isPublic} />
       <Flex
         direction="column"
         maxWidth="8xl"
         padding={10}
         minHeight="100vh"
         bg={bg}
-        marginLeft={isPublic ? 0 : 20}
+        marginLeft={20}
       >
         <Outlet />
         <Footer />

@@ -9,6 +9,7 @@ import {
 } from "../../components/Wrapper";
 import { AnalyticsDashboard } from "./AnalyticsDashboard";
 
+// TODO: Maybe a better way to handle this?
 export function Analytics({ isPublic = false }) {
   const { id } = useParams();
 

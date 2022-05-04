@@ -5,7 +5,7 @@ import { Logo } from "../Logo";
 import { ToggleButton } from "../ToggleButton";
 import { NavbarLink } from "./NavbarLink";
 
-const Navbar = () => {
+const Navbar = ({ isPublic = false }) => {
   const { signOut } = useAuth();
   const bg = useColorModeValue("white", "gray.700");
 
@@ -25,11 +25,15 @@ const Navbar = () => {
       boxShadow="base"
     >
       <Logo height={45} />
-      <VStack spacing={4}>
-        <NavbarLink to="/" icon={<Home2 />} label="Home" />
-        <NavbarLink to="/account" icon={<User />} label="Account" />
-        <IconButton aria-label="Logout" icon={<Logout />} onClick={signOut} />
-      </VStack>
+
+      {!isPublic && (
+        <VStack spacing={4}>
+          <NavbarLink to="/" icon={<Home2 />} label="Home" />
+          <NavbarLink to="/account" icon={<User />} label="Account" />
+          <IconButton aria-label="Logout" icon={<Logout />} onClick={signOut} />
+        </VStack>
+      )}
+
       <ToggleButton />
     </Flex>
   );
