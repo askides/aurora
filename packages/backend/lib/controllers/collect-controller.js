@@ -101,9 +101,9 @@ export class CollectController extends Controller {
 
   async update() {
     const { id } = this.req.query;
-    const { duration, seed } = JSON.parse(this.req.body);
+    const { duration, wid } = JSON.parse(this.req.body);
 
-    const website = await AuroraDB.getWebsite(seed);
+    const website = await AuroraDB.getWebsite(wid);
 
     if (!website) {
       this.abort(404);
