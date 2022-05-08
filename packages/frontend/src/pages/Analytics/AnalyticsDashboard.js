@@ -1,4 +1,4 @@
-import { Flex, Select } from "@chakra-ui/react";
+import { Flex, Select, SimpleGrid } from "@chakra-ui/react";
 import { subDays } from "date-fns";
 import * as React from "react";
 import { filtersReducer } from "../../lib/reducers/filters-reducer";
@@ -39,20 +39,20 @@ export function AnalyticsDashboard({ wid }) {
 
       <TimeseriesChart filters={filters} />
 
-      <Flex gap={5}>
+      <SimpleGrid spacing={5} columns={{ sm: 1, md: 2 }}>
         <PageTable filters={filters} />
         <ReferrerTable filters={filters} />
-      </Flex>
+      </SimpleGrid>
 
-      <Flex gap={5}>
+      <SimpleGrid spacing={5} columns={{ sm: 1, md: 2 }}>
         <DeviceTable filters={filters} />
         <OsTable filters={filters} />
-      </Flex>
+      </SimpleGrid>
 
-      <Flex gap={5}>
+      <SimpleGrid spacing={5} columns={{ sm: 1, md: 2 }}>
         <BrowserTable filters={filters} />
         <CountryTable filters={filters} />
-      </Flex>
+      </SimpleGrid>
     </Flex>
   );
 }

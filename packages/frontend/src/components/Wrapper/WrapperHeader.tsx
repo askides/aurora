@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex, useMediaQuery } from "@chakra-ui/react";
 import * as React from "react";
 
 interface WrapperHeaderProps {
@@ -6,8 +6,14 @@ interface WrapperHeaderProps {
 }
 
 const WrapperHeader = ({ children }: WrapperHeaderProps) => {
+  const [isNotMobile] = useMediaQuery("(min-width: 768px)");
+
   return (
-    <Flex direction="row" justifyContent="space-between">
+    <Flex
+      gap={3}
+      direction={isNotMobile ? "row" : "column"}
+      justifyContent="space-between"
+    >
       {children}
     </Flex>
   );

@@ -8,8 +8,8 @@ const Footer = () => (
         <Logo height={50} />
       </Stack>
       <Text fontSize="sm" color="subtle">
-        &copy; {new Date().getFullYear()} Aurora, Open Web Analytics. All rights
-        reserved.
+        &copy; {new Date().getFullYear()} Aurora, Open Web Analytics. <br />
+        All rights reserved.
       </Text>
     </Stack>
   </Box>
