@@ -8,11 +8,14 @@ interface StatProps {
 
 const Stat = ({ label, value }: StatProps) => {
   return (
-    <Panel flex={1} gap={2}>
-      <Text fontSize="md">{label}</Text>
-      <Heading as="h1" size="lg">
-        {value}
+    <Panel flex={1} gap={3}>
+      <Heading as="h3" size="md">
+        {label}
       </Heading>
+
+      <Text fontSize="3xl" lineHeight="1">
+        {value}
+      </Text>
     </Panel>
   );
 };
