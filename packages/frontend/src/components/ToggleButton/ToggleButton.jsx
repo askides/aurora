@@ -1,5 +1,5 @@
 import { IconButton, useColorMode } from "@chakra-ui/react";
-import { Moon, Sun } from "tabler-icons-react";
+import { HiOutlineMoon, HiOutlineSun } from "react-icons/hi";
 
 const ToggleButton = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -7,7 +7,7 @@ const ToggleButton = () => {
   return (
     <IconButton
       aria-label={`Toggle ${colorMode === "light" ? "Dark" : "Light"}`}
-      icon={colorMode === "light" ? <Moon /> : <Sun />}
+      icon={colorMode === "light" ? <HiOutlineMoon /> : <HiOutlineSun />}
       onClick={toggleColorMode}
     />
   );

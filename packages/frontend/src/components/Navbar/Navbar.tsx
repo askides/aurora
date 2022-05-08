@@ -1,5 +1,10 @@
 import { Flex, IconButton, useColorModeValue, VStack } from "@chakra-ui/react";
-import { Home2, Logout, User } from "tabler-icons-react";
+import {
+  HiOutlineHome,
+  HiOutlineLogout,
+  HiOutlineUser,
+  HiOutlineUsers,
+} from "react-icons/hi";
 import { useAuth } from "../../lib/context/auth-context";
 import { Logo } from "../Logo";
 import { ToggleButton } from "../ToggleButton";
@@ -28,9 +33,14 @@ const Navbar = ({ isPublic = false }) => {
 
       {!isPublic && (
         <VStack spacing={4}>
-          <NavbarLink to="/" icon={<Home2 />} label="Home" />
-          <NavbarLink to="/account" icon={<User />} label="Account" />
-          <IconButton aria-label="Logout" icon={<Logout />} onClick={signOut} />
+          <NavbarLink to="/" icon={<HiOutlineHome />} label="Home" />
+          <NavbarLink to="/account" icon={<HiOutlineUser />} label="Account" />
+          <NavbarLink to="/users" icon={<HiOutlineUsers />} label="Users" />
+          <IconButton
+            aria-label="Logout"
+            icon={<HiOutlineLogout />}
+            onClick={signOut}
+          />
         </VStack>
       )}
 
