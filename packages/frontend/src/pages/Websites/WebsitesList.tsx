@@ -58,7 +58,7 @@ const WebsitesList = ({ data }: WebsitesListProps) => {
   return (
     <Panel p={0}>
       <TableContainer>
-        <Table variant="simple">
+        <Table variant="simple" colorScheme="blackAlpha">
           <Thead>
             <Tr>
               <Th>Name</Th>
