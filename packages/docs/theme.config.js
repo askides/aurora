@@ -1,7 +1,7 @@
 export default {
   projectLink: "https://github.com/itsrennyman/aurora",
   docsRepositoryBase:
-    "https://github.com/itsrennyman/aurora/tree/main/packages/docs", // base URL for the docs repository
+    "https://github.com/itsrennyman/aurora/tree/main/packages/docs/pages", // base URL for the docs repository
   titleSuffix: " – Aurora",
   nextLinks: true,
   prevLinks: true,
