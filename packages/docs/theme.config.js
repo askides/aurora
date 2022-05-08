@@ -1,4 +1,5 @@
 export default {
+  github: "https://github.com/itsrennyman/aurora",
   projectLink: "https://github.com/itsrennyman/aurora",
   docsRepositoryBase:
     "https://github.com/itsrennyman/aurora/tree/main/packages/docs/pages", // base URL for the docs repository
