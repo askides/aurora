@@ -13,7 +13,7 @@ const MainLayout = ({ isPublic = false }) => {
       <Flex
         direction="column"
         maxWidth="8xl"
-        padding={10}
+        padding={isNotMobile ? 10 : 4}
         minHeight="100vh"
         bg={bg}
         marginLeft={isNotMobile ? 20 : 0}
