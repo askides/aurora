@@ -1,4 +1,5 @@
 import Joi from "joi";
+import locale from "locale-codes";
 import * as AuroraDB from "../database";
 import { authentication } from "../middleware/authentication";
 import { Controller } from "./controller";
@@ -35,9 +36,7 @@ export class MetadataController extends Controller {
 
     const data = await AuroraDB.getWebsiteViewsByMetadata(id, meta, filters);
 
-    // TODO: Extract Countries from locale tags
-
-    const metadata = {};
+    let metadata = {};
 
     data.forEach((element) => {
       const { value, events } = element;
@@ -54,11 +53,15 @@ export class MetadataController extends Controller {
       }
     });
 
-    // TODO: Cleanup this
-    const finalData = Object.entries(metadata).reduce((acc, [value, data]) => {
+    metadata = Object.entries(metadata).reduce((acc, [value, data]) => {
+      if (meta === "locale") {
+        const { location } = locale.getByTag(value);
+        return [...acc, { element: location, ...data }];
+      }
+
       return [...acc, { element: value, ...data }];
     }, []);
 
-    return this.res.status(200).json(finalData);
+    return this.res.status(200).json(metadata);
   }
 }
