@@ -33,6 +33,7 @@ export const authentication = async (req, res) => {
     throw new AuroraError(401, "Unauthenticated");
   }
 
-  // TODO: Remove sensitive informations like password
-  req.user = user;
+  const { password, ...userData } = user;
+
+  req.user = userData;
 };
