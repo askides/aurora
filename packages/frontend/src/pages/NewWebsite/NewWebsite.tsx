@@ -23,7 +23,7 @@ export function NewWebsite() {
     toast({ status: "error", title: "An error has occurred.." });
   };
 
-  // TODO: Fix this things.
+  // TODO: Fix this any.
   const handleSubmit = async (data: any) => {
     await client.post("/websites", data).then(onSuccess).catch(onError);
   };

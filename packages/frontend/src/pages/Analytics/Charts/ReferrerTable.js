@@ -11,7 +11,6 @@ import React from "react";
 import { Panel, PanelBody, PanelTitle } from "../../../components/Panel";
 import { useMetadata } from "../../../lib/hooks/use-metadata";
 
-// TODO: Move into a separate file
 export const dropProtocol = (url) => {
   return url
     .replace(/(^\w+:|^)\/\//, "")

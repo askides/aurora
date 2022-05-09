@@ -3,7 +3,7 @@ import React from "react";
 import { Panel, PanelBody, PanelTitle } from "../../../components/Panel";
 import { useMetadata } from "../../../lib/hooks/use-metadata";
 
-// TODO: Fix Grid Components and any
+// TODO: Fix this any
 const BrowserTableContainer = ({ filters }: any) => {
   const { data, isLoading, isError } = useMetadata("browser", filters);
 
