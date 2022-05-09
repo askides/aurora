@@ -3,8 +3,11 @@
   "version": "2.0.0",
   "description": "Aurora's Frontend Service",
   "author": "Renato Pozzi <renato.pozzi.dev@gmail.com>",
-  "homepage": "https://github.com/itsrennyman/aurora#readme",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itsrennyman/aurora.git"
+  },
   "dependencies": {
     "@chakra-ui/react": "^1.8.7",
     "@emotion/react": "^11.8.2",

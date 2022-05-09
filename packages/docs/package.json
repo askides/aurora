@@ -3,7 +3,10 @@
   "version": "2.0.0",
   "description": "Aurora's Docs",
   "author": "Renato Pozzi <renato.pozzi.dev@gmail.com>",
-  "homepage": "https://github.com/itsrennyman/aurora#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itsrennyman/aurora.git"
+  },
   "license": "MIT",
   "scripts": {
     "dev": "next dev",
