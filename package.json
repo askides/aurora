@@ -5,6 +5,6 @@
     "lerna": "^4.0.0"
   },
   "scripts": {
-    "publish": "lerna publish"
+    "publish": "lerna publish --skip-npm"
   }
 }
