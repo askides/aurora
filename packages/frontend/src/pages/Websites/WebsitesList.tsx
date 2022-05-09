@@ -13,10 +13,10 @@ import {
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { Panel } from "../../components/Panel";
-import { IWebsite } from "../../lib/types";
+import { Website } from "../../types";
 
 interface WebsitesListProps {
-  data: IWebsite[];
+  data: Website[];
 }
 
 const WebsitesList = ({ data }: WebsitesListProps) => {
