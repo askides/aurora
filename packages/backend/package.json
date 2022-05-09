@@ -8,14 +8,6 @@
     "type": "git",
     "url": "git+https://github.com/itsrennyman/aurora.git"
   },
-  "main": "src/index.js",
-  "directories": {
-    "src": "src",
-    "test": "__tests__"
-  },
-  "files": [
-    "src"
-  ],
   "prisma": {
     "seed": "node prisma/seed.js"
   },
@@ -26,9 +18,6 @@
     "build:tracker": "webpack --config tracker.config.js --mode production",
     "db:migrate": "prisma migrate deploy",
     "db:reset": "npx prisma migrate reset --force"
-  },
-  "bugs": {
-    "url": "https://github.com/useaurora/aurora/issues"
   },
   "devDependencies": {
     "@babel/core": "^7.17.5",
