@@ -35,7 +35,7 @@ export class PagesController extends Controller {
 
     const data = await AuroraDB.getWebsiteViewsByPage(id, filters);
 
-    const pages = {};
+    let pages = {};
 
     data.forEach((event) => {
       const { element } = event;
@@ -51,11 +51,10 @@ export class PagesController extends Controller {
       pages[element].unique += event.is_new_visitor ? 1 : 0;
     });
 
-    // TODO: Clean this shit because it's made in 5 minutes
-    const finalData = Object.entries(pages).reduce((acc, [page, data]) => {
+    pages = Object.entries(pages).reduce((acc, [page, data]) => {
       return [...acc, { element: page, ...data }];
     }, []);
 
-    return this.res.status(200).json(finalData);
+    return this.res.status(200).json(pages);
   }
 }
