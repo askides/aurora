@@ -1,7 +1,10 @@
 {
   "name": "docs",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.0.0",
+  "description": "Aurora's Frontend Service",
+  "author": "Renato Pozzi <renato.pozzi.dev@gmail.com>",
+  "homepage": "https://github.com/itsrennyman/aurora#readme",
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
