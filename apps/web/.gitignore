@@ -6,8 +6,5 @@ node_modules/
 /.react-router/
 /build/
 
-# Prisma client is generated from schema.prisma
-/app/generated/
-
 # Built by packages/tracker
 /public/tracker.js

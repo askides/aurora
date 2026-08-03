@@ -22,7 +22,6 @@
   "ignorePatterns": [
     "**/build/**",
     "**/.react-router/**",
-    "**/app/generated/**",
     "**/public/tracker.js"
   ],
   "rules": {

@@ -1,27 +1,31 @@
-import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "~/generated/prisma/client";
+import * as schema from "~/db/schema";
+import { drizzle } from "drizzle-orm/node-postgres";
+import { Pool } from "pg";
 
 /**
- * Prisma 7 requires an explicit driver adapter; the connection string no longer
- * lives in schema.prisma. Cached on globalThis so `react-router dev` HMR doesn't
- * open a new pool on every reload.
+ * Cached on globalThis so `react-router dev` HMR doesn't open a new pool on
+ * every reload.
  */
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
+const globalForDb = globalThis as unknown as {
+  pool: Pool | undefined;
 };
 
-function createClient() {
+function createPool() {
   const connectionString = process.env.DATABASE_URL;
 
   if (!connectionString) {
     throw new Error("DATABASE_URL is not set");
   }
 
-  return new PrismaClient({ adapter: new PrismaPg({ connectionString }) });
+  return new Pool({ connectionString });
 }
 
-export const prisma = globalForPrisma.prisma ?? createClient();
+const pool = globalForDb.pool ?? createPool();
 
 if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
+  globalForDb.pool = pool;
 }
+
+export const db = drizzle(pool, { schema, casing: "snake_case" });
+
+export { schema };

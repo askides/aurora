@@ -22,8 +22,11 @@
     "lint:fix": "oxlint --fix",
     "format": "oxfmt .",
     "format:check": "oxfmt --check .",
+    "db:generate": "pnpm --filter web db:generate",
     "db:migrate": "pnpm --filter web db:migrate",
-    "db:reset": "pnpm --filter web db:reset"
+    "db:push": "pnpm --filter web db:push",
+    "db:seed": "pnpm --filter web db:seed",
+    "db:studio": "pnpm --filter web db:studio"
   },
   "devDependencies": {
     "oxfmt": "^0.62.0",

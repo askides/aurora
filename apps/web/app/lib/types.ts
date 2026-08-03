@@ -7,6 +7,9 @@ export type BreakdownRow = { element: string; views: number; unique: number };
 
 export type TimeseriesPoint = { timeseries: string; count: number };
 
+/** One bucket as returned by Postgres, before gaps are padded. */
+export type TimeseriesRow = { ts: Date; count: number };
+
 export type Statistics = {
   visits: number;
   uniqueVisits: number;

@@ -1,12 +1,22 @@
+import { events } from "~/db/schema";
 import { corsJson, preflight } from "~/lib/cors.server";
-import { prisma, getWebsite } from "~/lib/queries.server";
+import { db, getWebsite } from "~/lib/queries.server";
+import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import type { Route } from "./+types/collect.$id";
 
-/** Body of the navigator.sendBeacon call that reports visit duration. */
+/** One day in milliseconds — matches the events_duration_range check. */
+const MAX_DURATION = 86_400_000;
+
+/**
+ * Body of the navigator.sendBeacon call that reports visit duration.
+ * /collect is unauthenticated and the event id is handed back in the 201, so
+ * the bounds matter: without them anyone could post a negative or absurd
+ * duration and permanently skew a site's average.
+ */
 export const durationSchema = z.object({
   wid: z.string().min(1),
-  duration: z.number(),
+  duration: z.number().min(0).max(MAX_DURATION),
 });
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -18,7 +28,6 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 /**
- * Visit duration, delivered by navigator.sendBeacon on visibilitychange.
  * sendBeacon posts a plain string, so the body is read as text and parsed here
  * rather than relying on a JSON content type.
  */
@@ -52,12 +61,13 @@ export async function action({ request, params }: Route.ActionArgs) {
   }
 
   // Scoped to the website so an event id alone can't be used to write anywhere.
-  const { count } = await prisma.event.updateMany({
-    where: { id: params.id, website_id: website.id },
-    data: { duration: parsed.data.duration },
-  });
+  const updated = await db
+    .update(events)
+    .set({ duration: parsed.data.duration })
+    .where(and(eq(events.id, params.id), eq(events.website_id, website.id)))
+    .returning({ id: events.id });
 
-  if (count === 0) {
+  if (updated.length === 0) {
     return corsJson({ message: "Not found" }, 404);
   }
 

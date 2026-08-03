@@ -14,9 +14,6 @@ dist/
 out/
 .react-router/
 
-# generated prisma client
-app/generated/
-
 # misc
 .DS_Store
 *.pem

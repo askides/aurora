@@ -58,7 +58,6 @@ jobs:
       - run: pnpm install --frozen-lockfile
         working-directory: .
 
-      - run: pnpm prisma generate
       - run: pnpm db:migrate
       - run: pnpm typecheck
       - run: pnpm test

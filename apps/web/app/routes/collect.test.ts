@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 // The route modules pull in the database layer at import time; these tests only
 // exercise their payload schemas, so the DB module is stubbed out.
 vi.mock("~/lib/queries.server", () => ({
-  prisma: {},
+  db: {},
   getWebsite: vi.fn(),
 }));
 

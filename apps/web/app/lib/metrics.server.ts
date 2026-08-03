@@ -47,6 +47,7 @@ function interval(startTs: string, endTs: string, unit: string, tz: string) {
 
 const setTimeToZero = (date: string) => `${date.split("T")[0]}T00:00:00.000Z`;
 
+/** Postgres only returns buckets that have rows; the gaps are filled here. */
 export async function timeseries(
   wid: string,
   filters: { start: string; end: string; unit: string; tz: string }
@@ -77,23 +78,11 @@ export async function timeseries(
   });
 }
 
-export async function pages(
+export function pages(
   wid: string,
   filters: { start: string; end: string }
 ): Promise<BreakdownRow[]> {
-  const events = await getWebsiteViewsByPage(wid, filters);
-  const totals: Record<string, { views: number; unique: number }> = {};
-
-  for (const event of events) {
-    totals[event.element] ??= { views: 0, unique: 0 };
-    totals[event.element].views += 1;
-    totals[event.element].unique += event.is_new_visitor ? 1 : 0;
-  }
-
-  return Object.entries(totals).map(([element, data]) => ({
-    element,
-    ...data,
-  }));
+  return getWebsiteViewsByPage(wid, filters);
 }
 
 export async function metadata(
@@ -102,21 +91,12 @@ export async function metadata(
   filters: { start: string; end: string }
 ): Promise<BreakdownRow[]> {
   const rows = await getWebsiteViewsByMetadata(wid, meta, filters);
-  const totals: Record<string, { views: number; unique: number }> = {};
 
-  // One `value` can span several metadata rows (e.g. per browser version).
-  for (const row of rows) {
-    const unique = row.events.filter((event) => event.is_new_visitor);
-
-    totals[row.value] ??= { views: 0, unique: 0 };
-    totals[row.value].views += row.events.length;
-    totals[row.value].unique += unique.length;
+  if (meta !== "locale") {
+    return rows;
   }
 
-  return Object.entries(totals).map(([value, data]) => ({
-    element: meta === "locale" ? localeName(value) : value,
-    ...data,
-  }));
+  return rows.map((row) => ({ ...row, element: localeName(row.element) }));
 }
 
 /** locale-codes returns undefined for tags it doesn't know; fall back to the tag. */
@@ -124,17 +104,9 @@ function localeName(tag: string) {
   return localeCodes.getByTag(tag)?.location ?? tag;
 }
 
-export async function statistics(
+export function statistics(
   wid: string,
   filters: { start: string; end: string }
 ): Promise<Statistics> {
-  const data = await getWebsiteStatistics(wid, filters);
-
-  return {
-    visits: data.visits._count._all,
-    uniqueVisits: data.uniqueVisits._count._all,
-    bounces: data.bounces._count._all,
-    sessions: data.sessions._count._all,
-    avgDuration: data.avgDuration._avg.duration || 0,
-  };
+  return getWebsiteStatistics(wid, filters);
 }
