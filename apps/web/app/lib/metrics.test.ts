@@ -52,6 +52,26 @@ describe("timeseries", () => {
     expect(points.every((p) => p.count === 0)).toBe(true);
   });
 
+  it("matches buckets for zones with a half-hour offset", async () => {
+    // date_trunc runs in the requested zone, so a bucket for Asia/Kolkata is a
+    // whole hour of *local* wall time. Building the padded series on whole UTC
+    // hours instead used to put every bucket on :30 and match nothing.
+    const at = Date.UTC(2026, 0, 15, 6, 30);
+
+    vi.mocked(queries.getWebsiteViewsTimeSeries).mockResolvedValue([
+      { ts: new Date(at + 330 * 60_000), count: 4 },
+    ]);
+
+    const points = await metrics.timeseries("wid", {
+      start: String(at - 2 * 3_600_000),
+      end: String(at + 3_600_000),
+      unit: "hour",
+      tz: "Asia/Kolkata",
+    });
+
+    expect(points.reduce((total, p) => total + p.count, 0)).toBe(4);
+  });
+
   it("rejects a unit it cannot bucket", async () => {
     vi.mocked(queries.getWebsiteViewsTimeSeries).mockResolvedValue([]);
 

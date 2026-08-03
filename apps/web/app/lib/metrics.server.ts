@@ -1,4 +1,4 @@
-import { addMinutes, eachDayOfInterval, eachHourOfInterval } from "date-fns";
+import { addMinutes } from "date-fns";
 import localeCodes from "locale-codes";
 import {
   getWebsiteStatistics,
@@ -26,26 +26,44 @@ export function getTzOffset(timeZone: string, date = new Date()) {
 }
 
 export function switchTz(date: Date, tz: string) {
-  return addMinutes(date, getTzOffset(tz));
+  return addMinutes(date, getTzOffset(tz, date));
 }
 
+const HOUR_MS = 3_600_000;
+const DAY_MS = 86_400_000;
+
+/**
+ * The bucket labels the chart needs.
+ *
+ * Postgres returns `date_trunc(unit, created_at AT TIME ZONE tz)` — wall-clock
+ * time in the requested zone, which the query layer labels as UTC. The padded
+ * series has to be generated in that same space or the two never line up.
+ *
+ * The previous implementation built whole hours on the *server's* clock and
+ * then added the zone offset, which only coincides with a truncated wall-clock
+ * hour when the offset is a whole number of hours. For India (+05:30), Nepal
+ * (+05:45), Iran, Newfoundland and central Australia every bucket landed on
+ * :30 or :45 and matched nothing, so the chart silently read zero.
+ */
 function interval(startTs: string, endTs: string, unit: string, tz: string) {
-  const start = new Date(Number(startTs));
-  const end = new Date(Number(endTs));
-
-  switch (unit) {
-    case "hour":
-      return eachHourOfInterval({ start, end }).map((date) =>
-        switchTz(date, tz)
-      );
-    case "day":
-      return eachDayOfInterval({ start, end });
-    default:
-      throw new Error(`Invalid unit: ${unit}`);
+  if (unit !== "hour" && unit !== "day") {
+    throw new Error(`Invalid unit: ${unit}`);
   }
-}
 
-const setTimeToZero = (date: string) => `${date.split("T")[0]}T00:00:00.000Z`;
+  const offset = getTzOffset(tz, new Date(Number(startTs))) * 60_000;
+  const step = unit === "hour" ? HOUR_MS : DAY_MS;
+
+  const start = Number(startTs) + offset;
+  const end = Number(endTs) + offset;
+
+  const buckets: Date[] = [];
+
+  for (let ts = Math.floor(start / step) * step; ts <= end; ts += step) {
+    buckets.push(new Date(ts));
+  }
+
+  return buckets;
+}
 
 /** Postgres only returns buckets that have rows; the gaps are filled here. */
 export async function timeseries(
@@ -54,28 +72,19 @@ export async function timeseries(
 ): Promise<TimeseriesPoint[]> {
   const rows = await getWebsiteViewsTimeSeries(wid, filters);
 
-  let data = rows.map((row) => ({
-    ...row,
-    ts: new Date(row.ts).toISOString(),
-  }));
+  // Both sides are now truncated the same way, so the keys match exactly and
+  // no after-the-fact date rounding is needed.
+  const counts = new Map(
+    rows.map((row) => [new Date(row.ts).toISOString(), Number(row.count)])
+  );
 
-  let buckets = interval(
-    filters.start,
-    filters.end,
-    filters.unit,
-    filters.tz
-  ).map((date) => date.toISOString());
+  return interval(filters.start, filters.end, filters.unit, filters.tz).map(
+    (bucket) => {
+      const label = bucket.toISOString();
 
-  if (filters.unit !== "hour") {
-    data = data.map((row) => ({ ...row, ts: setTimeToZero(row.ts) }));
-    buckets = buckets.map(setTimeToZero);
-  }
-
-  return buckets.map((bucket) => {
-    const views = data.find((row) => row.ts === bucket);
-
-    return { timeseries: bucket, count: views ? Number(views.count) : 0 };
-  });
+      return { timeseries: label, count: counts.get(label) ?? 0 };
+    }
+  );
 }
 
 export function pages(

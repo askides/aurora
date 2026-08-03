@@ -82,7 +82,7 @@ export async function updateUser(
     lastname: string;
     email: string;
     password: string;
-  }> = {}
+  }>
 ) {
   const { password, ...rest } = data;
 
@@ -132,7 +132,7 @@ export async function createWebsite(data: {
 
 export async function updateWebsite(
   wid: string,
-  data: Partial<{ name: string; url: string; is_public: boolean }> = {}
+  data: Partial<{ name: string; url: string; is_public: boolean }>
 ) {
   const [website] = await db
     .update(websites)
@@ -204,7 +204,8 @@ export async function getWebsiteStatistics(
       uniqueVisits: sql<number>`count(*) FILTER (WHERE ${events.is_new_visitor})::int`,
       sessions: sql<number>`count(*) FILTER (WHERE ${events.is_new_session})::int`,
       bounces: sql<number>`count(*) FILTER (WHERE ${events.is_a_bounce})::int`,
-      avgDuration: sql<string | null>`avg(${events.duration})`,
+      // duration is double precision, so avg() comes back as a JS number.
+      avgDuration: sql<number | null>`avg(${events.duration})`,
     })
     .from(events)
     .where(scopedTo(wid, filters));
@@ -214,8 +215,8 @@ export async function getWebsiteStatistics(
     uniqueVisits: row?.uniqueVisits ?? 0,
     sessions: row?.sessions ?? 0,
     bounces: row?.bounces ?? 0,
-    // avg() is null when nothing was measured, and arrives as a string.
-    avgDuration: row?.avgDuration ? Number(row.avgDuration) : 0,
+    // null when no row in the window recorded a duration.
+    avgDuration: row?.avgDuration ?? 0,
   };
 }
 
@@ -236,7 +237,18 @@ export async function getWebsiteViewsTimeSeries(
   return (
     db
       .select({
-        ts: sql<Date>`date_trunc(${unit}, ${events.created_at} AT TIME ZONE ${tz})`,
+        // `timestamptz AT TIME ZONE tz` yields `timestamp without time zone`,
+        // which the driver hands back as a naive string ("2026-08-03 14:00:00").
+        // Passing that to `new Date()` would parse it in the *server's* zone, so
+        // a host that isn't UTC would shift every bucket and the chart would
+        // stop matching the padded series. Pin it to UTC explicitly — the bucket
+        // list in metrics.server.ts is likewise wall-clock-labelled-as-UTC.
+        ts: sql<Date>`date_trunc(${unit}, ${events.created_at} AT TIME ZONE ${tz})`.mapWith(
+          (value: string | Date) =>
+            value instanceof Date
+              ? value
+              : new Date(`${value.replace(" ", "T")}Z`)
+        ),
         count: sql<number>`count(*)::int`,
       })
       .from(events)

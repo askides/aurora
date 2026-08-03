@@ -17,7 +17,19 @@ function createPool() {
     throw new Error("DATABASE_URL is not set");
   }
 
-  return new Pool({ connectionString });
+  const pool = new Pool({ connectionString });
+
+  // pg emits 'error' on the pool when an *idle* client fails — a database
+  // restart, a failover, an idle_session_timeout, a pooler dropping the TCP
+  // connection. Node throws on an 'error' event with no listener, which would
+  // take the whole server down rather than the one dead connection. The Prisma
+  // adapter this replaced installed such a handler; without it the port would
+  // have been a regression.
+  pool.on("error", (error) => {
+    console.error("[db] idle client error", error);
+  });
+
+  return pool;
 }
 
 const pool = globalForDb.pool ?? createPool();

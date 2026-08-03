@@ -7,15 +7,27 @@ import localeCodes from "locale-codes";
 import { z } from "zod";
 import type { Route } from "./+types/collect";
 
+/**
+ * metadata.value is part of a btree unique key, and btree refuses an index
+ * tuple over ~2704 bytes. Zod's .max() counts UTF-16 units, so a 2048-character
+ * multibyte string would pass and then abort the whole ingest transaction —
+ * bound the bytes instead.
+ */
+const boundedBytes = z
+  .string()
+  .refine((value) => Buffer.byteLength(value, "utf8") <= 1024, {
+    message: "Value is too long",
+  });
+
 /** The payload packages/tracker/src/aurora.js POSTs on every pageview. */
 export const collectSchema = z.object({
   // The only type the tracker emits. Anything else would be counted in the
   // totals but invisible in the Pages breakdown, so reject it outright.
   type: z.literal("pageView").default("pageView"),
-  element: z.string().min(1).max(2048),
+  element: z.string().min(1).pipe(boundedBytes),
   wid: z.string().min(1),
   language: z.string().max(64).optional(),
-  referrer: z.string().max(2048).optional(),
+  referrer: z.string().pipe(boundedBytes).optional(),
 
   uid: z.string().optional(),
   lastPageViewID: z.string().nullish(),
