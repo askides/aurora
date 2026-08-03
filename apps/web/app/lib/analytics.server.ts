@@ -1,5 +1,6 @@
 import { subDays } from "date-fns";
 import * as metrics from "./metrics.server";
+import { isValidTimeZone } from "./timezone";
 
 export const RANGES = {
   LAST_24_HOURS: { label: "Last 24 Hours", days: 1, unit: "hour" },
@@ -11,15 +12,6 @@ export type RangeKey = keyof typeof RANGES;
 
 export function isRangeKey(value: string | null): value is RangeKey {
   return value !== null && value in RANGES;
-}
-
-export function isValidTimeZone(tz: string) {
-  try {
-    new Intl.DateTimeFormat("en-US", { timeZone: tz });
-    return true;
-  } catch {
-    return false;
-  }
 }
 
 /**

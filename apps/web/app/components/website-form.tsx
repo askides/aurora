@@ -11,9 +11,12 @@ export type WebsiteFormValues = {
   is_public?: boolean;
 };
 
+// Stable reference so the default doesn't change identity on every render.
+const NO_VALUES: WebsiteFormValues = {};
+
 export function WebsiteForm({
   isNew = false,
-  values = {},
+  values = NO_VALUES,
   error,
   shareLink,
   snippet,

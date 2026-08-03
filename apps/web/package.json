@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "postinstall": "prisma generate",
     "dev": "react-router dev",
     "build": "pnpm --filter tracker build && prisma generate && react-router build",
     "start": "node --env-file-if-exists=.env ./node_modules/@react-router/serve/bin.cjs ./build/server/index.js",

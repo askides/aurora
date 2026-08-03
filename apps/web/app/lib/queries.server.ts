@@ -1,6 +1,7 @@
 import { Prisma } from "~/generated/prisma/client";
 import { prisma } from "./db.server";
 import { hash } from "./hash.server";
+import { assertTimeZone, assertTimeseriesUnit } from "./timezone";
 
 export { prisma };
 
@@ -157,8 +158,6 @@ export async function getWebsiteStatistics(
   return { visits, bounces, sessions, avgDuration, uniqueVisits };
 }
 
-export type TimeseriesUnit = "hour" | "day" | "month" | "year";
-
 export type TimeseriesRow = { ts: Date; count: number };
 
 /**
@@ -174,7 +173,7 @@ export async function getWebsiteViewsTimeSeries(
   wid: string,
   filters: { start: string; end: string; unit: string; tz: string }
 ) {
-  const unit = assertUnit(filters.unit);
+  const unit = assertTimeseriesUnit(filters.unit);
   const tz = assertTimeZone(filters.tz);
 
   const rows = await prisma.$queryRaw<TimeseriesRow[]>`
@@ -188,25 +187,4 @@ export async function getWebsiteViewsTimeSeries(
   `;
 
   return rows;
-}
-
-const UNITS: readonly TimeseriesUnit[] = ["hour", "day", "month", "year"];
-
-function assertUnit(unit: string): TimeseriesUnit {
-  if (!UNITS.includes(unit as TimeseriesUnit)) {
-    throw new Error(`Invalid unit: ${unit}`);
-  }
-
-  return unit as TimeseriesUnit;
-}
-
-function assertTimeZone(tz: string) {
-  try {
-    // Throws RangeError for anything Intl doesn't recognise as a zone.
-    new Intl.DateTimeFormat("en-US", { timeZone: tz });
-  } catch {
-    throw new Error(`Invalid time zone: ${tz}`);
-  }
-
-  return tz;
 }

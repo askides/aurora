@@ -1,6 +1,5 @@
 packages:
   - "apps/web"
-  - "apps/docs"
   - "packages/tracker"
 
 onlyBuiltDependencies:

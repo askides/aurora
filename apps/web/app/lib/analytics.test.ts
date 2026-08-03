@@ -1,7 +1,19 @@
 import { describe, expect, it } from "vitest";
-import { isValidTimeZone, RANGES, resolveFilters } from "./analytics.server";
+import { RANGES, resolveFilters } from "./analytics.server";
+import { isValidTimeZone } from "./timezone";
 
 const url = (query: string) => new URL(`http://localhost/analytics${query}`);
+
+/** resolveFilters throws a Response; unwrap it so assertions stay unconditional. */
+const rejectionOf = (query: string) => {
+  try {
+    resolveFilters(url(query));
+  } catch (error) {
+    return error;
+  }
+
+  return undefined;
+};
 
 describe("resolveFilters", () => {
   it("defaults to the last 24 hours in UTC", () => {
@@ -29,13 +41,12 @@ describe("resolveFilters", () => {
 
   it("rejects a timezone that isn't a real zone with a 400", () => {
     // Guards the query that previously interpolated tz straight into SQL.
-    try {
-      resolveFilters(url("?tz=UTC%27%3B%20DROP%20TABLE%20events%3B%20--"));
-      expect.unreachable("should have thrown");
-    } catch (error) {
-      expect(error).toBeInstanceOf(Response);
-      expect((error as Response).status).toBe(400);
-    }
+    const rejection = rejectionOf(
+      "?tz=UTC%27%3B%20DROP%20TABLE%20events%3B%20--"
+    );
+
+    expect(rejection).toBeInstanceOf(Response);
+    expect((rejection as Response).status).toBe(400);
   });
 
   it("produces a start before the end for every range", () => {

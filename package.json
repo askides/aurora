@@ -15,15 +15,18 @@
   "packageManager": "pnpm@10.30.0",
   "scripts": {
     "dev": "pnpm --filter web dev",
-    "dev:docs": "pnpm --filter docs dev",
     "build": "pnpm -r build",
     "test": "pnpm -r test",
     "typecheck": "pnpm -r typecheck",
-    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,mdx,css}\"",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "format": "oxfmt .",
+    "format:check": "oxfmt --check .",
     "db:migrate": "pnpm --filter web db:migrate",
     "db:reset": "pnpm --filter web db:reset"
   },
   "devDependencies": {
-    "prettier": "^3.4.2"
+    "oxfmt": "^0.62.0",
+    "oxlint": "^1.77.0"
   }
 }

@@ -9,7 +9,6 @@ WORKDIR /app
 FROM base AS deps
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/web/package.json apps/web/
-COPY apps/docs/package.json apps/docs/
 COPY packages/tracker/package.json packages/tracker/
 RUN pnpm install --frozen-lockfile --filter web... --filter tracker...
 

@@ -146,8 +146,8 @@ const sum = (args = []) => args.reduce((acc, el) => acc + el, 0);
 
       // XXX Need to do a workaround because of the duplicated data
       lastPageViewID = resJson.id;
-    } catch (err) {
-      console.log("Err");
+    } catch {
+      // Tracking must never break the host page.
     }
 
     // After Tracking..
