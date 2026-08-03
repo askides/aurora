@@ -5,7 +5,7 @@ import {
   PageHeader,
   PageTitle,
 } from "~/components/page-header";
-import { WebsiteForm } from "~/components/website-form";
+import { WebsiteForm, websiteSchema } from "~/components/website-form";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,7 +21,6 @@ import { Button } from "~/components/ui/button";
 import { Form } from "react-router";
 import { deleteWebsite, updateWebsite } from "~/lib/queries.server";
 import { requireUser } from "~/lib/session.server";
-import { websiteSchema } from "~/lib/validation";
 import { requireWebsiteOwner } from "~/lib/website-access.server";
 import type { Route } from "./+types/websites.edit";
 

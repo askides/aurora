@@ -1,9 +1,25 @@
 import { corsJson, preflight } from "~/lib/cors.server";
 import { prisma, getWebsite } from "~/lib/queries.server";
 import { parse } from "~/lib/ua.server";
-import { collectSchema } from "~/lib/validation";
 import localeCodes from "locale-codes";
+import { z } from "zod";
 import type { Route } from "./+types/collect";
+
+/** The payload packages/tracker/src/aurora.js POSTs on every pageview. */
+export const collectSchema = z.object({
+  type: z.string().optional(),
+  element: z.string().min(1),
+  wid: z.string().min(1),
+  language: z.string().optional(),
+  referrer: z.string().optional(),
+
+  uid: z.string().optional(),
+  lastPageViewID: z.string().nullish(),
+  isNewVisitor: z.boolean().optional(),
+  isNewSession: z.boolean().optional(),
+  lastVisitAt: z.number().optional(),
+  expires: z.number().optional(),
+});
 
 export async function loader({ request }: Route.LoaderArgs) {
   if (request.method === "OPTIONS") {

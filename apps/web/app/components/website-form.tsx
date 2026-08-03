@@ -4,6 +4,17 @@ import { Card, CardContent } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
+import { z } from "zod";
+
+/**
+ * Lives with the form it validates — the create and edit routes both submit
+ * these exact fields, so keeping one schema here avoids the two drifting.
+ */
+export const websiteSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  url: z.string().min(1, "URL is required"),
+  is_public: z.boolean(),
+});
 
 export type WebsiteFormValues = {
   name?: string;

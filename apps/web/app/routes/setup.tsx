@@ -6,10 +6,17 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { countUsers, createUser } from "~/lib/queries.server";
 import { createUserSession } from "~/lib/session.server";
-import { setupSchema } from "~/lib/validation";
+import { z } from "zod";
 import type { Route } from "./+types/setup";
 
 export const meta = () => [{ title: "Setup — Aurora" }];
+
+export const setupSchema = z.object({
+  firstname: z.string().min(1, "First name is required"),
+  lastname: z.string().min(1, "Last name is required"),
+  email: z.email("Enter a valid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+});
 
 /**
  * Setup is for the first user only. The previous implementation documented that

@@ -5,11 +5,10 @@ import {
   PageHeader,
   PageTitle,
 } from "~/components/page-header";
-import { WebsiteForm } from "~/components/website-form";
+import { WebsiteForm, websiteSchema } from "~/components/website-form";
 import { Button } from "~/components/ui/button";
 import { createWebsite } from "~/lib/queries.server";
 import { requireUser } from "~/lib/session.server";
-import { websiteSchema } from "~/lib/validation";
 import type { Route } from "./+types/websites.new";
 
 export const meta = () => [{ title: "Create Website — Aurora" }];

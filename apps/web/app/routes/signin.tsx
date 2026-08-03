@@ -6,10 +6,15 @@ import { Label } from "~/components/ui/label";
 import { verify } from "~/lib/hash.server";
 import { countUsers, getUserByEmail } from "~/lib/queries.server";
 import { createUserSession, getCurrentUser } from "~/lib/session.server";
-import { signInSchema } from "~/lib/validation";
+import { z } from "zod";
 import type { Route } from "./+types/signin";
 
 export const meta = () => [{ title: "Sign in — Aurora" }];
+
+export const signInSchema = z.object({
+  email: z.email("Enter a valid email address"),
+  password: z.string().min(1, "Password is required"),
+});
 
 export async function loader({ request }: Route.LoaderArgs) {
   if (await getCurrentUser(request)) {

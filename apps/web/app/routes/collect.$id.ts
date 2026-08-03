@@ -1,7 +1,13 @@
 import { corsJson, preflight } from "~/lib/cors.server";
 import { prisma, getWebsite } from "~/lib/queries.server";
-import { durationSchema } from "~/lib/validation";
+import { z } from "zod";
 import type { Route } from "./+types/collect.$id";
+
+/** Body of the navigator.sendBeacon call that reports visit duration. */
+export const durationSchema = z.object({
+  wid: z.string().min(1),
+  duration: z.number(),
+});
 
 export async function loader({ request }: Route.LoaderArgs) {
   if (request.method === "OPTIONS") {

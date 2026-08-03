@@ -6,10 +6,22 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { updateUser } from "~/lib/queries.server";
 import { requireUser } from "~/lib/session.server";
-import { accountSchema } from "~/lib/validation";
+import { z } from "zod";
 import type { Route } from "./+types/account";
 
 export const meta = () => [{ title: "Account — Aurora" }];
+
+export const accountSchema = z.object({
+  firstname: z.string().min(1, "First name is required"),
+  lastname: z.string().min(1, "Last name is required"),
+  email: z.email("Enter a valid email address"),
+  // Blank means "leave the current password alone".
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .optional()
+    .or(z.literal("")),
+});
 
 export async function loader({ request }: Route.LoaderArgs) {
   return { user: await requireUser(request) };

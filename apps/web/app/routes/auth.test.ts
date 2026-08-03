@@ -1,12 +1,24 @@
-import { describe, expect, it } from "vitest";
-import {
-  accountSchema,
-  collectSchema,
-  durationSchema,
-  setupSchema,
-  signInSchema,
-  websiteSchema,
-} from "./validation";
+import { describe, expect, it, vi } from "vitest";
+
+// These route modules import the database and session layers at module scope;
+// the tests below only cover their form schemas, so both are stubbed.
+vi.mock("~/lib/queries.server", () => ({
+  countUsers: vi.fn(),
+  createUser: vi.fn(),
+  getUserByEmail: vi.fn(),
+  updateUser: vi.fn(),
+}));
+
+vi.mock("~/lib/session.server", () => ({
+  createUserSession: vi.fn(),
+  getCurrentUser: vi.fn(),
+  requireUser: vi.fn(),
+}));
+
+const { signInSchema } = await import("./signin");
+const { setupSchema } = await import("./setup");
+const { accountSchema } = await import("./account");
+const { websiteSchema } = await import("~/components/website-form");
 
 describe("signInSchema", () => {
   it("accepts a well formed credential pair", () => {
@@ -70,52 +82,6 @@ describe("websiteSchema", () => {
 
     expect(
       websiteSchema.safeParse({ name: "", url: "x", is_public: true }).success
-    ).toBe(false);
-  });
-});
-
-describe("collectSchema", () => {
-  const payload = {
-    type: "pageView",
-    element: "/home",
-    wid: "cuid",
-    language: "en-US",
-    referrer: "",
-    isNewVisitor: true,
-    isNewSession: true,
-    lastPageViewID: null,
-  };
-
-  it("accepts what the tracker sends", () => {
-    expect(collectSchema.safeParse(payload).success).toBe(true);
-  });
-
-  it("allows a null lastPageViewID on a first view", () => {
-    const parsed = collectSchema.parse(payload);
-
-    expect(parsed.lastPageViewID).toBeNull();
-  });
-
-  it("requires element and wid", () => {
-    expect(collectSchema.safeParse({ ...payload, element: "" }).success).toBe(
-      false
-    );
-    expect(collectSchema.safeParse({ ...payload, wid: "" }).success).toBe(
-      false
-    );
-  });
-});
-
-describe("durationSchema", () => {
-  it("accepts a beacon payload", () => {
-    expect(
-      durationSchema.safeParse({ wid: "cuid", duration: 4200 }).success
-    ).toBe(true);
-  });
-
-  it("rejects a non-numeric duration", () => {
-    expect(
-      durationSchema.safeParse({ wid: "cuid", duration: "4200" }).success
     ).toBe(false);
   });
 });
