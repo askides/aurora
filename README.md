@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/itsrennyman/aurora/main/packages/frontend/public/aurora_mini_blue.svg" alt="Aurora Logo" height="100" />
+<img src="https://raw.githubusercontent.com/itsrennyman/aurora/main/apps/web/public/aurora_mini_blue.svg" alt="Aurora Logo" height="100" />
 
 <hr />
 
@@ -10,23 +10,50 @@
 Hate Cookies? Introducing Aurora, 100% Cookie-Free Open Website Analytics.
 Collect Anonymous Data. Make your Audience Happy Now!
 
-## Can I see a demo? 👀
-
-You can see a **running demo**
-[here](https://aurora-app-frontend.vercel.app/websites/cl2re5iw6000809l843fb61jr/s/analytics)!
-
 ### Getting Started 🤩
 
-You can go up and running with Aurora by following the
-[Official Docs](https://aurora-docs.vercel.app).
+```bash
+git clone https://github.com/itsrennyman/aurora
+cd aurora
+pnpm install
 
-> Please note that docs are currently under construction.
+cp apps/web/.env.example apps/web/.env   # set DATABASE_URL and SESSION_SECRET
+pnpm db:migrate
+pnpm dev
+```
+
+Then open `/setup` to create the first user. Full instructions live in the
+[docs](apps/docs).
+
+### Repository Layout 📦
+
+pnpm workspace, one deployable app plus its docs:
+
+```
+apps/
+  web     React Router app — dashboard, /collect endpoint and tracker script
+  docs    Nextra documentation site
+packages/
+  tracker Browser tracking script, bundled into apps/web/public/tracker.js
+```
 
 ### Built With 🏗️
 
-- [React.js](https://reactjs.org/)
-- [Chakra UI](https://chakra-ui.com/)
-- [Vercel](https://vercel.com/)
+- [React Router](https://reactrouter.com/) (framework mode)
+- [Tailwind CSS](https://tailwindcss.com/) and
+  [shadcn/ui](https://ui.shadcn.com/)
+- [Prisma](https://www.prisma.io/) and PostgreSQL
+
+### Scripts 🛠️
+
+| Command           | Description                       |
+| ----------------- | --------------------------------- |
+| `pnpm dev`        | Run the dashboard in development  |
+| `pnpm dev:docs`   | Run the documentation site        |
+| `pnpm build`      | Build every workspace package     |
+| `pnpm test`       | Run the test suites               |
+| `pnpm typecheck`  | Typecheck every workspace package |
+| `pnpm db:migrate` | Apply database migrations         |
 
 ### Versioning 🚦
 

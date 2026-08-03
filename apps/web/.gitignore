@@ -1,0 +1,13 @@
+.DS_Store
+.env
+node_modules/
+
+# React Router
+/.react-router/
+/build/
+
+# Prisma client is generated from schema.prisma
+/app/generated/
+
+# Built by packages/tracker
+/public/tracker.js

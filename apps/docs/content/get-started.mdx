@@ -1,0 +1,116 @@
+---
+title: Getting Started
+---
+
+import { Callout, Steps } from "nextra/components";
+
+# Getting Started
+
+Aurora is a single React Router application: the dashboard, the collection
+endpoint and the tracker script are all served from one origin. There is no
+separate backend service to deploy any more.
+
+## Requirements
+
+- Node.js 20 or newer, and [pnpm](https://pnpm.io/).
+- A PostgreSQL instance to be used as data storage.
+
+<Steps>
+
+### Clone and install
+
+```bash
+git clone https://github.com/itsrennyman/aurora
+cd aurora
+pnpm install
+```
+
+### Configure the environment
+
+Copy the example file and fill it in:
+
+```bash
+cp apps/web/.env.example apps/web/.env
+```
+
+| Variable         | Description                                    |
+| ---------------- | ---------------------------------------------- |
+| `DATABASE_URL`   | Connection string of your PostgreSQL instance. |
+| `SESSION_SECRET` | Secret used to sign the session cookie.        |
+
+Generate a strong secret with:
+
+```bash
+openssl rand -base64 32
+```
+
+<Callout type="warning">
+  `SESSION_SECRET` signs the cookie that keeps users signed in. Changing it
+  signs everyone out; leaking it lets anyone forge a session.
+</Callout>
+
+### Run the database migrations
+
+```bash
+pnpm db:migrate
+```
+
+### Start it up
+
+```bash
+pnpm dev
+```
+
+The dashboard is now available at `http://localhost:5173`.
+
+### Create the first user
+
+Open `/setup` and fill in the form. You will be signed in automatically.
+
+<Callout type="warning">
+  The setup page is only available while the instance has no users. Once the
+  first account exists, both the page and the underlying action refuse any
+  further attempt.
+</Callout>
+
+</Steps>
+
+## Connecting a website
+
+Create a website from the dashboard, then open its detail page. It shows a
+snippet like this — copy it into your site's `<head>`:
+
+```html
+<script
+  async
+  defer
+  src="https://your-aurora-instance.com/tracker.js"
+  aurora-id="your-website-id"
+></script>
+```
+
+The tracker derives the collection endpoint from its own `src`, so it always
+reports back to the instance that served it.
+
+## Sharing statistics
+
+Enable **Share Statistics** on a website to expose a read-only dashboard at
+`/websites/<id>/s/analytics`. While the flag is off, that URL requires the
+owner's session.
+
+## Deploying
+
+Any host that runs a Node server works. Build once, then start:
+
+```bash
+pnpm build
+pnpm --filter web start
+```
+
+Migrations are applied separately with `pnpm db:migrate`, using the same
+`DATABASE_URL`.
+
+<Callout>
+  A `Dockerfile` at the repository root builds the app as a container. Build it
+  from the repository root, since the app is a workspace member.
+</Callout>

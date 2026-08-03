@@ -1,0 +1,24 @@
+{
+  "name": "docs",
+  "private": true,
+  "version": "3.0.0",
+  "description": "Aurora's Docs",
+  "author": "Renato Pozzi <renato.pozzi.dev@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itsrennyman/aurora.git"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "^16.3.0",
+    "nextra": "^4.6.0",
+    "nextra-theme-docs": "^4.6.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  }
+}
