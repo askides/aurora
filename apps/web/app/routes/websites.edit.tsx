@@ -1,8 +1,13 @@
-import { Link, redirect, useNavigation } from "react-router";
+import { useEffect } from "react";
+import { Form, Link, redirect, useNavigation } from "react-router";
+import { ChartLineIcon } from "lucide-react";
+import { toast } from "sonner";
 import {
   Page,
   PageActions,
+  PageDescription,
   PageHeader,
+  PageHeading,
   PageTitle,
 } from "~/components/page-header";
 import { WebsiteForm, websiteSchema } from "~/components/website-form";
@@ -18,13 +23,20 @@ import {
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
 import { Button } from "~/components/ui/button";
-import { Form } from "react-router";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
+import { Spinner } from "~/components/ui/spinner";
 import { deleteWebsite, updateWebsite } from "~/lib/queries.server";
 import { requireUser } from "~/lib/session.server";
 import { requireWebsiteOwner } from "~/lib/website-access.server";
 import type { Route } from "./+types/websites.edit";
 
-export const meta = () => [{ title: "Website Details — Aurora" }];
+export const meta = () => [{ title: "Website settings — Aurora" }];
 
 export async function loader({ request, params }: Route.LoaderArgs) {
   const user = await requireUser(request);
@@ -76,24 +88,59 @@ export default function EditWebsite({
   const navigation = useNavigation();
   const isDeleting = navigation.formData?.get("intent") === "delete";
 
+  useEffect(() => {
+    if (actionData && "ok" in actionData) {
+      toast.success("Changes saved");
+    }
+  }, [actionData]);
+
   return (
     <Page>
       <PageHeader>
-        <PageTitle>Website Details</PageTitle>
+        <PageHeading>
+          <PageTitle>{website.name}</PageTitle>
+          <PageDescription>{website.url}</PageDescription>
+        </PageHeading>
         <PageActions>
-          <Button variant="outline" render={<Link to="/" />}>
-            Back to Websites
+          <Button
+            variant="outline"
+            render={<Link to={`/websites/${website.id}/analytics`} />}
+          >
+            <ChartLineIcon />
+            View analytics
           </Button>
+        </PageActions>
+      </PageHeader>
 
+      <WebsiteForm
+        values={website}
+        error={
+          actionData && "error" in actionData ? actionData.error : undefined
+        }
+        shareLink={shareLink}
+        snippet={snippet}
+      />
+
+      {/* Card's default ring is swapped for a destructive border, not stacked with it. */}
+      <Card className="border border-destructive/40 ring-0">
+        <CardHeader>
+          <CardTitle>Danger zone</CardTitle>
+          <CardDescription>
+            Deleting {website.name} removes every pageview recorded for it. This
+            cannot be undone.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex justify-end">
           <AlertDialog>
             <AlertDialogTrigger render={<Button variant="destructive" />}>
-              Delete Website
+              Delete website
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Delete Website</AlertDialogTitle>
+                <AlertDialogTitle>Delete website</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Are you sure? You can&apos;t undo this action afterwards.
+                  {website.name} and every pageview recorded for it will be
+                  deleted permanently.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -105,29 +152,15 @@ export default function EditWebsite({
                     variant="destructive"
                     disabled={isDeleting}
                   >
+                    {isDeleting && <Spinner />}
                     Delete
                   </AlertDialogAction>
                 </Form>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
-        </PageActions>
-      </PageHeader>
-
-      {actionData && "ok" in actionData && (
-        <p className="text-sm text-emerald-600 dark:text-emerald-400">
-          Website updated.
-        </p>
-      )}
-
-      <WebsiteForm
-        values={website}
-        error={
-          actionData && "error" in actionData ? actionData.error : undefined
-        }
-        shareLink={shareLink}
-        snippet={snippet}
-      />
+        </CardContent>
+      </Card>
     </Page>
   );
 }
