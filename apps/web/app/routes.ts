@@ -24,7 +24,10 @@ export default [
 
   // Resource routes hit by the tracker script from third-party origins.
   route("collect", "routes/collect.ts"),
-  route("collect/:id", "routes/collect.$id.ts"),
+  // A fixed path, not `collect/:id`: the duration beacon names its view by the
+  // tracker's own ephemeral token in the body, so the event id never has to be
+  // handed to a third-party origin in the first place.
+  route("collect/duration", "routes/collect.duration.ts"),
 
   route("*", "routes/not-found.tsx"),
 ] satisfies RouteConfig;
