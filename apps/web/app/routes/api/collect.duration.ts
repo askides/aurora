@@ -11,34 +11,8 @@ import { db } from "~/shared/lib/db.server";
 import { rateLimit } from "~/modules/ingest/ratelimit.server";
 import { clientKey } from "~/modules/ingest/visitor.server";
 import { and, eq, sql } from "drizzle-orm";
-import { z } from "zod";
-import { bounded, readPayload } from "./collect";
+import { durationSchema, readPayload } from "~/modules/ingest/payload.server";
 import type { Route } from "./+types/collect.duration";
-
-/** One day, matching the events_duration_range check. */
-const MAX_DURATION = 86_400_000;
-
-/**
- * The unload beacon that reports how long a view lasted.
- *
- * It names the view by the tracker's own ephemeral token rather than by an
- * event id, which is the whole reason the id never leaves the server: a token
- * is meaningless the moment the page is gone, an id is a row anyone could then
- * write to. The bounds matter for the same reason the endpoint is
- * unauthenticated — without them one beacon skews a site's average visit time
- * permanently.
- *
- * `bounded` is shared with /collect rather than restated: it strips the NUL
- * that Postgres refuses even in a `text` comparison, and a `vid` carrying one
- * used to throw 22021 straight out of the UPDATE below.
- */
-export const durationSchema = z.object({
-  // A cuid2 website id is 25 characters; a stored token is at most 64 bytes, so
-  // nothing longer than either can match anything.
-  wid: bounded(32).pipe(z.string().min(1)),
-  vid: bounded(64).pipe(z.string().min(1)),
-  duration: z.number().min(0).max(MAX_DURATION),
-});
 
 export async function loader({ request }: Route.LoaderArgs) {
   const origin = request.headers.get("origin");

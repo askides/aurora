@@ -125,16 +125,12 @@ vi.mock("~/modules/websites/queries.server", () => ({
   getWebsite: stub.getWebsite,
 }));
 
-const {
-  action: collectAction,
-  loader: collectLoader,
-  collectSchema,
-} = await import("../collect");
-const {
-  action: durationAction,
-  loader: durationLoader,
-  durationSchema,
-} = await import("../collect.duration");
+const { action: collectAction, loader: collectLoader } =
+  await import("../collect");
+const { action: durationAction, loader: durationLoader } =
+  await import("../collect.duration");
+const { collectSchema, durationSchema } =
+  await import("~/modules/ingest/payload.server");
 
 type CollectArgs = Parameters<typeof collectAction>[0];
 type DurationArgs = Parameters<typeof durationAction>[0];
