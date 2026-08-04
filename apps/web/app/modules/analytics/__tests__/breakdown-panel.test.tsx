@@ -2,7 +2,8 @@
 
 import { cleanup, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { BreakdownPanel, ROW_CAP } from "../components/breakdown-panel";
+import { BreakdownPanel } from "../components/breakdown-panel";
+import { ROW_CAP } from "../components/panel";
 
 // jest-dom's matchers are not registered by test/setup.ts, so everything here
 // asserts on plain DOM.

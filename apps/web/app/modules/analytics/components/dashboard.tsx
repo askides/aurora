@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { useNavigation, useSearchParams } from "react-router";
-import { BAR_BASIS_HINT, BreakdownPanel } from "./breakdown-panel";
+import { BreakdownPanel } from "./breakdown-panel";
+import { BAR_BASIS_HINT } from "./panel";
 import { GoalsPanel } from "./goals-panel";
 import { DAILY_VISITORS_HINT } from "~/shared/components/metric-hint";
 import { RangePicker } from "./range-picker";

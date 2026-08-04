@@ -8,7 +8,7 @@ import {
   PanelColumns,
   ROW_CAP,
   TruncationNote,
-} from "./breakdown-panel";
+} from "./panel";
 import { MetricHint } from "~/shared/components/metric-hint";
 import { Button } from "~/shared/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/shared/ui/card";
