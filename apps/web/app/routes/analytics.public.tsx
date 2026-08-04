@@ -7,7 +7,7 @@ import {
   PageHeading,
   PageTitle,
 } from "~/shared/components/page-header";
-import { PublicShell } from "~/shell/app-shell";
+import { PublicShell } from "~/shell/public-shell";
 import { loadDashboard } from "~/modules/analytics/loader.server";
 import { requireWebsiteAccess } from "~/modules/auth/website-access.server";
 import type { Route } from "./+types/analytics.public";
