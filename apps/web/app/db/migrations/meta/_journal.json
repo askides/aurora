@@ -8,6 +8,13 @@
       "when": 1785795637857,
       "tag": "0000_sloppy_vivisector",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1785836687841,
+      "tag": "0001_nervous_alex_wilder",
+      "breakpoints": true
     }
   ]
 }
