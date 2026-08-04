@@ -1,121 +1,130 @@
-import { addMinutes } from "date-fns";
 import localeCodes from "locale-codes";
 import {
+  BREAKDOWN_DIMENSIONS,
+  getWebsiteBreakdown,
+  getWebsiteCustomEvents,
   getWebsiteStatistics,
-  getWebsiteViewsByMetadata,
-  getWebsiteViewsByPage,
   getWebsiteViewsTimeSeries,
+  type CustomEventRow,
+  type EventRevenue,
 } from "./queries.server";
-import type { BreakdownRow, Statistics, TimeseriesPoint } from "./types";
+import type {
+  Breakdown,
+  BreakdownRow,
+  Breakdowns,
+  BreakdownUnit,
+  Statistics,
+  TimeseriesPoint,
+} from "./types";
 
-export type { BreakdownRow, Statistics, TimeseriesPoint };
+export type {
+  Breakdown,
+  BreakdownRow,
+  Breakdowns,
+  BreakdownUnit,
+  CustomEventRow,
+  EventRevenue,
+  Statistics,
+  TimeseriesPoint,
+};
 
-export function getTzOffset(timeZone: string, date = new Date()) {
-  const tz = date
-    .toLocaleString("en", { timeZone, timeStyle: "long" })
-    .split(" ")
-    .slice(-1)[0];
-
-  const dateString = date.toString();
-
-  const offset =
-    Date.parse(`${dateString} UTC`) - Date.parse(`${dateString} ${tz}`);
-
-  // return UTC offset in minutes
-  return offset / 1000 / 60;
-}
-
-export function switchTz(date: Date, tz: string) {
-  return addMinutes(date, getTzOffset(tz, date));
-}
-
-const HOUR_MS = 3_600_000;
-const DAY_MS = 86_400_000;
+/** The window every panel is asked for, as epoch milliseconds. */
+type Window = { start: number; end: number };
 
 /**
- * The bucket labels the chart needs.
+ * The chart's series, one point per bucket, gaps included.
  *
- * Postgres returns `date_trunc(unit, created_at AT TIME ZONE tz)` — wall-clock
- * time in the requested zone, which the query layer labels as UTC. The padded
- * series has to be generated in that same space or the two never line up.
- *
- * The previous implementation built whole hours on the *server's* clock and
- * then added the zone offset, which only coincides with a truncated wall-clock
- * hour when the offset is a whole number of hours. For India (+05:30), Nepal
- * (+05:45), Iran, Newfoundland and central Australia every bucket landed on
- * :30 or :45 and matched nothing, so the chart silently read zero.
+ * The padding used to be generated here, by stepping milliseconds from a zone
+ * offset this module derived itself. That is a second implementation of the
+ * calendar Postgres already has, and it disagreed with the first one for 37
+ * IANA zones, for every window containing a DST transition, and for numeric
+ * zones — each disagreement showing up as buckets the chart quietly read as
+ * zero, under stat tiles that still counted the same events. The series now
+ * arrives padded from the same statement that counts, so there is nothing left
+ * for the two sides to disagree about; see getWebsiteViewsTimeSeries.
  */
-function interval(startTs: string, endTs: string, unit: string, tz: string) {
-  if (unit !== "hour" && unit !== "day") {
-    throw new Error(`Invalid unit: ${unit}`);
-  }
-
-  const offset = getTzOffset(tz, new Date(Number(startTs))) * 60_000;
-  const step = unit === "hour" ? HOUR_MS : DAY_MS;
-
-  const start = Number(startTs) + offset;
-  const end = Number(endTs) + offset;
-
-  const buckets: Date[] = [];
-
-  for (let ts = Math.floor(start / step) * step; ts <= end; ts += step) {
-    buckets.push(new Date(ts));
-  }
-
-  return buckets;
-}
-
-/** Postgres only returns buckets that have rows; the gaps are filled here. */
 export async function timeseries(
   wid: string,
-  filters: { start: string; end: string; unit: string; tz: string }
+  filters: { start: number; end: number; unit: string; tz: string }
 ): Promise<TimeseriesPoint[]> {
   const rows = await getWebsiteViewsTimeSeries(wid, filters);
 
-  // Both sides are now truncated the same way, so the keys match exactly and
-  // no after-the-fact date rounding is needed.
-  const counts = new Map(
-    rows.map((row) => [new Date(row.ts).toISOString(), Number(row.count)])
-  );
-
-  return interval(filters.start, filters.end, filters.unit, filters.tz).map(
-    (bucket) => {
-      const label = bucket.toISOString();
-
-      return { timeseries: label, count: counts.get(label) ?? 0 };
-    }
-  );
+  return rows.map((row) => ({
+    timeseries: row.ts.toISOString(),
+    count: row.count,
+  }));
 }
 
-export function pages(
+/**
+ * Every panel, in parallel.
+ *
+ * One query per dimension: they are independent index ranges over the same
+ * window, so the database reads each one on its own and nothing here waits on
+ * anything else. What used to be a `metadata.type` string threaded through two
+ * joins is now the choice of a column, which is why a panel costs a query and
+ * no more.
+ *
+ * Each panel arrives carrying the unit it is counted in — the acquisition
+ * dimensions are per-session and the rest per-pageview (see BREAKDOWN_SCOPES) —
+ * and that travels through untouched, so nothing between the query and the
+ * column header gets to decide what the numbers are.
+ */
+export async function breakdowns(
   wid: string,
-  filters: { start: string; end: string }
-): Promise<BreakdownRow[]> {
-  return getWebsiteViewsByPage(wid, filters);
+  filters: Window
+): Promise<Breakdowns> {
+  const panels = await Promise.all(
+    BREAKDOWN_DIMENSIONS.map(async (dimension) => {
+      const panel = await getWebsiteBreakdown(wid, dimension, filters);
+
+      return [
+        dimension,
+        dimension === "locales"
+          ? { ...panel, rows: panel.rows.map(toLocaleName) }
+          : panel,
+      ] as const;
+    })
+  );
+
+  return Object.fromEntries(panels) as Breakdowns;
 }
 
-export async function metadata(
-  wid: string,
-  meta: string,
-  filters: { start: string; end: string }
-): Promise<BreakdownRow[]> {
-  const rows = await getWebsiteViewsByMetadata(wid, meta, filters);
+/**
+ * `en-GB` is the only dimension the database stores in a form nobody reads.
+ *
+ * Resolved to the language, qualified by region when the tag carries one.
+ * Not to locale-codes' `location` alone, which is what this returned while the
+ * panel was still mislabelled as countries: a locales list reading "Italy" next
+ * to a countries list reading "Italy" is the same answer twice, and it drops
+ * the half of the tag the panel exists for. The browser language says who the
+ * reader is, the edge header says where they are, and they disagree often.
+ * `location` is also null on a bare `en` or `fr`, so that reading left the
+ * panel mixing country names with raw tags.
+ */
+function toLocaleName(row: BreakdownRow): BreakdownRow {
+  const locale = localeCodes.getByTag(row.element);
 
-  if (meta !== "locale") {
-    return rows;
+  // Unknown to locale-codes, including the empty bucket the panels label
+  // "Unknown": the tag survives rather than becoming "undefined".
+  if (!locale?.name) {
+    return row;
   }
 
-  return rows.map((row) => ({ ...row, element: localeName(row.element) }));
+  return {
+    ...row,
+    element: locale.location
+      ? `${locale.name} (${locale.location})`
+      : locale.name,
+  };
 }
 
-/** locale-codes returns undefined for tags it doesn't know; fall back to the tag. */
-function localeName(tag: string) {
-  return localeCodes.getByTag(tag)?.location ?? tag;
-}
-
-export function statistics(
-  wid: string,
-  filters: { start: string; end: string }
-): Promise<Statistics> {
+export function statistics(wid: string, filters: Window): Promise<Statistics> {
   return getWebsiteStatistics(wid, filters);
+}
+
+export function customEvents(
+  wid: string,
+  filters: Window
+): Promise<CustomEventRow[]> {
+  return getWebsiteCustomEvents(wid, filters);
 }
