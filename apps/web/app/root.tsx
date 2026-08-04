@@ -1,11 +1,17 @@
 import {
   isRouteErrorResponse,
+  Link,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
 } from "react-router";
+
+import { Logo } from "~/components/logo";
+import { Button } from "~/components/ui/button";
+import { Toaster } from "~/components/ui/sonner";
+import { TooltipProvider } from "~/components/ui/tooltip";
 
 import type { Route } from "./+types/root";
 import "./app.css";
@@ -37,13 +43,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/aurora_mini_blue.svg" />
+        <meta name="color-scheme" content="light dark" />
+        <link rel="icon" href="/logo.svg" type="image/svg+xml" />
         <Meta />
         <Links />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body>
-        {children}
+        <TooltipProvider>{children}</TooltipProvider>
+        <Toaster />
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -56,30 +64,46 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
+  let status = "Error";
+  let message = "Something went wrong";
+  let details = "The page couldn't be loaded. Try again in a moment.";
   let stack: string | undefined;
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
+    status = String(error.status);
+    message = error.status === 404 ? "Page not found" : "Request failed";
     details =
       error.status === 404
-        ? "The requested page could not be found."
+        ? "This page doesn't exist, or it moved somewhere else."
         : error.statusText || details;
-  } else if (import.meta.env.DEV && error && error instanceof Error) {
+  } else if (import.meta.env.DEV && error instanceof Error) {
     details = error.message;
     stack = error.stack;
   }
 
   return (
-    <main className="container mx-auto space-y-4 p-4 pt-16">
-      <h1 className="text-2xl font-semibold">{message}</h1>
-      <p className="text-muted-foreground">{details}</p>
-      {stack && (
-        <pre className="w-full overflow-x-auto rounded-md border p-4 text-sm">
-          <code>{stack}</code>
-        </pre>
-      )}
+    <main className="flex min-h-svh flex-col items-center justify-center gap-6 bg-sidebar p-6">
+      <div className="flex w-full max-w-lg flex-col gap-5">
+        <div className="flex items-center gap-2.5">
+          <Logo className="size-6" />
+          <span className="text-eyebrow text-muted-foreground">{status}</span>
+        </div>
+
+        <div className="space-y-2">
+          <h1 className="text-2xl font-semibold tracking-tight">{message}</h1>
+          <p className="text-sm text-muted-foreground">{details}</p>
+        </div>
+
+        <div>
+          <Button render={<Link to="/" />}>Back to websites</Button>
+        </div>
+
+        {stack && (
+          <pre className="max-h-80 overflow-auto rounded-lg bg-card p-4 font-mono text-xs ring-1 ring-foreground/10">
+            <code>{stack}</code>
+          </pre>
+        )}
+      </div>
     </main>
   );
 }

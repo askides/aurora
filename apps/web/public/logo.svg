@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <title>Aurora</title>
+  <!-- The component draws with currentColor; a standalone favicon has no
+       cascade to inherit from, so the primary token is baked in per scheme. -->
+  <style>
+    :root { stroke: #4a5de4 }
+    @media (prefers-color-scheme: dark) { :root { stroke: #6a83ff } }
+  </style>
+  <!-- Equilateral: side 18, height 18 * sqrt(3) / 2 = 15.588, centred in the box. -->
+  <path d="M12 4.206 21 19.794H3Z" />
+  <!-- Aurora streak, anchored on both slopes. -->
+  <path d="M5.7 15.118 16.49 11.983" />
+</svg>
