@@ -203,7 +203,7 @@ function UserMenu({ user }: { user: SidebarUser }) {
 
         <DropdownMenuSeparator />
 
-        <Form method="post" action="/logout">
+        <Form method="post" action="/signout">
           <DropdownMenuItem
             nativeButton
             // Closing the menu unmounts the form mid-click, which cancels the

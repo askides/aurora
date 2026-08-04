@@ -1,5 +1,5 @@
-import { users } from "~/db/schema";
-import { eq, sql } from "drizzle-orm";
+import { users, type User } from "~/db/schema";
+import { eq } from "drizzle-orm";
 import { db } from "~/shared/lib/db.server";
 import { hash } from "./hash.server";
 
@@ -7,7 +7,13 @@ export function getUsers() {
   return db.select().from(users);
 }
 
-export async function getUser(uid: string) {
+/**
+ * Annotated `User | null` rather than left to inference. `const [user] = rows`
+ * types as `User` without noUncheckedIndexedAccess, so the `?? null` reads as
+ * unreachable and callers were handed a type that says a missing row cannot
+ * happen — which is what `/signup`'s duplicate check turns on.
+ */
+export async function getUser(uid: string): Promise<User | null> {
   const [user] = await db
     .select()
     .from(users)
@@ -17,7 +23,7 @@ export async function getUser(uid: string) {
   return user ?? null;
 }
 
-export async function getUserByEmail(email: string) {
+export async function getUserByEmail(email: string): Promise<User | null> {
   const [user] = await db
     .select()
     .from(users)
@@ -25,14 +31,6 @@ export async function getUserByEmail(email: string) {
     .limit(1);
 
   return user ?? null;
-}
-
-export async function countUsers() {
-  const [row] = await db
-    .select({ count: sql<number>`count(*)::int` })
-    .from(users);
-
-  return row?.count ?? 0;
 }
 
 export async function createUser(data: {

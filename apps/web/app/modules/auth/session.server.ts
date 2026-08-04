@@ -83,7 +83,7 @@ export async function createUserSession(userId: string, redirectTo: string) {
   });
 }
 
-export async function logout(request: Request) {
+export async function signout(request: Request) {
   const session = await getSession(request.headers.get("Cookie"));
 
   return redirect("/signin", {

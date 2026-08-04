@@ -7,7 +7,7 @@ import { Field, FieldGroup, FieldLabel } from "~/shared/ui/field";
 import { Input } from "~/shared/ui/input";
 import { Spinner } from "~/shared/ui/spinner";
 import { verify } from "~/modules/auth/hash.server";
-import { countUsers, getUserByEmail } from "~/modules/auth/queries.server";
+import { getUserByEmail } from "~/modules/auth/queries.server";
 import {
   createUserSession,
   getCurrentUser,
@@ -30,8 +30,6 @@ export async function loader({ request }: Route.LoaderArgs) {
   const redirectTo = new URL(request.url).searchParams.get("redirectTo") ?? "/";
 
   return {
-    // Surfaces the "create the first user" link only when it will actually work.
-    needsSetup: (await countUsers()) === 0,
     // Only relative paths, so ?redirectTo can't bounce to another origin.
     redirectTo: redirectTo.startsWith("/") ? redirectTo : "/",
   };
@@ -50,7 +48,10 @@ export async function action({ request }: Route.ActionArgs) {
     return { error: parsed.error.issues[0].message };
   }
 
-  const user = await getUserByEmail(parsed.data.email);
+  // Lowercased to match what /signup stores: Postgres compares text exactly, so
+  // an address typed with different capitalisation than it was registered with
+  // would otherwise find no row and read as a wrong password.
+  const user = await getUserByEmail(parsed.data.email.trim().toLowerCase());
 
   // Same message either way, so the response can't be used to probe for emails.
   if (!user || !verify(parsed.data.password, user.password)) {
@@ -147,18 +148,16 @@ export default function SignIn({
           </FieldGroup>
         </Form>
 
-        {loaderData.needsSetup && (
-          <p className="text-sm text-muted-foreground">
-            First time here?{" "}
-            <Link
-              to="/setup"
-              className="font-medium text-foreground underline underline-offset-4 hover:text-primary"
-            >
-              Create the first account
-            </Link>
-            .
-          </p>
-        )}
+        <p className="text-sm text-muted-foreground">
+          Don&apos;t have an account?{" "}
+          <Link
+            to="/signup"
+            className="font-medium text-foreground underline underline-offset-4 hover:text-primary"
+          >
+            Create one
+          </Link>
+          .
+        </p>
       </div>
     </AuthLayout>
   );

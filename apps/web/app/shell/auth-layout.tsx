@@ -4,7 +4,7 @@ import { ThemeToggle } from "~/shell/theme-toggle";
 import { cn } from "~/shared/lib/utils";
 
 /**
- * The two unauthenticated pages — /signin and /setup — share this frame: a
+ * The two unauthenticated pages — /signin and /signup — share this frame: a
  * brand rail on the left, the form on the right.
  *
  * The rail is scoped `dark` in both themes rather than following the toggle.

@@ -19,8 +19,8 @@ export default [
   route("websites/:id/s/analytics", "routes/analytics.public.tsx"),
 
   route("signin", "routes/signin.tsx"),
-  route("setup", "routes/setup.tsx"),
-  route("logout", "routes/logout.tsx"),
+  route("signup", "routes/signup.tsx"),
+  route("signout", "routes/signout.tsx"),
 
   // Resource routes hit by the tracker script from third-party origins.
   route("collect", "routes/api/collect.ts"),
