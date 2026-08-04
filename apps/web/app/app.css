@@ -2,12 +2,14 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --font-heading: var(--font-sans);
-  --font-sans: "Geist Variable", sans-serif;
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, SFMono-Regular, monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -21,6 +23,10 @@
   --color-chart-3: var(--chart-3);
   --color-chart-2: var(--chart-2);
   --color-chart-1: var(--chart-1);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
@@ -48,83 +54,288 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/**
+ * The two bands of the aurora on the auth pages. Slow, out of phase, and
+ * offset from each other so the rail never reads as a still image — the
+ * reduced-motion rule at the bottom of this file collapses both.
+ *
+ * Transform only, deliberately. Opacity is what separates the bands from each
+ * other — violet over cerulean over green, the order they stack in the sky —
+ * and an animated `opacity` would override the class that sets it and drift
+ * every band through the same range, flattening the ramp into one wash.
+ */
+@theme {
+  --animate-aurora: aurora 22s ease-in-out infinite alternate;
+  --animate-aurora-slow: aurora-slow 31s ease-in-out infinite alternate;
+
+  @keyframes aurora {
+    from {
+      transform: translate3d(-4%, 2%, 0) scale(1);
+    }
+    to {
+      transform: translate3d(6%, -4%, 0) scale(1.18);
+    }
+  }
+
+  @keyframes aurora-slow {
+    from {
+      transform: translate3d(4%, -3%, 0) scale(1.14);
+    }
+    to {
+      transform: translate3d(-5%, 3%, 0) scale(1);
+    }
+  }
+}
+
+/**
+ * Aurora
+ *
+ * Three surfaces, in order of elevation: --sidebar is the recessed frame the
+ * app sits in, --background is the content surface, --card is what floats on
+ * it. The ladder holds in both themes, so panels read as panels without
+ * needing shadows to say so.
+ *
+ * The chart ramp is the aurora emission spectrum — indigo and violet from
+ * nitrogen, cerulean through green from oxygen — which is also where the
+ * brand indigo (#555de4) comes from. chart-1 is the brand hue, so a
+ * single-series chart is automatically on-brand.
+ */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --background: oklch(0.988 0.002 268);
+  --foreground: oklch(0.185 0.015 268);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.185 0.015 268);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --popover-foreground: oklch(0.185 0.015 268);
+  --primary: oklch(0.545 0.204 271.5);
+  --primary-foreground: oklch(0.99 0.005 271.5);
+  --secondary: oklch(0.962 0.004 268);
+  --secondary-foreground: oklch(0.245 0.015 268);
+  --muted: oklch(0.962 0.004 268);
+  --muted-foreground: oklch(0.508 0.016 268);
+  --accent: oklch(0.955 0.012 271.5);
+  --accent-foreground: oklch(0.34 0.1 271.5);
+  /**
+   * The third semantic token, held to the same rule as the two below and for
+   * the same reason: it is worn as text everywhere it appears — Button and
+   * Badge `variant="destructive"` are `text-destructive` on a 10% tint of
+   * themselves, Alert is `text-destructive` on a 5% one with its description at
+   * 90% opacity over that, and the stat cards' down-trend arrow is bare
+   * `text-destructive`. At oklch(0.585 0.216 25.5) it measured 4.02:1 on the
+   * button's tint over --card, 3.89:1 over --background, 3.43:1 on the button's
+   * hover tint, and 3.80:1 for the alert description — a fail in every tinted
+   * role, on the one token of the three that was not re-lit.
+   *
+   * Same method as --success and --warning: measured on every surface the
+   * components can sit on (--card, --background, --popover — never --sidebar,
+   * which carries no alerts or destructive buttons) and on the darkest backdrop
+   * each role lays down, which for the button is the 20% hover tint rather than
+   * the 10% resting one. Worst case is now 4.63:1, on the hover tint over
+   * --background; the resting states are 5.6:1 and up.
+   *
+   * Chroma is capped just under what sRGB holds at this lightness (0.201 at
+   * L 0.49, hue 25.5) for the reason spelled out below: asking for more only
+   * makes the browser gamut-map it, to a colour whose contrast is then whatever
+   * the mapping decided rather than what was measured here.
+   */
+  --destructive: oklch(0.49 0.195 25.5);
+  /**
+   * Both of these are worn as text — `text-success` under every stat card's
+   * trend arrow, and both as the `text-*` half of the tinted badges — so they
+   * are held to the 4.5:1 AA threshold for body text, not the 3:1 one for
+   * graphics. They used to be lit for a chart legend: 3.93:1 and 2.99:1 on
+   * --card, which is a fail and a bad fail.
+   *
+   * Measured on every surface they can sit on (--card, --background, --popover,
+   * --sidebar) and on the 10% tint of themselves the badges lay down over the
+   * first two, which is the darkest backdrop either of them gets. Read back off
+   * a canvas in the browser rather than modelled, so the figures are the pixels
+   * that get painted: worst case is now 4.66:1 for --success and 4.76:1 for
+   * --warning, and on --card, where the stat cards wear them, 5.60:1 and
+   * 5.69:1. The dark theme's pair already cleared the threshold with room to
+   * spare (7.33:1 and 8.63:1 at worst) and is unchanged.
+   *
+   * The chroma comes down with the lightness because these hues run out of sRGB
+   * before that: at L 0.5 the greenest green sRGB holds is C 0.132, and asking
+   * for more only makes the browser gamut-map it back — to a colour whose
+   * contrast is then whatever the mapping decided rather than what was measured
+   * here. The old --warning was over that line already.
+   */
+  --success: oklch(0.5 0.132 152);
+  --success-foreground: oklch(0.985 0.01 152);
+  --warning: oklch(0.52 0.117 65);
+  --warning-foreground: oklch(0.985 0.01 65);
+  --border: oklch(0.912 0.006 268);
+  /**
+   * No longer the same value as --border, which is what it was.
+   *
+   * The two are worn for different jobs and held to different rules. --border
+   * draws the ring around a Card, which is decoration: WCAG 1.4.11 exempts it,
+   * and 1.25:1 is fine for something whose absence costs nothing. --input is
+   * the *only* thing that delimits an Input, Textarea, SelectTrigger or
+   * InputGroup from the page — all four are `bg-transparent border
+   * border-input` — so it is the visual boundary that identifies a user
+   * interface component, which 1.4.11 requires to reach 3:1. It measured
+   * 1.25:1 against --background and 1.30:1 against --card.
+   *
+   * L 0.655 is the lightest value that clears 3:1 against the surfaces a form
+   * control renders on: 3.07:1 on --background, 3.17:1 on --card and --popover.
+   * It does not reach 3:1 on --sidebar (2.78:1), which no form control is drawn
+   * on — SidebarInput is unused, and would be `bg-background` if it were.
+   */
+  --input: oklch(0.655 0.006 268);
+  --ring: oklch(0.545 0.204 271.5);
+
+  --chart-1: oklch(0.545 0.204 271.5);
+  --chart-2: oklch(0.585 0.185 300);
+  --chart-3: oklch(0.635 0.135 225);
+  --chart-4: oklch(0.7 0.13 175);
+  --chart-5: oklch(0.775 0.155 140);
+
+  --radius: 0.5rem;
+
+  --sidebar: oklch(0.955 0.005 268);
+  --sidebar-foreground: oklch(0.185 0.015 268);
+  --sidebar-primary: oklch(0.545 0.204 271.5);
+  --sidebar-primary-foreground: oklch(0.99 0.005 271.5);
+  --sidebar-accent: oklch(0.925 0.008 268);
+  --sidebar-accent-foreground: oklch(0.185 0.015 268);
+  --sidebar-border: oklch(0.9 0.007 268);
+  --sidebar-ring: oklch(0.545 0.204 271.5);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: oklch(0.185 0.011 268);
+  --foreground: oklch(0.965 0.003 268);
+  --card: oklch(0.215 0.012 268);
+  --card-foreground: oklch(0.965 0.003 268);
+  --popover: oklch(0.225 0.013 268);
+  --popover-foreground: oklch(0.965 0.003 268);
+  --primary: oklch(0.655 0.19 272);
+  --primary-foreground: oklch(0.16 0.04 272);
+  --secondary: oklch(0.258 0.013 268);
+  --secondary-foreground: oklch(0.965 0.003 268);
+  --muted: oklch(0.258 0.013 268);
+  --muted-foreground: oklch(0.69 0.014 268);
+  --accent: oklch(0.288 0.028 272);
+  --accent-foreground: oklch(0.9 0.05 272);
+  /**
+   * Lighter and less chromatic than the oklch(0.695 0.19 24) it replaces, by
+   * the same measurement as the light theme's: 4.45:1 on the button's 20% tint
+   * over --card and 3.62:1 on its 30% hover tint, against a 4.5:1 threshold.
+   *
+   * The chroma is not a taste decision. Red runs out of sRGB quickly on the
+   * light side — the most saturated red the display holds at L 0.755 is
+   * C 0.147 — so lifting the lightness far enough to clear the tints spends
+   * chroma whether this file admits it or not. Worst case is now 4.61:1, on the
+   * hover tint over --popover.
+   */
+  --destructive: oklch(0.755 0.144 24);
+  --success: oklch(0.72 0.15 152);
+  --success-foreground: oklch(0.16 0.04 152);
+  --warning: oklch(0.79 0.15 72);
+  --warning-foreground: oklch(0.16 0.04 72);
+  --border: oklch(1 0 0 / 9%);
+  /** Split from --border for the reason given in the light theme: 1.39:1. */
+  --input: oklch(1 0 0 / 35%);
+  --ring: oklch(0.655 0.19 272);
+
+  --chart-1: oklch(0.655 0.19 272);
+  --chart-2: oklch(0.685 0.165 300);
+  --chart-3: oklch(0.72 0.125 225);
+  --chart-4: oklch(0.78 0.125 175);
+  --chart-5: oklch(0.855 0.155 140);
+
+  --sidebar: oklch(0.145 0.012 268);
+  --sidebar-foreground: oklch(0.965 0.003 268);
+  --sidebar-primary: oklch(0.655 0.19 272);
+  --sidebar-primary-foreground: oklch(0.16 0.04 272);
+  --sidebar-accent: oklch(0.245 0.014 268);
+  --sidebar-accent-foreground: oklch(0.965 0.003 268);
+  --sidebar-border: oklch(1 0 0 / 8%);
+  --sidebar-ring: oklch(0.655 0.19 272);
+}
+
+/** Section and metric labels. Small, quiet, and always the same size. */
+@utility text-eyebrow {
+  font-size: 0.6875rem;
+  line-height: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+/** Any figure a reader might scan down a column. */
+@utility num {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "ss01";
+  letter-spacing: -0.01em;
+}
+
+/** Headline figures: tight, optically aligned, never reflowing on tick. */
+@utility num-display {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "ss01";
+  letter-spacing: -0.03em;
+  line-height: 1;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
+
   html {
     @apply font-sans;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-sidebar text-foreground;
+  }
+
+  ::selection {
+    background-color: color-mix(in oklch, var(--primary) 22%, transparent);
+  }
+
+  /* Thin, self-effacing scrollbars — dense tables scroll a lot here. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklch, var(--foreground) 20%, transparent)
+      transparent;
+  }
+
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    border-radius: 9999px;
+    background-color: color-mix(in oklch, var(--foreground) 18%, transparent);
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: color-mix(in oklch, var(--foreground) 30%, transparent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
