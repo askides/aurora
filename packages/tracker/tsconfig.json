@@ -1,0 +1,26 @@
+{
+  "include": ["src/**/*", "vitest.config.ts"],
+  "compilerOptions": {
+    "lib": ["DOM", "ES2018"],
+    "target": "ES2018",
+    "module": "ES2022",
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "verbatimModuleSyntax": true,
+    // This bundle is served to third-party pages, so the Node ambient globals
+    // hoisted at the repo root must not be in scope: a stray `process` or
+    // `Buffer` has to be a compile error here, not a ReferenceError on someone
+    // else's site.
+    "types": [],
+    "noEmit": true,
+    "skipLibCheck": true,
+    "strict": true,
+    // esbuild is the only transpiler and compiles each file on its own, so the
+    // source has to stay safe under single-file transpilation.
+    "isolatedModules": true,
+    // The record is full of optional fields whose `undefined` is meaningful;
+    // without this, writing `undefined` into a `string | null` slips through.
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true
+  }
+}
