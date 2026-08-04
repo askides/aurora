@@ -8,20 +8,20 @@ import {
   PageHeader,
   PageHeading,
   PageTitle,
-} from "~/components/page-header";
-import { Alert, AlertTitle } from "~/components/ui/alert";
-import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+} from "~/shared/components/page-header";
+import { Alert, AlertTitle } from "~/shared/ui/alert";
+import { Button } from "~/shared/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "~/shared/ui/card";
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
-} from "~/components/ui/field";
-import { Input } from "~/components/ui/input";
-import { Spinner } from "~/components/ui/spinner";
-import { updateUser } from "~/lib/queries.server";
-import { requireUser } from "~/lib/session.server";
+} from "~/shared/ui/field";
+import { Input } from "~/shared/ui/input";
+import { Spinner } from "~/shared/ui/spinner";
+import { updateUser } from "~/modules/auth/queries.server";
+import { requireUser } from "~/modules/auth/session.server";
 import { z } from "zod";
 import type { Route } from "./+types/account";
 

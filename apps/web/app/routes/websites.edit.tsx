@@ -9,8 +9,11 @@ import {
   PageHeader,
   PageHeading,
   PageTitle,
-} from "~/components/page-header";
-import { WebsiteForm, websiteSchema } from "~/components/website-form";
+} from "~/shared/components/page-header";
+import {
+  WebsiteForm,
+  websiteSchema,
+} from "~/modules/websites/components/website-form";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,19 +24,22 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "~/components/ui/alert-dialog";
-import { Button } from "~/components/ui/button";
+} from "~/shared/ui/alert-dialog";
+import { Button } from "~/shared/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "~/components/ui/card";
-import { Spinner } from "~/components/ui/spinner";
-import { deleteWebsite, updateWebsite } from "~/lib/queries.server";
-import { requireUser } from "~/lib/session.server";
-import { requireWebsiteOwner } from "~/lib/website-access.server";
+} from "~/shared/ui/card";
+import { Spinner } from "~/shared/ui/spinner";
+import {
+  deleteWebsite,
+  updateWebsite,
+} from "~/modules/websites/queries.server";
+import { requireUser } from "~/modules/auth/session.server";
+import { requireWebsiteOwner } from "~/modules/auth/website-access.server";
 import type { Route } from "./+types/websites.edit";
 
 export const meta = () => [{ title: "Website settings — Aurora" }];

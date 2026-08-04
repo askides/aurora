@@ -1,7 +1,7 @@
 import { redirect } from "react-router";
-import { websiteSchema } from "~/components/website-form";
-import { createWebsite } from "~/lib/queries.server";
-import { requireUser } from "~/lib/session.server";
+import { websiteSchema } from "~/modules/websites/components/website-form";
+import { createWebsite } from "~/modules/websites/queries.server";
+import { requireUser } from "~/modules/auth/session.server";
 import type { Route } from "./+types/websites.new";
 
 /**

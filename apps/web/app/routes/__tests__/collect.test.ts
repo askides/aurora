@@ -8,7 +8,7 @@
  * `Headers` and `Buffer` all survive the swap — jsdom defines none of them — so
  * the route tests below run exactly as they did.
  */
-import { limiter, rateLimit } from "~/lib/ratelimit.server";
+import { limiter, rateLimit } from "~/modules/ingest/ratelimit.server";
 import type { SQL } from "drizzle-orm";
 import { PgDialect } from "drizzle-orm/pg-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -119,8 +119,9 @@ const stub = vi.hoisted(() => {
   };
 });
 
-vi.mock("~/lib/queries.server", () => ({
-  db: stub.db,
+vi.mock("~/shared/lib/db.server", () => ({ db: stub.db }));
+
+vi.mock("~/modules/websites/queries.server", () => ({
   getWebsite: stub.getWebsite,
 }));
 

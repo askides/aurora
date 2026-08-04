@@ -1,15 +1,15 @@
 import { ArrowUpRightIcon } from "lucide-react";
-import { AnalyticsDashboard } from "~/components/analytics-dashboard";
+import { AnalyticsDashboard } from "~/modules/analytics/components/dashboard";
 import {
   Page,
   PageDescription,
   PageHeader,
   PageHeading,
   PageTitle,
-} from "~/components/page-header";
-import { PublicShell } from "~/components/shell";
-import { loadDashboard } from "~/lib/analytics.server";
-import { requireWebsiteAccess } from "~/lib/website-access.server";
+} from "~/shared/components/page-header";
+import { PublicShell } from "~/shell/app-shell";
+import { loadDashboard } from "~/modules/analytics/loader.server";
+import { requireWebsiteAccess } from "~/modules/auth/website-access.server";
 import type { Route } from "./+types/analytics.public";
 
 export const meta = () => [{ title: "Dashboard — Aurora" }];

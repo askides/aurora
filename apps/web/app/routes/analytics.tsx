@@ -1,7 +1,7 @@
 import { ArrowUpRightIcon, CopyIcon, Settings2Icon } from "lucide-react";
 import { Link } from "react-router";
 import { toast } from "sonner";
-import { AnalyticsDashboard } from "~/components/analytics-dashboard";
+import { AnalyticsDashboard } from "~/modules/analytics/components/dashboard";
 import {
   Page,
   PageActions,
@@ -9,11 +9,11 @@ import {
   PageHeader,
   PageHeading,
   PageTitle,
-} from "~/components/page-header";
-import { Button } from "~/components/ui/button";
-import { loadDashboard } from "~/lib/analytics.server";
-import { requireUser } from "~/lib/session.server";
-import { requireWebsiteOwner } from "~/lib/website-access.server";
+} from "~/shared/components/page-header";
+import { Button } from "~/shared/ui/button";
+import { loadDashboard } from "~/modules/analytics/loader.server";
+import { requireUser } from "~/modules/auth/session.server";
+import { requireWebsiteOwner } from "~/modules/auth/website-access.server";
 import type { Route } from "./+types/analytics";
 
 export const meta = () => [{ title: "Dashboard — Aurora" }];

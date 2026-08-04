@@ -2,14 +2,14 @@ import { describe, expect, it, vi } from "vitest";
 
 // These route modules import the database and session layers at module scope;
 // the tests below only cover their form schemas, so both are stubbed.
-vi.mock("~/lib/queries.server", () => ({
+vi.mock("~/modules/auth/queries.server", () => ({
   countUsers: vi.fn(),
   createUser: vi.fn(),
   getUserByEmail: vi.fn(),
   updateUser: vi.fn(),
 }));
 
-vi.mock("~/lib/session.server", () => ({
+vi.mock("~/modules/auth/session.server", () => ({
   createUserSession: vi.fn(),
   getCurrentUser: vi.fn(),
   requireUser: vi.fn(),
@@ -18,7 +18,8 @@ vi.mock("~/lib/session.server", () => ({
 const { signInSchema } = await import("../signin");
 const { setupSchema } = await import("../setup");
 const { accountSchema } = await import("../account");
-const { websiteSchema } = await import("~/components/website-form");
+const { websiteSchema } =
+  await import("~/modules/websites/components/website-form");
 
 describe("signInSchema", () => {
   it("accepts a well formed credential pair", () => {

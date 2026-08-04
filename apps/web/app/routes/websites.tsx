@@ -1,7 +1,10 @@
 import { Globe, Lock, MoreHorizontal, Plus } from "lucide-react";
 import { Link } from "react-router";
-import { AddWebsiteSheet } from "~/components/add-website-sheet";
-import { DAILY_VISITORS_HINT, MetricHint } from "~/components/metric-hint";
+import { AddWebsiteSheet } from "~/modules/websites/components/add-website-sheet";
+import {
+  DAILY_VISITORS_HINT,
+  MetricHint,
+} from "~/shared/components/metric-hint";
 import {
   Page,
   PageActions,
@@ -9,17 +12,17 @@ import {
   PageHeader,
   PageHeading,
   PageTitle,
-} from "~/components/page-header";
-import { Sparkline } from "~/components/sparkline";
-import { Badge } from "~/components/ui/badge";
-import { Button } from "~/components/ui/button";
-import { Card } from "~/components/ui/card";
+} from "~/shared/components/page-header";
+import { Sparkline } from "~/shared/components/sparkline";
+import { Badge } from "~/shared/ui/badge";
+import { Button } from "~/shared/ui/button";
+import { Card } from "~/shared/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu";
+} from "~/shared/ui/dropdown-menu";
 import {
   Empty,
   EmptyContent,
@@ -27,7 +30,7 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from "~/components/ui/empty";
+} from "~/shared/ui/empty";
 import {
   Table,
   TableBody,
@@ -35,10 +38,17 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "~/components/ui/table";
-import { formatCompactNumber, formatNumber, initials } from "~/lib/format";
-import { getUserWebsitesOverview, OVERVIEW_DAYS } from "~/lib/queries.server";
-import { requireUser } from "~/lib/session.server";
+} from "~/shared/ui/table";
+import {
+  formatCompactNumber,
+  formatNumber,
+  initials,
+} from "~/shared/lib/format";
+import {
+  getUserWebsitesOverview,
+  OVERVIEW_DAYS,
+} from "~/modules/websites/queries.server";
+import { requireUser } from "~/modules/auth/session.server";
 import type { Route } from "./+types/websites";
 
 export const meta = () => [{ title: "Websites — Aurora" }];

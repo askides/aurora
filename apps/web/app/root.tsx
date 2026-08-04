@@ -8,10 +8,10 @@ import {
   ScrollRestoration,
 } from "react-router";
 
-import { Logo } from "~/components/logo";
-import { Button } from "~/components/ui/button";
-import { Toaster } from "~/components/ui/sonner";
-import { TooltipProvider } from "~/components/ui/tooltip";
+import { Logo } from "~/shared/components/logo";
+import { Button } from "~/shared/ui/button";
+import { Toaster } from "~/shared/ui/sonner";
+import { TooltipProvider } from "~/shared/ui/tooltip";
 
 import type { Route } from "./+types/root";
 import "./app.css";

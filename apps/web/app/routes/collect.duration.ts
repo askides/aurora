@@ -5,10 +5,11 @@ import {
   originAllowed,
   preflight,
   serverError,
-} from "~/lib/cors.server";
-import { db, getWebsite } from "~/lib/queries.server";
-import { rateLimit } from "~/lib/ratelimit.server";
-import { clientKey } from "~/lib/visitor.server";
+} from "~/modules/ingest/cors.server";
+import { getWebsite } from "~/modules/websites/queries.server";
+import { db } from "~/shared/lib/db.server";
+import { rateLimit } from "~/modules/ingest/ratelimit.server";
+import { clientKey } from "~/modules/ingest/visitor.server";
 import { and, eq, sql } from "drizzle-orm";
 import { z } from "zod";
 import { bounded, readPayload } from "./collect";

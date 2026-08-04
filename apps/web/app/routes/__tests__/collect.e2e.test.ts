@@ -39,7 +39,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { events } from "~/db/schema";
-import { limiter } from "~/lib/ratelimit.server";
+import { limiter } from "~/modules/ingest/ratelimit.server";
 import { asc, eq, sql } from "drizzle-orm";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
 import { Client } from "pg";
@@ -179,8 +179,12 @@ type Beacon = { url: string; body: Record<string, unknown> };
 type Visitor = { ip: string; ua?: string; country?: string };
 
 let admin: Client;
-let queries: typeof import("~/lib/queries.server");
-let metrics: typeof import("~/lib/metrics.server");
+// Imported dynamically and separately: db.server reads DATABASE_URL at import,
+// and the two query modules are owned by different features.
+let database: typeof import("~/shared/lib/db.server");
+let users: typeof import("~/modules/auth/queries.server");
+let sites: typeof import("~/modules/websites/queries.server");
+let metrics: typeof import("~/modules/analytics/metrics.server");
 let collect: typeof import("../collect");
 let duration: typeof import("../collect.duration");
 let user: { id: string };
@@ -239,14 +243,16 @@ e2e("a beacon's whole journey", () => {
     // first of these dynamic imports and not one line later.
     process.env.DATABASE_URL = scratchUrl();
 
-    queries = await import("~/lib/queries.server");
-    metrics = await import("~/lib/metrics.server");
+    database = await import("~/shared/lib/db.server");
+    users = await import("~/modules/auth/queries.server");
+    sites = await import("~/modules/websites/queries.server");
+    metrics = await import("~/modules/analytics/metrics.server");
     collect = await import("../collect");
     duration = await import("../collect.duration");
 
-    await migrate(queries.db, { migrationsFolder: MIGRATIONS });
+    await migrate(database.db, { migrationsFolder: MIGRATIONS });
 
-    user = await queries.createUser({
+    user = await users.createUser({
       firstname: "E2E",
       lastname: "Runner",
       email: "e2e@aurora.test",
@@ -256,7 +262,7 @@ e2e("a beacon's whole journey", () => {
 
   afterAll(async () => {
     try {
-      await queries?.db.$client.end();
+      await database?.db.$client.end();
     } finally {
       if (admin) {
         await drop();
@@ -294,7 +300,7 @@ e2e("a beacon's whole journey", () => {
 
   /** One website per journey, so no journey can read another's rows. */
   async function site(name: string) {
-    const website = await queries.createWebsite({
+    const website = await sites.createWebsite({
       name,
       url: SITE_URL,
       is_public: false,
@@ -483,7 +489,7 @@ e2e("a beacon's whole journey", () => {
    */
 
   const recorded = (wid: string) =>
-    queries.db
+    database.db
       .select()
       .from(events)
       .where(eq(events.website_id, wid))
@@ -504,7 +510,7 @@ e2e("a beacon's whole journey", () => {
   });
 
   it("applies the real migrations to the scratch database", async () => {
-    const { rows } = await queries.db.execute<{ table_name: string }>(sql`
+    const { rows } = await database.db.execute<{ table_name: string }>(sql`
       select table_name
       from information_schema.tables
       where table_schema = 'public'
@@ -903,7 +909,7 @@ e2e("a beacon's whole journey", () => {
     // the two visits one visitor — advancing a fake clock by 31 minutes could
     // step over midnight and rotate the pseudonym, which is the one thing this
     // journey needs held still.
-    await queries.db.execute(sql`
+    await database.db.execute(sql`
       update ${events}
       set created_at = created_at - interval '31 minutes'
       where ${eq(events.website_id, wid)}

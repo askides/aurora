@@ -1,18 +1,17 @@
 import { ArrowRightIcon, CircleAlertIcon } from "lucide-react";
 import { Form, Link, redirect, useNavigation } from "react-router";
+import { AuthAside, AuthHeading, AuthLayout } from "~/shell/auth-layout";
+import { Alert, AlertTitle } from "~/shared/ui/alert";
+import { Button } from "~/shared/ui/button";
+import { Field, FieldGroup, FieldLabel } from "~/shared/ui/field";
+import { Input } from "~/shared/ui/input";
+import { Spinner } from "~/shared/ui/spinner";
+import { verify } from "~/modules/auth/hash.server";
+import { countUsers, getUserByEmail } from "~/modules/auth/queries.server";
 import {
-  AuthAside,
-  AuthHeading,
-  AuthLayout,
-} from "~/components/auth-layout";
-import { Alert, AlertTitle } from "~/components/ui/alert";
-import { Button } from "~/components/ui/button";
-import { Field, FieldGroup, FieldLabel } from "~/components/ui/field";
-import { Input } from "~/components/ui/input";
-import { Spinner } from "~/components/ui/spinner";
-import { verify } from "~/lib/hash.server";
-import { countUsers, getUserByEmail } from "~/lib/queries.server";
-import { createUserSession, getCurrentUser } from "~/lib/session.server";
+  createUserSession,
+  getCurrentUser,
+} from "~/modules/auth/session.server";
 import { z } from "zod";
 import type { Route } from "./+types/signin";
 
@@ -87,7 +86,11 @@ export default function SignIn({
         />
 
         <Form method="post">
-          <input type="hidden" name="redirectTo" value={loaderData.redirectTo} />
+          <input
+            type="hidden"
+            name="redirectTo"
+            value={loaderData.redirectTo}
+          />
 
           <FieldGroup>
             {actionData?.error && (

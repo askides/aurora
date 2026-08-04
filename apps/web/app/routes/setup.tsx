@@ -1,22 +1,18 @@
 import { CircleAlertIcon } from "lucide-react";
 import { Form, redirect, useNavigation } from "react-router";
-import {
-  AuthAside,
-  AuthHeading,
-  AuthLayout,
-} from "~/components/auth-layout";
-import { Alert, AlertTitle } from "~/components/ui/alert";
-import { Button } from "~/components/ui/button";
+import { AuthAside, AuthHeading, AuthLayout } from "~/shell/auth-layout";
+import { Alert, AlertTitle } from "~/shared/ui/alert";
+import { Button } from "~/shared/ui/button";
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
-} from "~/components/ui/field";
-import { Input } from "~/components/ui/input";
-import { Spinner } from "~/components/ui/spinner";
-import { countUsers, createUser } from "~/lib/queries.server";
-import { createUserSession } from "~/lib/session.server";
+} from "~/shared/ui/field";
+import { Input } from "~/shared/ui/input";
+import { Spinner } from "~/shared/ui/spinner";
+import { countUsers, createUser } from "~/modules/auth/queries.server";
+import { createUserSession } from "~/modules/auth/session.server";
 import { z } from "zod";
 import type { Route } from "./+types/setup";
 

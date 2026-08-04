@@ -6,13 +6,18 @@ import {
   originAllowed,
   preflight,
   serverError,
-} from "~/lib/cors.server";
-import { country } from "~/lib/geo.server";
-import { db, getWebsite } from "~/lib/queries.server";
-import { rateLimit } from "~/lib/ratelimit.server";
-import { acquisition, urlHost } from "~/lib/referrer.server";
-import { isBot, parseUserAgent, screenClass } from "~/lib/ua.server";
-import { SESSION_WINDOW_MS, clientKey, visitorId } from "~/lib/visitor.server";
+} from "~/modules/ingest/cors.server";
+import { country } from "~/modules/ingest/geo.server";
+import { getWebsite } from "~/modules/websites/queries.server";
+import { db } from "~/shared/lib/db.server";
+import { rateLimit } from "~/modules/ingest/ratelimit.server";
+import { acquisition, urlHost } from "~/modules/ingest/referrer.server";
+import { isBot, parseUserAgent, screenClass } from "~/modules/ingest/ua.server";
+import {
+  SESSION_WINDOW_MS,
+  clientKey,
+  visitorId,
+} from "~/modules/ingest/visitor.server";
 import { and, desc, eq, sql } from "drizzle-orm";
 import localeCodes from "locale-codes";
 import { z } from "zod";

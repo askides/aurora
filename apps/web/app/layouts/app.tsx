@@ -1,7 +1,7 @@
 import { Outlet } from "react-router";
-import { AppShell } from "~/components/shell";
-import { getUserWebsites } from "~/lib/queries.server";
-import { requireUser } from "~/lib/session.server";
+import { AppShell } from "~/shell/app-shell";
+import { getUserWebsites } from "~/modules/websites/queries.server";
+import { requireUser } from "~/modules/auth/session.server";
 import type { Route } from "./+types/app";
 
 /**
