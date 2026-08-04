@@ -36,7 +36,16 @@ jobs:
 
     services:
       postgres:
-        image: postgres:16
+        # Pinned to the patch for the reason docker-compose.yml gives at length:
+        # Postgres reads zones from its image's own OS tzdata package, so a
+        # floating `postgres:16` picks up whichever release the latest rebuild
+        # carried. It resolves to 16.14 / tzdata 2026b today, one release ahead
+        # of the 2026a the Dockerfile asserts against `process.versions.tz` and
+        # docker-compose's healthcheck refuses to start without. The
+        # timezone-sensitive suites are the ones that run here, so this was the
+        # one place the two zone databases were never checked against each
+        # other. Move this with the pin in docker-compose.yml.
+        image: postgres:16.13
         env:
           POSTGRES_DB: aurora
           POSTGRES_USER: root
@@ -62,3 +71,27 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm build
+
+  # The deployment path, which nothing else exercises. `pnpm build` covers the
+  # app's own compilation, but the Dockerfile carries logic that only ever runs
+  # here: the base stage's tzdata assertion, the `--filter web... --filter
+  # tracker...` scoped installs, the `--prod` install, and the runner stage's
+  # hand-assembled node_modules copy. A dependency that only resolved because a
+  # dev dependency hoisted it, or a file the runner stage forgets to copy, is
+  # invisible to every step above and surfaces at deploy time.
+  docker:
+    name: Docker
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+
+      # Build only — the image is never pushed from CI. This is a gate, not a
+      # release step.
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

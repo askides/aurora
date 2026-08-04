@@ -15,8 +15,13 @@ export default defineConfig({
     environment: "node",
     include: ["app/**/*.test.{ts,tsx}"],
     setupFiles: ["./test/setup.ts"],
-    // Timeseries buckets are generated with date-fns in local time, so results
-    // depend on the host zone. Servers run UTC; pin tests to match.
+    // Servers run UTC, so the suite defaults to it for reproducibility.
+    //
+    // This is a blind spot as much as a convenience: pinning the zone here is
+    // exactly what stops the suite noticing when the host zone leaks into a
+    // calculation, and three such leaks were found by hand rather than by a
+    // failing test. The cases that guard it therefore set `process.env.TZ`
+    // themselves at runtime — grep for it before assuming this line covers you.
     env: { TZ: "UTC" },
   },
 });

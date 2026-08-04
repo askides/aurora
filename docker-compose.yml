@@ -1,20 +1,64 @@
 # Dev-only backing services. The app itself runs locally (`pnpm dev`).
 # Credentials match the DATABASE_URL in apps/web/.env.example.
+#
+# Upgrading from a container started before the pin below: compose will not
+# re-pull for a container that already exists, so `docker compose up` keeps
+# running the old floating `postgres:16` (16.14, tzdata 2026b) under the old
+# healthcheck definition and reports it healthy. Recreate it explicitly —
+# `docker compose up -d --force-recreate postgres` — or the pin does nothing.
+# Note that this hands a data directory initialised by 16.14 to a 16.13 binary.
+# Minor releases share a catalog version so it starts, but it is a downgrade
+# against an existing directory: dump first if the data matters, or
+# `docker compose down -v` if it does not.
 services:
   postgres:
-    image: postgres:16
+    # Pinned to the minor for the zone database, not for Postgres. The Debian
+    # packages build with `--with-system-tzdata=/usr/share/zoneinfo`, so the
+    # image's own tzdata release is what `AT TIME ZONE` reads, and a floating
+    # `postgres:16` picks up whichever release the latest rebuild happened to
+    # ship. Node compiles its copy in, so the two sides carry two independently
+    # moving zone databases, and the dashboard reads both: JS resolves the
+    # window's boundaries (see app/lib/timezone.ts) and SQL groups the buckets
+    # inside them. When the releases disagree about a zone the two answers
+    # disagree by the offset, silently — `postgres:16` was on 2026b against
+    # Node's 2026a while this was written, which puts America/Vancouver an hour
+    # out from 2026-11-02 onward and would have shifted every bucket boundary
+    # in that zone by an hour with nothing on screen to say so.
+    image: postgres:16.13
     restart: unless-stopped
     environment:
       POSTGRES_DB: aurora
       POSTGRES_USER: root
       POSTGRES_PASSWORD: password
+      # The release both sides are held to. Keep in step with AURORA_TZDATA in
+      # the Dockerfile, which asserts the same value against Node's copy: each
+      # side checks itself, so either one drifting fails rather than quietly
+      # disagreeing with the other.
+      AURORA_TZDATA: "2026a"
     # Host port is 5434 to avoid clashing with other local Postgres containers.
     ports:
       - "5434:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    # Accepting connections is not enough to be useful: a container whose
+    # zoneinfo has moved out from under the pin is a container that draws wrong
+    # charts, so it never reports healthy and `up --wait` stops on it. The
+    # pinned tag is not a guarantee on its own — a tag can be rebuilt onto a
+    # newer base image, and only the tzdata inside it is checkable.
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U root -d aurora"]
+      test:
+        - CMD-SHELL
+        # `$$` is a literal `$` for the container's shell rather than something
+        # compose should substitute. The release is the first line of the file
+        # the Debian tzdata package installs, which is the same file the server
+        # reads its rules out of.
+        - |
+          pg_isready -U root -d aurora || exit 1
+          want="# version $$AURORA_TZDATA"
+          have=$$(head -1 /usr/share/zoneinfo/tzdata.zi 2>/dev/null)
+          [ "$$have" = "$$want" ] && exit 0
+          echo "tzdata mismatch: this Postgres image carries '$$have', the app is built against '$$want'. Pin an image whose zone database matches Node's, or move both."
+          exit 1
       interval: 5s
       timeout: 5s
       retries: 10
