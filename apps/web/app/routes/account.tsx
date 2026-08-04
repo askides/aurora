@@ -1,9 +1,25 @@
+import { useEffect } from "react";
 import { Form, useNavigation } from "react-router";
-import { Page, PageHeader, PageTitle } from "~/components/page-header";
+import { TriangleAlertIcon } from "lucide-react";
+import { toast } from "sonner";
+import {
+  Page,
+  PageDescription,
+  PageHeader,
+  PageHeading,
+  PageTitle,
+} from "~/components/page-header";
+import { Alert, AlertTitle } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
-import { Card, CardContent } from "~/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "~/components/ui/field";
 import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
+import { Spinner } from "~/components/ui/spinner";
 import { updateUser } from "~/lib/queries.server";
 import { requireUser } from "~/lib/session.server";
 import { z } from "zod";
@@ -67,87 +83,119 @@ export default function Account({
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
 
+  useEffect(() => {
+    if (actionData && "ok" in actionData) {
+      toast.success("Account updated");
+    }
+  }, [actionData]);
+
   return (
-    <Page>
+    <Page className="max-w-2xl">
       <PageHeader>
-        <PageTitle>Account</PageTitle>
+        <PageHeading>
+          <PageTitle>Account</PageTitle>
+          <PageDescription>
+            Your sign-in details for this Aurora instance.
+          </PageDescription>
+        </PageHeading>
       </PageHeader>
 
-      <Card>
-        <CardContent>
-          <Form method="post" className="flex flex-col gap-5">
-            <div className="grid gap-2">
-              <Label htmlFor="firstname">Firstname</Label>
-              <Input
-                id="firstname"
-                name="firstname"
-                defaultValue={user.firstname}
-                required
-              />
-            </div>
+      {/* One form, two cards: the action reads every field in a single pass. */}
+      <Form method="post" className="flex flex-col gap-4">
+        {actionData && "error" in actionData && (
+          <Alert variant="destructive">
+            <TriangleAlertIcon />
+            <AlertTitle>{actionData.error}</AlertTitle>
+          </Alert>
+        )}
 
-            <div className="grid gap-2">
-              <Label htmlFor="lastname">Lastname</Label>
-              <Input
-                id="lastname"
-                name="lastname"
-                defaultValue={user.lastname}
-                required
-              />
-            </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Profile</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <FieldGroup>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field>
+                  <FieldLabel htmlFor="firstname">First name</FieldLabel>
+                  <Input
+                    id="firstname"
+                    name="firstname"
+                    defaultValue={user.firstname}
+                    autoComplete="given-name"
+                    required
+                  />
+                </Field>
 
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                defaultValue={user.email}
-                required
-              />
-            </div>
+                <Field>
+                  <FieldLabel htmlFor="lastname">Last name</FieldLabel>
+                  <Input
+                    id="lastname"
+                    name="lastname"
+                    defaultValue={user.lastname}
+                    autoComplete="family-name"
+                    required
+                  />
+                </Field>
+              </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="password">New Password</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="new-password"
-              />
-              <p className="text-muted-foreground text-sm">
-                Leave blank to keep your current password. Minimum 8 characters.
-              </p>
-            </div>
+              <Field>
+                <FieldLabel htmlFor="email">Email</FieldLabel>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  defaultValue={user.email}
+                  autoComplete="email"
+                  required
+                />
+              </Field>
+            </FieldGroup>
+          </CardContent>
+        </Card>
 
-            <div className="grid gap-2">
-              <Label htmlFor="confirmPassword">Repeat New Password</Label>
-              <Input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                autoComplete="new-password"
-              />
-            </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Password</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor="password">New password</FieldLabel>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  autoComplete="new-password"
+                />
+                <FieldDescription>
+                  Leave blank to keep your current password. Minimum 8
+                  characters.
+                </FieldDescription>
+              </Field>
 
-            {actionData && "error" in actionData && (
-              <p role="alert" className="text-destructive text-sm">
-                {actionData.error}
-              </p>
-            )}
+              <Field>
+                <FieldLabel htmlFor="confirmPassword">
+                  Repeat new password
+                </FieldLabel>
+                <Input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  autoComplete="new-password"
+                />
+              </Field>
+            </FieldGroup>
+          </CardContent>
+        </Card>
 
-            {actionData && "ok" in actionData && (
-              <p className="text-sm text-emerald-600 dark:text-emerald-400">
-                Account updated!
-              </p>
-            )}
-
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              Update Informations!
-            </Button>
-          </Form>
-        </CardContent>
-      </Card>
+        <div className="flex justify-end">
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting && <Spinner />}
+            Save changes
+          </Button>
+        </div>
+      </Form>
     </Page>
   );
 }

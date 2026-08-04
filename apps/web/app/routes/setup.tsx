@@ -1,9 +1,20 @@
+import { CircleAlertIcon } from "lucide-react";
 import { Form, redirect, useNavigation } from "react-router";
-import { Logo } from "~/components/logo";
+import {
+  AuthAside,
+  AuthHeading,
+  AuthLayout,
+} from "~/components/auth-layout";
+import { Alert, AlertTitle } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
-import { Card, CardContent } from "~/components/ui/card";
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "~/components/ui/field";
 import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
+import { Spinner } from "~/components/ui/spinner";
 import { countUsers, createUser } from "~/lib/queries.server";
 import { createUserSession } from "~/lib/session.server";
 import { z } from "zod";
@@ -64,80 +75,116 @@ export default function Setup({ actionData }: Route.ComponentProps) {
   const isSubmitting = navigation.formAction === "/setup";
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center gap-10 p-6 md:flex-row md:gap-0">
-      <div className="flex flex-1 flex-col gap-10 md:p-10">
-        <Logo className="h-24 w-24" />
+    <AuthLayout
+      className="max-w-md"
+      aside={
+        <AuthAside
+          title="Measure everything. Track no one."
+          description="This first account owns the instance. Create it once, then add the sites you want to measure."
+        />
+      }
+    >
+      <div className="flex flex-col gap-7">
+        <AuthHeading
+          title="Set up Aurora"
+          description="One account, created once, on the instance you control."
+        />
 
-        <div className="flex flex-col gap-3">
-          <h1 className="text-3xl font-semibold tracking-tight">Welcome</h1>
-          <p className="text-muted-foreground text-xl">
-            You are about to setup your first Aurora account. Please fill the
-            form to continue. You will be able to change these informations
-            later, so don&apos;t worry.
-          </p>
-        </div>
-      </div>
+        <Form method="post">
+          <FieldGroup>
+            {actionData?.error && (
+              <Alert variant="destructive">
+                <CircleAlertIcon />
+                <AlertTitle>{actionData.error}</AlertTitle>
+              </Alert>
+            )}
 
-      <div className="flex w-full flex-1 flex-col md:p-10">
-        <Card>
-          <CardContent>
-            <Form method="post" className="flex flex-col gap-5">
-              <div className="grid gap-2">
-                <Label htmlFor="firstname">First Name</Label>
-                <Input id="firstname" name="firstname" required />
-              </div>
-
-              <div className="grid gap-2">
-                <Label htmlFor="lastname">Last Name</Label>
-                <Input id="lastname" name="lastname" required />
-              </div>
-
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email address</Label>
-                <Input id="email" name="email" type="email" required />
-                <p className="text-muted-foreground text-sm">
-                  It will be used as username.
-                </p>
-              </div>
-
-              <div className="grid gap-2">
-                <Label htmlFor="password">Password</Label>
+            <div className="grid gap-5 sm:grid-cols-2">
+              <Field>
+                <FieldLabel htmlFor="firstname">First name</FieldLabel>
                 <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="new-password"
+                  id="firstname"
+                  name="firstname"
+                  autoComplete="given-name"
+                  className="h-9"
+                  autoFocus
                   required
                 />
-                <p className="text-muted-foreground text-sm">
-                  Minimum 8 characters
-                </p>
-              </div>
+              </Field>
 
-              <div className="grid gap-2">
-                <Label htmlFor="confirmPassword">Repeat Password</Label>
+              <Field>
+                <FieldLabel htmlFor="lastname">Last name</FieldLabel>
                 <Input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type="password"
-                  autoComplete="new-password"
+                  id="lastname"
+                  name="lastname"
+                  autoComplete="family-name"
+                  className="h-9"
                   required
                 />
-              </div>
+              </Field>
+            </div>
 
-              {actionData?.error && (
-                <p role="alert" className="text-destructive text-sm">
-                  {actionData.error}
-                </p>
+            <Field>
+              <FieldLabel htmlFor="email">Email</FieldLabel>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                placeholder="you@example.com"
+                className="h-9"
+                required
+              />
+              <FieldDescription className="text-xs">
+                Used as your username.
+              </FieldDescription>
+            </Field>
+
+            <Field>
+              <FieldLabel htmlFor="password">Password</FieldLabel>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                autoComplete="new-password"
+                className="h-9"
+                required
+              />
+              <FieldDescription className="text-xs">
+                At least 8 characters.
+              </FieldDescription>
+            </Field>
+
+            <Field>
+              <FieldLabel htmlFor="confirmPassword">Repeat password</FieldLabel>
+              <Input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                autoComplete="new-password"
+                className="h-9"
+                required
+              />
+            </Field>
+
+            <Button
+              type="submit"
+              size="lg"
+              className="w-full"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <Spinner />
+                  Creating…
+                </>
+              ) : (
+                "Create account"
               )}
-
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? "Creating…" : "Start using Aurora!"}
-              </Button>
-            </Form>
-          </CardContent>
-        </Card>
+            </Button>
+          </FieldGroup>
+        </Form>
       </div>
-    </main>
+    </AuthLayout>
   );
 }

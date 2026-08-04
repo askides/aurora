@@ -1,8 +1,15 @@
+import { ArrowRightIcon, CircleAlertIcon } from "lucide-react";
 import { Form, Link, redirect, useNavigation } from "react-router";
+import {
+  AuthAside,
+  AuthHeading,
+  AuthLayout,
+} from "~/components/auth-layout";
+import { Alert, AlertTitle } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
-import { Card, CardContent } from "~/components/ui/card";
+import { Field, FieldGroup, FieldLabel } from "~/components/ui/field";
 import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
+import { Spinner } from "~/components/ui/spinner";
 import { verify } from "~/lib/hash.server";
 import { countUsers, getUserByEmail } from "~/lib/queries.server";
 import { createUserSession, getCurrentUser } from "~/lib/session.server";
@@ -65,63 +72,91 @@ export default function SignIn({
   const isSubmitting = navigation.formAction === "/signin";
 
   return (
-    <main className="flex min-h-screen items-center justify-center p-6">
-      <div className="flex w-full max-w-md flex-col items-center gap-8">
-        <h1 className="text-3xl font-semibold tracking-tight">Sign In</h1>
+    <AuthLayout
+      aside={
+        <AuthAside
+          title="Measure everything. Track no one."
+          description="Aurora counts your traffic without cookies, fingerprints, or a third party in the middle — and keeps every event in a database only you can reach."
+        />
+      }
+    >
+      <div className="flex flex-col gap-7">
+        <AuthHeading
+          title="Sign in"
+          description="Welcome back. Your instance, your data."
+        />
 
-        <Card className="w-full">
-          <CardContent>
-            <Form method="post" className="flex flex-col gap-5">
-              <input
-                type="hidden"
-                name="redirectTo"
-                value={loaderData.redirectTo}
+        <Form method="post">
+          <input type="hidden" name="redirectTo" value={loaderData.redirectTo} />
+
+          <FieldGroup>
+            {actionData?.error && (
+              <Alert variant="destructive">
+                <CircleAlertIcon />
+                <AlertTitle>{actionData.error}</AlertTitle>
+              </Alert>
+            )}
+
+            <Field>
+              <FieldLabel htmlFor="email">Email</FieldLabel>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                placeholder="you@example.com"
+                className="h-9"
+                autoFocus
+                required
               />
+            </Field>
 
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email address</Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                />
-              </div>
+            <Field>
+              <FieldLabel htmlFor="password">Password</FieldLabel>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                className="h-9"
+                required
+              />
+            </Field>
 
-              <div className="grid gap-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                />
-              </div>
-
-              {actionData?.error && (
-                <p role="alert" className="text-destructive text-sm">
-                  {actionData.error}
-                </p>
+            <Button
+              type="submit"
+              size="lg"
+              className="w-full"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <Spinner />
+                  Signing in…
+                </>
+              ) : (
+                <>
+                  Sign in
+                  <ArrowRightIcon className="transition-transform group-hover/button:translate-x-0.5" />
+                </>
               )}
-
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? "Signing in…" : "Sign In!"}
-              </Button>
-            </Form>
-          </CardContent>
-        </Card>
+            </Button>
+          </FieldGroup>
+        </Form>
 
         {loaderData.needsSetup && (
-          <p className="text-muted-foreground text-sm">
+          <p className="text-sm text-muted-foreground">
             First time here?{" "}
-            <Link to="/setup" className="text-primary font-medium">
-              Create the first user!
+            <Link
+              to="/setup"
+              className="font-medium text-foreground underline underline-offset-4 hover:text-primary"
+            >
+              Create the first account
             </Link>
+            .
           </p>
         )}
       </div>
-    </main>
+    </AuthLayout>
   );
 }

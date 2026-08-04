@@ -15,9 +15,9 @@ vi.mock("~/lib/session.server", () => ({
   requireUser: vi.fn(),
 }));
 
-const { signInSchema } = await import("./signin");
-const { setupSchema } = await import("./setup");
-const { accountSchema } = await import("./account");
+const { signInSchema } = await import("../signin");
+const { setupSchema } = await import("../setup");
+const { accountSchema } = await import("../account");
 const { websiteSchema } = await import("~/components/website-form");
 
 describe("signInSchema", () => {
