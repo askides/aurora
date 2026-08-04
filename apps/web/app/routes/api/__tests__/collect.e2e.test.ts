@@ -60,8 +60,8 @@ import {
  * taken off `import.meta.url` itself.
  */
 const HERE = dirname(fileURLToPath(import.meta.url));
-const ROOT = resolve(HERE, "../../../../..");
-const WEB = resolve(HERE, "../../..");
+const ROOT = resolve(HERE, "../../../../../..");
+const WEB = resolve(HERE, "../../../..");
 const BUNDLE = resolve(WEB, "public/tracker.js");
 const MIGRATIONS = resolve(WEB, "app/db/migrations");
 const ENV_FILE = resolve(WEB, ".env");

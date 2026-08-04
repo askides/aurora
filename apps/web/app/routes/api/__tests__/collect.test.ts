@@ -12,7 +12,7 @@ import { limiter, rateLimit } from "~/modules/ingest/ratelimit.server";
 import type { SQL } from "drizzle-orm";
 import { PgDialect } from "drizzle-orm/pg-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { normalizePath } from "../../../../../packages/tracker/src/payload";
+import { normalizePath } from "../../../../../../packages/tracker/src/payload";
 
 /**
  * The routes reach the database through `db` and `getWebsite` only, so the
@@ -1555,7 +1555,7 @@ describe("the tracker's own beacons", () => {
 
     vi.resetModules();
 
-    await import("../../../../../packages/tracker/src/index");
+    await import("../../../../../../packages/tracker/src/index");
     await tick();
   };
 
