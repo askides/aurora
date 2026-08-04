@@ -1,0 +1,23 @@
+# Dev-only backing services. The app itself runs locally (`pnpm dev`).
+# Credentials match the DATABASE_URL in apps/web/.env.example.
+services:
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: aurora
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+    # Host port is 5434 to avoid clashing with other local Postgres containers.
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U root -d aurora"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres-data:
