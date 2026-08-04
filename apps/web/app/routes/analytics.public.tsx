@@ -1,6 +1,13 @@
+import { ArrowUpRightIcon } from "lucide-react";
 import { AnalyticsDashboard } from "~/components/analytics-dashboard";
-import { Page, PageHeader, PageTitle } from "~/components/page-header";
-import { Shell } from "~/components/shell";
+import {
+  Page,
+  PageDescription,
+  PageHeader,
+  PageHeading,
+  PageTitle,
+} from "~/components/page-header";
+import { PublicShell } from "~/components/shell";
 import { loadDashboard } from "~/lib/analytics.server";
 import { requireWebsiteAccess } from "~/lib/website-access.server";
 import type { Route } from "./+types/analytics.public";
@@ -13,21 +20,47 @@ export const meta = () => [{ title: "Dashboard — Aurora" }];
  * threading — the check happens before anything renders.
  */
 export async function loader({ request, params }: Route.LoaderArgs) {
-  await requireWebsiteAccess(request, params.id);
+  const website = await requireWebsiteAccess(request, params.id);
 
-  return loadDashboard(params.id, new URL(request.url));
+  return {
+    ...(await loadDashboard(params.id, new URL(request.url))),
+    // Only the two fields the header shows are serialised: the rest of the row
+    // (owner id, flags, timestamps) has no business reaching an anonymous
+    // viewer just because the site is shared.
+    website: { name: website.name, url: website.url },
+  };
+}
+
+/** Same reason as the owner dashboard: the URL column is a free string. */
+function siteHref(url: string) {
+  return /^https?:\/\//i.test(url) ? url : `https://${url}`;
 }
 
 export default function PublicAnalytics({ loaderData }: Route.ComponentProps) {
+  const { website } = loaderData;
+
   return (
-    <Shell isPublic>
+    <PublicShell>
       <Page>
         <PageHeader>
-          <PageTitle>Dashboard</PageTitle>
+          <PageHeading>
+            <PageTitle>{website.name}</PageTitle>
+            <PageDescription>
+              <a
+                href={siteHref(website.url)}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="inline-flex items-center gap-1 hover:underline"
+              >
+                {website.url}
+                <ArrowUpRightIcon className="size-3" />
+              </a>
+            </PageDescription>
+          </PageHeading>
         </PageHeader>
 
         <AnalyticsDashboard data={loaderData} />
       </Page>
-    </Shell>
+    </PublicShell>
   );
 }
