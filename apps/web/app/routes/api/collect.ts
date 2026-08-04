@@ -10,6 +10,7 @@ import {
 import { country } from "~/modules/ingest/geo.server";
 import { getWebsite } from "~/modules/websites/queries.server";
 import { db } from "~/shared/lib/db.server";
+import { isUniqueViolation } from "~/shared/lib/pg-errors.server";
 import { rateLimit } from "~/modules/ingest/ratelimit.server";
 import { acquisition, urlHost } from "~/modules/ingest/referrer.server";
 import { isBot, parseUserAgent, screenClass } from "~/modules/ingest/ua.server";
@@ -309,27 +310,6 @@ function localeTag(language: string | undefined): string | null {
   }
 
   return localeCodes.getByTag(language)?.tag ?? null;
-}
-
-/**
- * pg reports a unique violation as 23505, and drizzle wraps it in a
- * DrizzleQueryError, so the code is one `cause` down — two once a transaction
- * has rethrown it.
- */
-function isUniqueViolation(error: unknown): boolean {
-  for (let cause = error, depth = 0; depth < 4; depth += 1) {
-    if (typeof cause !== "object" || cause === null) {
-      return false;
-    }
-
-    if ((cause as { code?: unknown }).code === "23505") {
-      return true;
-    }
-
-    cause = (cause as { cause?: unknown }).cause;
-  }
-
-  return false;
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
