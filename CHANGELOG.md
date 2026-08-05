@@ -5,7 +5,6 @@
 
 ### Documentation
 
-* show the dashboard in the readme ([9190ed8](https://github.com/askides/aurora/commit/9190ed84c86a429e5ef3687440827af201ad0666))
 * show the dashboard in the readme ([27c410e](https://github.com/askides/aurora/commit/27c410e52a3246277bcfeeb8a4bfb8865c691985))
 
 ## [4.0.1](https://github.com/askides/aurora/compare/v4.0.0...v4.0.1) (2026-08-05)
@@ -13,54 +12,23 @@
 
 ### Bug Fixes
 
-* **calendar:** keep keyboard navigation alive after picking a date ([fd3823f](https://github.com/askides/aurora/commit/fd3823f364b4faf98c39fc6c31ea754f1a43ac5d))
 * **calendar:** keep keyboard navigation alive after picking a date ([dcd8b15](https://github.com/askides/aurora/commit/dcd8b15d5a83ce45c6127129f839d073bd76964b))
 
 ## [4.0.0](https://github.com/askides/aurora/compare/v2.0.1...v4.0.0) (2026-08-05)
 
-A ground-up rewrite. Nothing is carried over from the 2.x Next.js application —
-the stack, the database schema, the tracker, and the dashboard are all new, and
-there is no migration path from a 2.x installation.
+Aurora 4.0 is a complete rewrite. Nothing carries over from the 2.x Next.js app
+— the stack, the database, the tracker and the dashboard are all new, so there's
+no upgrade path from a 2.x install. There is no 3.x; the number was skipped so
+the rewrite could start on a clean major.
 
-There is no 3.x: the number was skipped so the rewrite starts on a clean major.
+The app now runs on React Router v8 in a pnpm workspace, with Drizzle in place of
+Prisma and a single wide events table instead of the old normalised schema. The
+tracker was rewritten in TypeScript and no longer touches cookies or
+`localStorage` — visitor and session ids come from a rotating HMAC,
+sessionization happens at ingest, and referrers are sorted into acquisition
+channels as they're written. The dashboard is new too: range and timezone
+pickers, a Recharts timeseries, tabbed breakdown panels and a per-site list, all
+on an aurora palette.
 
-### ⚠ BREAKING CHANGES
-
-- The event schema is denormalised into a single wide table. A 2.x database
-  cannot be upgraded in place.
-- Prisma is replaced by Drizzle; `prisma migrate` is replaced by
-  `pnpm db:migrate` (drizzle-kit).
-- The tracker's wire format changed. Re-copy the snippet from the dashboard —
-  a 2.x `tracker.js` will not report to a 3.x collector.
-
-### Features
-
-- Rewritten storage-free tracker in TypeScript: no cookies, no `localStorage`.
-- Visitor and session ids derived from a rotating HMAC rather than stored
-  identifiers.
-- Ingest rebuilt around sessionization and a duration token, with referrers
-  classified into acquisition channels at write time.
-- Country resolved from edge headers only; client parsed from UA hints first,
-  falling back to the UA string.
-- Rate limiting on the unauthenticated collect endpoints, and CORS that echoes
-  the caller's origin instead of allowing `*`.
-- Dashboard rebuilt around range and timezone pickers, a Recharts timeseries,
-  tabbed breakdown panels, and a sidebar shell on an aurora palette.
-- Website list with per-site numbers and a sheet for adding sites.
-
-### Refactoring
-
-- Migrated to React Router v8 on a pnpm workspace with Tailwind and shadcn.
-- Reorganised the app into feature modules over a shared layer, with the
-  shared-to-modules direction enforced by oxlint.
-- Replaced Prisma with Drizzle and fixed the schema defects that surfaced.
-- Query layer rebuilt on the wide events table; preset windows measured in
-  milliseconds rather than calendar days.
-- Replaced prettier with oxfmt + oxlint.
-
-### Bug Fixes
-
-- Pinned both tzdata copies — the Node base image and the Postgres image — and
-  assert them at build time, so the JS and SQL halves of a chart cannot disagree
-  about a zone's offset.
-- Substituted the legacy timezone names Postgres rejects.
+To move over, start from a fresh database and re-copy the tracker snippet from
+your dashboard — a 2.x `tracker.js` won't report to the 4.x collector.
