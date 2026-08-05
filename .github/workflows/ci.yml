@@ -118,8 +118,8 @@ jobs:
 
   # The deployment path, which nothing else exercises. `pnpm build` covers the
   # app's own compilation, but the Dockerfile carries logic that only ever runs
-  # here: the base stage's tzdata assertion, the `--filter web... --filter
-  # tracker...` scoped installs, the `--prod` install, and the runner stage's
+  # here: the base stage's tzdata assertion, the `--filter web...` scoped
+  # install, the `--prod` install, and the runner stage's
   # hand-assembled node_modules copy. A dependency that only resolved because a
   # dev dependency hoisted it, or a file the runner stage forgets to copy, is
   # invisible to every step above and surfaces at deploy time.
@@ -172,17 +172,37 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-  # Publishing lives here, keyed off the job above's output, rather than in a
-  # workflow triggered `on: release`. A release created with GITHUB_TOKEN does
-  # not fire `release`, `create`, or tag `push` events — GitHub suppresses them
-  # so workflows cannot trigger themselves — so the obvious wiring would simply
-  # never run. Reading `release_created` in the same workflow avoids needing a
-  # personal access token or a GitHub App just to break that loop.
+  # One runner per architecture, each building natively.
+  #
+  # Both architectures used to be built on one amd64 runner with arm64 under
+  # QEMU, and the emulated leg dominated everything: the same Dockerfile takes
+  # 1m58s for amd64 alone and over 25 minutes once arm64 joins it — the app's
+  # own `pnpm install` and Vite build, run through an instruction translator.
+  # The repository is public, so `ubuntu-24.04-arm` is free, and the two legs
+  # now run natively and concurrently instead.
+  #
+  # Neither leg tags anything. `push-by-digest` uploads an untagged image and
+  # returns its digest, and the merge job below assembles those digests into
+  # one tagged manifest list — a per-arch tag would otherwise be overwritten by
+  # whichever leg finished last, leaving `latest` pointing at one architecture.
   publish:
-    name: Publish
+    name: Publish (${{ matrix.suffix }})
     if: github.event_name == 'push'
     needs: [release]
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runner }}
+
+    strategy:
+      # One architecture failing should not cancel the other: knowing whether
+      # the failure is arch-specific is most of the diagnosis.
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest
+            suffix: amd64
+          - platform: linux/arm64
+            runner: ubuntu-24.04-arm
+            suffix: arm64
 
     permissions:
       contents: read
@@ -190,12 +210,79 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
 
-      # linux/arm64 is emulated, so its install and build stages are slow on a
-      # cold cache. If that becomes the bottleneck, the repository is public and
-      # therefore has free ubuntu-24.04-arm runners: split into a per-platform
-      # matrix that builds by digest and merge with `buildx imagetools create`.
-      - uses: docker/setup-qemu-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Labels only. Tags are the merge job's business; this one carries
+      # org.opencontainers.image.source, which links the package to the
+      # repository and is what makes it inherit repository visibility.
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+
+      - id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: ${{ matrix.platform }}
+          labels: ${{ steps.meta.outputs.labels }}
+          outputs:
+            type=image,name=ghcr.io/${{ github.repository
+            }},push-by-digest=true,name-canonical=true,push=true
+          # Scoped per architecture. A shared scope would have the two legs
+          # overwrite each other's layers, and every run would start cold.
+          cache-from: type=gha,scope=publish-${{ matrix.suffix }}
+          cache-to: type=gha,mode=max,scope=publish-${{ matrix.suffix }}
+
+      # The digest is passed to the merge job as an empty file named after it:
+      # artifacts move files, and the name is the whole payload.
+      - name: Export digest
+        env:
+          DIGEST: ${{ steps.build.outputs.digest }}
+        run: |
+          mkdir -p /tmp/digests
+          touch "/tmp/digests/${DIGEST#sha256:}"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: digests-${{ matrix.suffix }}
+          path: /tmp/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  # Assembles the per-architecture digests into one tagged manifest list, so a
+  # single tag serves both architectures and Docker picks the right one.
+  #
+  # This is also where the tags are decided, keyed off the release job's output
+  # rather than living in a workflow triggered `on: release`. A release created
+  # with GITHUB_TOKEN does not fire `release`, `create`, or tag `push` events —
+  # GitHub suppresses them so workflows cannot trigger themselves — so the
+  # obvious wiring would simply never run. Reading `release_created` in the same
+  # workflow avoids needing a personal access token or a GitHub App just to
+  # break that loop.
+  merge:
+    name: Merge
+    if: github.event_name == 'push'
+    needs: [release, publish]
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: /tmp/digests
+          pattern: digests-*
+          merge-multiple: true
+
       - uses: docker/setup-buildx-action@v3
 
       - uses: docker/login-action@v3
@@ -222,14 +309,21 @@ jobs:
             type=semver,pattern={{major}},value=${{ needs.release.outputs.tag_name }},enable=${{ needs.release.outputs.release_created == 'true' }}
             type=raw,value=latest,enable=${{ needs.release.outputs.release_created == 'true' }}
 
-      - uses: docker/build-push-action@v6
-        with:
-          context: .
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          # Carries org.opencontainers.image.source, which is what links the
-          # package to this repository and inherits its visibility.
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha,scope=publish
-          cache-to: type=gha,mode=max,scope=publish
+      - name: Create manifest list and push
+        working-directory: /tmp/digests
+        env:
+          IMAGE: ghcr.io/${{ github.repository }}
+        run: |
+          docker buildx imagetools create \
+            $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+            $(printf "$IMAGE@sha256:%s " *)
+
+      # Fails the job if the manifest list did not come out with both
+      # architectures on it — the failure mode this job exists to prevent.
+      - name: Inspect
+        env:
+          IMAGE: ghcr.io/${{ github.repository }}
+        run: |
+          docker buildx imagetools inspect "$IMAGE:edge"
+          docker buildx imagetools inspect "$IMAGE:edge" --raw \
+            | jq -e '[.manifests[].platform | select(.os != "unknown") | "\(.os)/\(.architecture)"] | sort == ["linux/amd64","linux/arm64"]'
