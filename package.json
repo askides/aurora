@@ -1,19 +1,20 @@
 {
   "name": "aurora",
   "private": true,
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "Aurora - Open, Cookie-Free Website Analytics",
   "author": "Renato Pozzi <renato.pozzi.dev@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/itsrennyman/aurora.git"
+    "url": "git+https://github.com/askides/aurora.git"
   },
   "engines": {
     "node": ">=20"
   },
   "packageManager": "pnpm@10.30.0",
   "scripts": {
+    "prepare": "husky || true",
     "dev": "pnpm --filter web dev",
     "build": "pnpm -r build",
     "test": "pnpm -r test",
@@ -29,6 +30,9 @@
     "db:studio": "pnpm --filter web db:studio"
   },
   "devDependencies": {
+    "@commitlint/cli": "^21.2.1",
+    "@commitlint/config-conventional": "^21.2.0",
+    "husky": "^9.1.7",
     "oxfmt": "^0.62.0",
     "oxlint": "^1.77.0"
   }

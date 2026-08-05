@@ -16,5 +16,5 @@
   "useTabs": false,
   "vueIndentScriptAndStyle": false,
   "sortPackageJson": false,
-  "ignorePatterns": []
+  "ignorePatterns": ["CHANGELOG.md"]
 }
