@@ -1,7 +1,7 @@
 {
   "name": "tracker",
   "private": true,
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Aurora's browser tracking script",
   "type": "module",
   "scripts": {

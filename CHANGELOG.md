@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.0.1](https://github.com/askides/aurora/compare/v4.0.0...v4.0.1) (2026-08-05)
+
+
+### Bug Fixes
+
+* **calendar:** keep keyboard navigation alive after picking a date ([fd3823f](https://github.com/askides/aurora/commit/fd3823f364b4faf98c39fc6c31ea754f1a43ac5d))
+* **calendar:** keep keyboard navigation alive after picking a date ([dcd8b15](https://github.com/askides/aurora/commit/dcd8b15d5a83ce45c6127129f839d073bd76964b))
+
 ## [4.0.0](https://github.com/askides/aurora/compare/v2.0.1...v4.0.0) (2026-08-05)
 
 A ground-up rewrite. Nothing is carried over from the 2.x Next.js application —
