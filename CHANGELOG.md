@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.0.1](https://github.com/askides/aurora/compare/v4.0.0...v4.0.1) (2026-08-05)
+
+
+### Bug Fixes
+
+* **signin:** remove the autofocus from the email field ([529dc72](https://github.com/askides/aurora/commit/529dc724f67206ae71730fdc5ed1321cf83f7a20))
+
+
+### Documentation
+
+* add the readme and restore the license ([be577bb](https://github.com/askides/aurora/commit/be577bb801458ae304d107b8f3d2cc0f39d60cd9))
+
 ## [4.0.0](https://github.com/askides/aurora/compare/v2.0.1...v4.0.0) (2026-08-05)
 
 A ground-up rewrite. Nothing is carried over from the 2.x Next.js application —
