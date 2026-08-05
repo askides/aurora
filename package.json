@@ -1,7 +1,7 @@
 {
   "name": "aurora",
   "private": true,
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "Aurora - Open, Cookie-Free Website Analytics",
   "author": "Renato Pozzi <renato.pozzi.dev@gmail.com>",
   "license": "MIT",

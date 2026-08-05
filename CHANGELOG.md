@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.0.2](https://github.com/askides/aurora/compare/v4.0.1...v4.0.2) (2026-08-05)
+
+
+### Documentation
+
+* show the dashboard in the readme ([9190ed8](https://github.com/askides/aurora/commit/9190ed84c86a429e5ef3687440827af201ad0666))
+* show the dashboard in the readme ([27c410e](https://github.com/askides/aurora/commit/27c410e52a3246277bcfeeb8a4bfb8865c691985))
+
 ## [4.0.1](https://github.com/askides/aurora/compare/v4.0.0...v4.0.1) (2026-08-05)
 
 
