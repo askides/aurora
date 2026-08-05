@@ -1,0 +1,19 @@
+{
+  "name": "tracker",
+  "private": true,
+  "version": "4.0.0",
+  "description": "Aurora's browser tracking script",
+  "type": "module",
+  "scripts": {
+    "build": "esbuild src/index.ts --bundle --minify --format=iife --target=es2018 --outfile=../../apps/web/public/tracker.js",
+    "dev": "esbuild src/index.ts --bundle --format=iife --target=es2018 --outfile=../../apps/web/public/tracker.js --watch",
+    "typecheck": "tsc",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "esbuild": "^0.27.2",
+    "jsdom": "^30.0.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.10"
+  }
+}

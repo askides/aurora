@@ -1,0 +1,9 @@
+packages:
+  - "apps/web"
+  - "packages/tracker"
+
+onlyBuiltDependencies:
+  - "@prisma/client"
+  - "@prisma/engines"
+  - "prisma"
+  - "esbuild"
