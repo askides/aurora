@@ -110,7 +110,6 @@ export default function SignIn({
                 autoComplete="email"
                 placeholder="you@example.com"
                 className="h-9"
-                autoFocus
                 required
               />
             </Field>
