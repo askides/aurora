@@ -11,6 +11,10 @@ Postgres database you control. The tracking script is 2.4 KB over the wire.
 [![Release](https://img.shields.io/github/v/release/askides/aurora?style=flat-square)](https://github.com/askides/aurora/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](#license)
 
+![The Aurora dashboard: pageviews, daily visitors, sessions, bounce rate and
+average visit duration over a 30-day range, above a daily pageviews chart and
+the top pages and acquisition channels.](.github/assets/dashboard.png)
+
 ## Why cookie-free matters
 
 ePrivacy Art. 5(3) governs "storage of information in terminal equipment" — a
