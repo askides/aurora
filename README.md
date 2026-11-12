@@ -43,13 +43,15 @@ Then open `http://localhost:3000/signup`, create an account, and add a site.
 
 ## Configuration
 
-| Variable                | Required             | Description                                                                                   |
-| ----------------------- | -------------------- | --------------------------------------------------------------------------------------------- |
-| `DATABASE_URL`          | yes                  | Postgres connection string, used at runtime and for migrations.                               |
-| `SESSION_SECRET`        | yes                  | Signs the session cookie. `openssl rand -base64 32`.                                          |
-| `AURORA_SALT`           | yes in production    | HMAC salt for visitor ids. Without it they would be derivable by anyone, so boot fails.       |
-| `AURORA_IP_HEADER`      | strongly recommended | The forwarding header your proxy overwrites, e.g. `cf-connecting-ip`.                         |
-| `AURORA_COUNTRY_HEADER` | no                   | The header your edge writes the country code into, when it isn't one of the three known ones. |
+| Variable                         | Required             | Description                                                                                      |
+| -------------------------------- | -------------------- | ------------------------------------------------------------------------------------------------ |
+| `DATABASE_URL`                   | yes                  | Postgres connection string, used at runtime and for migrations.                                  |
+| `SESSION_SECRET`                 | yes                  | Signs the session cookie. `openssl rand -base64 32`.                                             |
+| `AURORA_SALT`                    | yes in production    | HMAC salt for visitor ids. Without it they would be derivable by anyone, so boot fails.          |
+| `AURORA_IP_HEADER`               | strongly recommended | The forwarding header your proxy overwrites, e.g. `cf-connecting-ip`.                            |
+| `AURORA_COUNTRY_HEADER`          | no                   | The header your edge writes the country code into, when it isn't one of the three known ones.    |
+| `AURORA_DISABLE_PASSWORD_SIGNUP` | no                   | `true` closes `/signup`. Existing accounts keep their passwords; new ones come only through SSO. |
+| `AURORA_DISABLE_PASSWORD_LOGIN`  | no                   | `true` makes SSO the only way in and ends existing password sessions. Requires `OIDC_ISSUER`.    |
 
 `AURORA_IP_HEADER` deserves a word. Every forwarding header is client-supplied
 until some hop overwrites it, and which hop that is depends on your topology
@@ -58,6 +60,75 @@ warns at boot and falls back to guessing among `cf-connecting-ip`, `x-real-ip`
 and `x-forwarded-for` — all of which a client can set, which makes visitor,
 session and bounce figures forgeable. Name your trusted hop and nothing else is
 consulted.
+
+Single sign-on has variables of its own, under
+[Single sign-on](#single-sign-on).
+
+## Single sign-on
+
+Aurora can sign people in through any OpenID Connect provider — Keycloak,
+Authentik, Authelia, Zitadel, Okta, Entra ID, Google and so on. Register Aurora
+as a confidential web client using the authorization code flow, with
+`https://your-instance/auth/oidc/callback` as its redirect URI, then set:
+
+| Variable                  | Required | Description                                                                                                                                                            |
+| ------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OIDC_ISSUER`             | yes      | The issuer URL, e.g. `https://id.example.com/realms/acme`. Setting it turns SSO on.                                                                                    |
+| `OIDC_CLIENT_ID`          | yes      | The client id registered at the provider.                                                                                                                              |
+| `OIDC_CLIENT_SECRET`      | no       | The client secret. Leave it out for a public client, which then relies on PKCE alone.                                                                                  |
+| `OIDC_REDIRECT_URI`       | yes      | `https://your-instance/auth/oidc/callback`, exactly as registered at the provider. Served on several domains? List one per domain, comma-separated, and register each. |
+| `OIDC_PROVIDER_NAME`      | no       | The name on the button, "Continue with …". Defaults to `SSO`.                                                                                                          |
+| `OIDC_SCOPES`             | no       | Defaults to `openid email profile`.                                                                                                                                    |
+| `OIDC_ALLOWED_DOMAINS`    | no       | Comma-separated email domains allowed to sign in. Only addresses the provider has verified count.                                                                      |
+| `OIDC_CLIENT_AUTH_METHOD` | no       | `client_secret_basic` (default) or `client_secret_post`, matching the provider's client setting.                                                                       |
+| `OIDC_PROVIDER_LOGOUT`    | no       | `false` keeps signing out of Aurora from also signing out at the provider. Defaults to `true`.                                                                         |
+
+A sign-in button appears on `/signin` and `/signup`. A sign-in returns to the
+page that asked for it, on the domain it started from. Someone signing in for
+the first time gets a new account with no password. An existing account is never
+matched to an SSO identity by email. Aurora doesn't verify the addresses
+`/signup` accepts, so the account holding an address may not belong to the
+person who owns it. If someone signs in through SSO with an address that is
+already registered, the sign-in is refused. To use SSO with an existing account,
+sign in with its password and connect the provider from the account page.
+
+Who may sign in is up to the provider: assign the Aurora client only to the
+people who should have it. With a provider anyone can sign up at, such as
+Google, set `OIDC_ALLOWED_DOMAINS`. Entra ID doesn't send `email_verified`, so
+the allowlist rejects everyone there. Restrict access through a single-tenant
+issuer and app assignment instead.
+
+### Signing out
+
+Signing out of a session that started through SSO also ends the session at the
+provider. That signs the user out of every app using it, which is what you want
+on a shared machine. Set `OIDC_PROVIDER_LOGOUT=false` to sign out of Aurora
+only. Sessions started with a password are never sent to the provider.
+
+After signing out, the provider sends the browser back to the callback URI,
+which forwards it to `/signin`. Keycloak, Authentik and Entra ID accept a
+registered redirect URI as the post-logout target, so they need no extra setup.
+Okta keeps a separate list of sign-out redirect URIs; add the callback URI
+there.
+
+### SSO only
+
+`AURORA_DISABLE_PASSWORD_LOGIN=true` removes password sign-in, so the provider's
+policies, such as MFA, can't be bypassed with a local password. It also closes
+`/signup`. Sessions started with a password end at once instead of running to
+their 30-day expiry. SSO-only users can't set or remove a password.
+
+Have users connect SSO from the account page before you turn this on. An account
+without a connected identity has no way in afterwards, and SSO won't take it
+over by email (see above). To let such a user connect, turn password sign-in
+back on for as long as it takes.
+
+### Rate limits
+
+Password attempts are throttled per client and per account. The client is the
+address `AURORA_IP_HEADER` names, so set it. Both steps of an SSO round trip
+count against the client's limit. A throttled account can sign in again after a
+few seconds, whether or not the password was right.
 
 ## Adding the tracker to a site
 

@@ -203,7 +203,9 @@ function UserMenu({ user }: { user: SidebarUser }) {
 
         <DropdownMenuSeparator />
 
-        <Form method="post" action="/signout">
+        {/* A document POST: signing out of an SSO session ends at the
+            provider's logout page, on another origin. */}
+        <Form method="post" action="/signout" reloadDocument>
           <DropdownMenuItem
             nativeButton
             // Closing the menu unmounts the form mid-click, which cancels the

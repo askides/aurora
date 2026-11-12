@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { Form, useNavigation } from "react-router";
-import { TriangleAlertIcon } from "lucide-react";
+import { Form, data, useNavigation } from "react-router";
+import { KeyRoundIcon, TriangleAlertIcon } from "lucide-react";
 import { toast } from "sonner";
 import {
   Page,
@@ -11,7 +11,13 @@ import {
 } from "~/shared/components/page-header";
 import { Alert, AlertTitle } from "~/shared/ui/alert";
 import { Button } from "~/shared/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "~/shared/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/shared/ui/card";
 import {
   Field,
   FieldDescription,
@@ -20,8 +26,13 @@ import {
 } from "~/shared/ui/field";
 import { Input } from "~/shared/ui/input";
 import { Spinner } from "~/shared/ui/spinner";
-import { updateUser } from "~/modules/auth/queries.server";
-import { requireUser } from "~/modules/auth/session.server";
+import { authConfig } from "~/modules/auth/config.server";
+import {
+  getUserIdentity,
+  unlinkIdentity,
+  updateUser,
+} from "~/modules/auth/queries.server";
+import { consumeFlashError, requireUser } from "~/modules/auth/session.server";
 import { z } from "zod";
 import type { Route } from "./+types/account";
 
@@ -40,14 +51,61 @@ export const accountSchema = z.object({
 });
 
 export async function loader({ request }: Route.LoaderArgs) {
-  return { user: await requireUser(request) };
+  const user = await requireUser(request);
+  const settings = authConfig.oidc;
+
+  // A connection that failed on the way back from the provider lands here
+  // with its reason flashed.
+  const { error, headers } = await consumeFlashError(request);
+
+  return data(
+    {
+      user,
+      error,
+      passwordLogin: authConfig.passwordLogin,
+      sso: settings && {
+        providerName: settings.providerName,
+        connected: !!(await getUserIdentity(user.id)),
+      },
+    },
+    { headers }
+  );
 }
 
 export async function action({ request }: Route.ActionArgs) {
   const user = await requireUser(request);
   const formData = await request.formData();
 
-  const password = String(formData.get("password") ?? "");
+  if (formData.get("intent") === "disconnect-sso") {
+    const settings = authConfig.oidc;
+
+    if (!settings) {
+      throw new Response("Not found", { status: 404 });
+    }
+
+    // With password sign-in off, the identity is the only way in at all.
+    if (!authConfig.passwordLogin) {
+      return {
+        error: `Password sign-in is turned off on this instance, so ${settings.providerName} cannot be disconnected.`,
+      };
+    }
+
+    // Refused in the statement itself when there is no password to fall back
+    // on, so an SSO-only account cannot lock itself out.
+    if (!(await unlinkIdentity(user.id))) {
+      return {
+        error: `Set a password before disconnecting ${settings.providerName}, or you will have no way to sign in.`,
+      };
+    }
+
+    return { ok: true, notice: `${settings.providerName} disconnected` };
+  }
+
+  // A password nobody can sign in with would only be a latent way around the
+  // provider for the day the switch is turned back off.
+  const password = authConfig.passwordLogin
+    ? String(formData.get("password") ?? "")
+    : "";
 
   if (password && password !== String(formData.get("confirmPassword") ?? "")) {
     return { error: "Passwords do not match." };
@@ -72,20 +130,22 @@ export async function action({ request }: Route.ActionArgs) {
     ...(newPassword ? { password: newPassword } : {}),
   });
 
-  return { ok: true };
+  return { ok: true, notice: "Account updated" };
 }
 
 export default function Account({
   loaderData,
   actionData,
 }: Route.ComponentProps) {
-  const { user } = loaderData;
+  const { user, sso, passwordLogin } = loaderData;
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
+  const error =
+    actionData && "error" in actionData ? actionData.error : loaderData.error;
 
   useEffect(() => {
     if (actionData && "ok" in actionData) {
-      toast.success("Account updated");
+      toast.success(actionData.notice);
     }
   }, [actionData]);
 
@@ -100,15 +160,15 @@ export default function Account({
         </PageHeading>
       </PageHeader>
 
+      {error && (
+        <Alert variant="destructive">
+          <TriangleAlertIcon />
+          <AlertTitle>{error}</AlertTitle>
+        </Alert>
+      )}
+
       {/* One form, two cards: the action reads every field in a single pass. */}
       <Form method="post" className="flex flex-col gap-4">
-        {actionData && "error" in actionData && (
-          <Alert variant="destructive">
-            <TriangleAlertIcon />
-            <AlertTitle>{actionData.error}</AlertTitle>
-          </Alert>
-        )}
-
         <Card>
           <CardHeader>
             <CardTitle>Profile</CardTitle>
@@ -154,40 +214,44 @@ export default function Account({
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Password</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="password">New password</FieldLabel>
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="new-password"
-                />
-                <FieldDescription>
-                  Leave blank to keep your current password. Minimum 8
-                  characters.
-                </FieldDescription>
-              </Field>
+        {passwordLogin && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Password</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <FieldGroup>
+                <Field>
+                  <FieldLabel htmlFor="password">New password</FieldLabel>
+                  <Input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="new-password"
+                  />
+                  <FieldDescription>
+                    {user.has_password
+                      ? "Leave blank to keep your current password."
+                      : "You sign in through single sign-on. Set a password to also sign in with your email."}{" "}
+                    Minimum 8 characters.
+                  </FieldDescription>
+                </Field>
 
-              <Field>
-                <FieldLabel htmlFor="confirmPassword">
-                  Repeat new password
-                </FieldLabel>
-                <Input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type="password"
-                  autoComplete="new-password"
-                />
-              </Field>
-            </FieldGroup>
-          </CardContent>
-        </Card>
+                <Field>
+                  <FieldLabel htmlFor="confirmPassword">
+                    Repeat new password
+                  </FieldLabel>
+                  <Input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type="password"
+                    autoComplete="new-password"
+                  />
+                </Field>
+              </FieldGroup>
+            </CardContent>
+          </Card>
+        )}
 
         <div className="flex justify-end">
           <Button type="submit" disabled={isSubmitting}>
@@ -196,6 +260,54 @@ export default function Account({
           </Button>
         </div>
       </Form>
+
+      {/* Its own forms, outside the one above: HTML forms do not nest. */}
+      {sso && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Single sign-on</CardTitle>
+            <CardDescription>
+              {sso.connected
+                ? `You can sign in with your ${sso.providerName} account.`
+                : `Connect your ${sso.providerName} account to sign in with it.`}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col items-start gap-3">
+            {sso.connected && !passwordLogin ? (
+              <FieldDescription>
+                Password sign-in is turned off on this instance, so{" "}
+                {sso.providerName} is how you sign in.
+              </FieldDescription>
+            ) : sso.connected ? (
+              <Form method="post">
+                <input type="hidden" name="intent" value="disconnect-sso" />
+                <Button
+                  type="submit"
+                  variant="outline"
+                  disabled={isSubmitting || !user.has_password}
+                >
+                  Disconnect {sso.providerName}
+                </Button>
+              </Form>
+            ) : (
+              <Form method="post" action="/auth/oidc" reloadDocument>
+                <input type="hidden" name="intent" value="link" />
+                <Button type="submit" variant="outline">
+                  <KeyRoundIcon />
+                  Connect {sso.providerName}
+                </Button>
+              </Form>
+            )}
+
+            {sso.connected && passwordLogin && !user.has_password && (
+              <FieldDescription>
+                Set a password above before disconnecting, or you will have no
+                way to sign in.
+              </FieldDescription>
+            )}
+          </CardContent>
+        </Card>
+      )}
     </Page>
   );
 }

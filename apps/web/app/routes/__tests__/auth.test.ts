@@ -12,13 +12,21 @@ vi.mock("~/modules/auth/session.server", () => ({
   createUserSession: vi.fn(),
   getCurrentUser: vi.fn(),
   requireUser: vi.fn(),
+  safeRedirect: vi.fn(() => "/"),
 }));
 
-const { signInSchema } = await import("../signin");
+/** Mutable, so a case can turn password sign-in off for itself. */
+vi.mock("~/modules/auth/config.server", () => ({
+  authConfig: { oidc: null, passwordLogin: true, passwordSignup: true },
+}));
+
+const { signInSchema, action: signinAction } = await import("../signin");
 const { signupSchema, action: signupAction } = await import("../signup");
 const { accountSchema } = await import("../account");
 const { createUser, getUserByEmail } =
   await import("~/modules/auth/queries.server");
+const { authConfig } = await import("~/modules/auth/config.server");
+const { resetSignInThrottle } = await import("~/modules/auth/ratelimit.server");
 const { websiteSchema } =
   await import("~/modules/websites/components/website-form");
 
@@ -34,6 +42,80 @@ describe("signInSchema", () => {
     { email: "a@b.com", password: "" },
   ])("rejects %o", (input) => {
     expect(signInSchema.safeParse(input).success).toBe(false);
+  });
+});
+
+describe("POST /signin", () => {
+  const form = (fields: Record<string, string>) =>
+    ({
+      request: new Request("https://aurora.test/signin", {
+        method: "POST",
+        body: new URLSearchParams(fields),
+      }),
+      params: {},
+      context: {},
+    }) as unknown as Parameters<typeof signinAction>[0];
+
+  beforeEach(() => {
+    resetSignInThrottle();
+    vi.mocked(getUserByEmail).mockReset();
+    vi.mocked(getUserByEmail).mockResolvedValue(null);
+  });
+
+  /**
+   * An account created through SSO has a null password. Whatever is typed, it
+   * must read as a wrong password — not reach bcrypt with a null hash, and not
+   * answer differently from an address that has no account at all.
+   */
+  it("refuses any password for an account that has none", async () => {
+    vi.mocked(getUserByEmail).mockResolvedValue({
+      id: "u1",
+      password: null,
+    } as never);
+
+    await expect(
+      signinAction(form({ email: "ada@example.com", password: "anything" }))
+    ).resolves.toEqual({ error: "Invalid email or password." });
+  });
+
+  /**
+   * Per account, so rotating the claimed address does not help a guesser —
+   * and charged whether or not the account exists, so the 429 says nothing
+   * about which addresses do.
+   */
+  it("throttles guesses at one account", async () => {
+    const attempt = () =>
+      signinAction(form({ email: "ada@example.com", password: "guess" }));
+
+    for (let i = 0; i < 10; i += 1) {
+      await attempt();
+    }
+
+    const refused = await attempt();
+
+    expect(refused).toMatchObject({
+      init: { status: 429 },
+      data: { error: expect.stringMatching(/Too many sign-in attempts/) },
+    });
+    expect(getUserByEmail).toHaveBeenCalledTimes(10);
+
+    // Another account from the same client is still fine.
+    await expect(
+      signinAction(form({ email: "bob@example.com", password: "guess" }))
+    ).resolves.toEqual({ error: "Invalid email or password." });
+  });
+
+  it("refuses every password while password sign-in is off", async () => {
+    authConfig.passwordLogin = false;
+
+    try {
+      await expect(
+        signinAction(form({ email: "ada@example.com", password: "right" }))
+      ).resolves.toMatchObject({ init: { status: 403 } });
+      expect(getUserByEmail).not.toHaveBeenCalled();
+    } finally {
+      authConfig.passwordLogin = true;
+    }
   });
 });
 

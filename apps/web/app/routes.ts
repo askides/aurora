@@ -21,6 +21,8 @@ export default [
   route("signin", "routes/signin.tsx"),
   route("signup", "routes/signup.tsx"),
   route("signout", "routes/signout.tsx"),
+  route("auth/oidc", "routes/auth.oidc.ts"),
+  route("auth/oidc/callback", "routes/auth.oidc.callback.ts"),
 
   // Resource routes hit by the tracker script from third-party origins.
   route("collect", "routes/api/collect.ts"),
