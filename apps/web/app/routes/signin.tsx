@@ -1,16 +1,20 @@
 import { ArrowRightIcon, CircleAlertIcon } from "lucide-react";
-import { Form, Link, redirect, useNavigation } from "react-router";
+import { Form, Link, data, redirect, useNavigation } from "react-router";
 import { AuthAside, AuthHeading, AuthLayout } from "~/shell/auth-layout";
 import { Alert, AlertTitle } from "~/shared/ui/alert";
 import { Button } from "~/shared/ui/button";
 import { Field, FieldGroup, FieldLabel } from "~/shared/ui/field";
 import { Input } from "~/shared/ui/input";
 import { Spinner } from "~/shared/ui/spinner";
+import { SsoSignIn } from "~/modules/auth/components/sso-button";
+import { authConfig } from "~/modules/auth/config.server";
 import { verify } from "~/modules/auth/hash.server";
 import { getUserByEmail } from "~/modules/auth/queries.server";
 import {
+  consumeFlashError,
   createUserSession,
   getCurrentUser,
+  safeRedirect,
 } from "~/modules/auth/session.server";
 import { z } from "zod";
 import type { Route } from "./+types/signin";
@@ -27,17 +31,25 @@ export async function loader({ request }: Route.LoaderArgs) {
     return redirect("/");
   }
 
-  const redirectTo = new URL(request.url).searchParams.get("redirectTo") ?? "/";
+  // An SSO attempt that failed comes back here with its reason flashed.
+  const { error, headers } = await consumeFlashError(request);
 
-  return {
-    // Only relative paths, so ?redirectTo can't bounce to another origin.
-    redirectTo: redirectTo.startsWith("/") ? redirectTo : "/",
-  };
+  return data(
+    {
+      // Only relative paths, so ?redirectTo can't bounce to another origin.
+      redirectTo: safeRedirect(
+        new URL(request.url).searchParams.get("redirectTo")
+      ),
+      error,
+      sso: authConfig.oidc && { providerName: authConfig.oidc.providerName },
+      passwordSignup: authConfig.passwordSignup,
+    },
+    { headers }
+  );
 }
 
 export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
-  const redirectTo = String(formData.get("redirectTo") || "/");
 
   const parsed = signInSchema.safeParse({
     email: formData.get("email"),
@@ -54,14 +66,13 @@ export async function action({ request }: Route.ActionArgs) {
   const user = await getUserByEmail(parsed.data.email.trim().toLowerCase());
 
   // Same message either way, so the response can't be used to probe for emails.
-  if (!user || !verify(parsed.data.password, user.password)) {
+  // An account created through SSO has no password, and nothing matches it.
+  if (!user?.password || !verify(parsed.data.password, user.password)) {
     return { error: "Invalid email or password." };
   }
 
   // Only allow relative paths, so ?redirectTo can't bounce to another origin.
-  const safeRedirect = redirectTo.startsWith("/") ? redirectTo : "/";
-
-  return createUserSession(user.id, safeRedirect);
+  return createUserSession(user.id, safeRedirect(formData.get("redirectTo")));
 }
 
 export default function SignIn({
@@ -70,6 +81,7 @@ export default function SignIn({
 }: Route.ComponentProps) {
   const navigation = useNavigation();
   const isSubmitting = navigation.formAction === "/signin";
+  const error = actionData?.error ?? loaderData.error;
 
   return (
     <AuthLayout
@@ -86,6 +98,20 @@ export default function SignIn({
           description="Welcome back. Your instance, your data."
         />
 
+        {error && (
+          <Alert variant="destructive">
+            <CircleAlertIcon />
+            <AlertTitle>{error}</AlertTitle>
+          </Alert>
+        )}
+
+        {loaderData.sso && (
+          <SsoSignIn
+            providerName={loaderData.sso.providerName}
+            redirectTo={loaderData.redirectTo}
+          />
+        )}
+
         <Form method="post">
           <input
             type="hidden"
@@ -94,13 +120,6 @@ export default function SignIn({
           />
 
           <FieldGroup>
-            {actionData?.error && (
-              <Alert variant="destructive">
-                <CircleAlertIcon />
-                <AlertTitle>{actionData.error}</AlertTitle>
-              </Alert>
-            )}
-
             <Field>
               <FieldLabel htmlFor="email">Email</FieldLabel>
               <Input
@@ -147,16 +166,18 @@ export default function SignIn({
           </FieldGroup>
         </Form>
 
-        <p className="text-sm text-muted-foreground">
-          Don&apos;t have an account?{" "}
-          <Link
-            to="/signup"
-            className="font-medium text-foreground underline underline-offset-4 hover:text-primary"
-          >
-            Create one
-          </Link>
-          .
-        </p>
+        {loaderData.passwordSignup && (
+          <p className="text-sm text-muted-foreground">
+            Don&apos;t have an account?{" "}
+            <Link
+              to="/signup"
+              className="font-medium text-foreground underline underline-offset-4 hover:text-primary"
+            >
+              Create one
+            </Link>
+            .
+          </p>
+        )}
       </div>
     </AuthLayout>
   );

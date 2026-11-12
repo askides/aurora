@@ -11,6 +11,8 @@ import {
 } from "~/shared/ui/field";
 import { Input } from "~/shared/ui/input";
 import { Spinner } from "~/shared/ui/spinner";
+import { SsoSignIn } from "~/modules/auth/components/sso-button";
+import { authConfig } from "~/modules/auth/config.server";
 import { createUser, getUserByEmail } from "~/modules/auth/queries.server";
 import {
   createUserSession,
@@ -26,8 +28,9 @@ export const meta = () => [{ title: "Sign up — Aurora" }];
  * Registration is open. This replaced /setup, which was gated to the first
  * account on the instance: anyone who can reach the sign-in page can now create
  * one, and there is nothing else in front of it — no email verification, no
- * invite, no rate limit on this route. A deployment that does not want that has
- * to put something in front of it.
+ * invite, no rate limit on this route. A deployment that does not want that
+ * sets AURORA_DISABLE_PASSWORD_SIGNUP, which closes this route; accounts then
+ * come only from SSO, if it is configured, and from nowhere if it is not.
  */
 export const signupSchema = z.object({
   firstname: z.string().min(1, "First name is required"),
@@ -53,10 +56,20 @@ export async function loader({ request }: Route.LoaderArgs) {
     return redirect("/");
   }
 
-  return null;
+  if (!authConfig.passwordSignup) {
+    return redirect("/signin");
+  }
+
+  return {
+    sso: authConfig.oidc && { providerName: authConfig.oidc.providerName },
+  };
 }
 
 export async function action({ request }: Route.ActionArgs) {
+  if (!authConfig.passwordSignup) {
+    throw new Response("Not found", { status: 404 });
+  }
+
   const formData = await request.formData();
   const password = String(formData.get("password") ?? "");
 
@@ -95,7 +108,10 @@ export async function action({ request }: Route.ActionArgs) {
   }
 }
 
-export default function SignUp({ actionData }: Route.ComponentProps) {
+export default function SignUp({
+  loaderData,
+  actionData,
+}: Route.ComponentProps) {
   const navigation = useNavigation();
   const isSubmitting = navigation.formAction === "/signup";
 
@@ -114,6 +130,10 @@ export default function SignUp({ actionData }: Route.ComponentProps) {
           title="Create your account"
           description="No card, no third party in the middle."
         />
+
+        {loaderData.sso && (
+          <SsoSignIn providerName={loaderData.sso.providerName} />
+        )}
 
         <Form method="post">
           <FieldGroup>

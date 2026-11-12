@@ -14,7 +14,7 @@ vi.mock("~/modules/auth/session.server", () => ({
   requireUser: vi.fn(),
 }));
 
-const { signInSchema } = await import("../signin");
+const { signInSchema, action: signinAction } = await import("../signin");
 const { signupSchema, action: signupAction } = await import("../signup");
 const { accountSchema } = await import("../account");
 const { createUser, getUserByEmail } =
@@ -34,6 +34,34 @@ describe("signInSchema", () => {
     { email: "a@b.com", password: "" },
   ])("rejects %o", (input) => {
     expect(signInSchema.safeParse(input).success).toBe(false);
+  });
+});
+
+describe("POST /signin", () => {
+  const form = (fields: Record<string, string>) =>
+    ({
+      request: new Request("https://aurora.test/signin", {
+        method: "POST",
+        body: new URLSearchParams(fields),
+      }),
+      params: {},
+      context: {},
+    }) as unknown as Parameters<typeof signinAction>[0];
+
+  /**
+   * An account created through SSO has a null password. Whatever is typed, it
+   * must read as a wrong password — not reach bcrypt with a null hash, and not
+   * answer differently from an address that has no account at all.
+   */
+  it("refuses any password for an account that has none", async () => {
+    vi.mocked(getUserByEmail).mockResolvedValue({
+      id: "u1",
+      password: null,
+    } as never);
+
+    await expect(
+      signinAction(form({ email: "ada@example.com", password: "anything" }))
+    ).resolves.toEqual({ error: "Invalid email or password." });
   });
 });
 

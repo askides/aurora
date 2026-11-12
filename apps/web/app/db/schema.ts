@@ -40,10 +40,51 @@ export const users = pgTable("users", {
   firstname: text("firstname").notNull(),
   lastname: text("lastname").notNull(),
   email: text("email").notNull().unique(),
-  password: text("password").notNull(),
+  /**
+   * Null for an account that was created through single sign-on and has never
+   * set one. Such an account cannot sign in with a password at all — there is
+   * nothing to compare against — which is the point: an SSO-only account has
+   * no second way in that the identity provider does not control.
+   */
+  password: text("password"),
   created_at: createdAt(3),
   updated_at: updatedAt(3),
 });
+
+/**
+ * An external OpenID Connect identity attached to a user.
+ *
+ * Keyed by `(issuer, subject)` and nothing else. `sub` is the only claim the
+ * spec promises is stable and unique within an issuer; the email address is
+ * profile data the provider may let its users edit, and matching on it is how
+ * an account gets taken over (an attacker registers the victim's address first
+ * and waits for the victim to arrive through SSO). So nothing here is ever
+ * found by email: an identity is attached either when SSO creates the account,
+ * or by a signed-in user from the account page.
+ *
+ * `issuer` is the token's `iss`, not the configured OIDC_ISSUER: the two can
+ * differ in spelling (a trailing slash) and, for multi-tenant Entra ID, in
+ * substance — every tenant signs with its own. An instance has one provider,
+ * so a user has at most one identity, which also gives the account page one
+ * thing to show and one thing to disconnect. That index doubles as the one a
+ * user delete needs to cascade.
+ */
+export const userIdentities = pgTable(
+  "user_identities",
+  {
+    id: id(),
+    user_id: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    issuer: text("issuer").notNull(),
+    subject: text("subject").notNull(),
+    created_at: createdAt(3),
+  },
+  (t) => [
+    uniqueIndex("user_identities_issuer_subject_idx").on(t.issuer, t.subject),
+    uniqueIndex("user_identities_user_id_idx").on(t.user_id),
+  ]
+);
 
 export const websites = pgTable(
   "websites",
@@ -293,6 +334,14 @@ export const events = pgTable(
 
 export const usersRelations = relations(users, ({ many }) => ({
   websites: many(websites),
+  identities: many(userIdentities),
+}));
+
+export const userIdentitiesRelations = relations(userIdentities, ({ one }) => ({
+  user: one(users, {
+    fields: [userIdentities.user_id],
+    references: [users.id],
+  }),
 }));
 
 export const websitesRelations = relations(websites, ({ one, many }) => ({
@@ -308,5 +357,6 @@ export const eventsRelations = relations(events, ({ one }) => ({
 }));
 
 export type User = typeof users.$inferSelect;
+export type UserIdentity = typeof userIdentities.$inferSelect;
 export type Website = typeof websites.$inferSelect;
 export type Event = typeof events.$inferSelect;

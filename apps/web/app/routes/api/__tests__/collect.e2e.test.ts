@@ -518,10 +518,12 @@ e2e("a beacon's whole journey", () => {
     `);
 
     // The drizzle bookkeeping table lives in its own schema, so this is the
-    // whole of what 0000 and 0001 leave behind — including the two tables 0001
-    // drops, whose absence is the evidence it ran rather than being skipped.
+    // whole of what the migrations leave behind — including the two tables
+    // 0001 drops, whose absence is the evidence it ran rather than being
+    // skipped, and the one 0002 adds.
     expect(rows.map((row) => row.table_name)).toEqual([
       "events",
+      "user_identities",
       "users",
       "websites",
     ]);

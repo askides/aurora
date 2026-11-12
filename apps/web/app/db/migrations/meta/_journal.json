@@ -15,6 +15,13 @@
       "when": 1785836687841,
       "tag": "0001_nervous_alex_wilder",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794398538776,
+      "tag": "0002_oidc_identities",
+      "breakpoints": true
     }
   ]
 }
