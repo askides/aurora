@@ -2,6 +2,10 @@ import { redirect } from "react-router";
 import { authConfig } from "~/modules/auth/config.server";
 import { beginOidcFlow } from "~/modules/auth/oidc.server";
 import {
+  throttleSignIn,
+  tooManyAttemptsMessage,
+} from "~/modules/auth/ratelimit.server";
+import {
   redirectWithError,
   requireUser,
   safeRedirect,
@@ -28,6 +32,13 @@ export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
   const intent = formData.get("intent") === "link" ? "link" : "signin";
   const userId = intent === "link" ? (await requireUser(request)).id : null;
+  const back = intent === "link" ? "/account" : "/signin";
+
+  const wait = throttleSignIn(request);
+
+  if (wait !== null) {
+    return redirectWithError(request, back, tooManyAttemptsMessage(wait));
+  }
 
   try {
     return await beginOidcFlow(settings, request, {
@@ -43,7 +54,7 @@ export async function action({ request }: Route.ActionArgs) {
 
     return redirectWithError(
       request,
-      intent === "link" ? "/account" : "/signin",
+      back,
       ssoFailureMessage("unreachable", settings.providerName)
     );
   }

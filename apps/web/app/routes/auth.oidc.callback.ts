@@ -5,7 +5,12 @@ import {
   clearFlowCookie,
   completeOidcFlow,
   readFlow,
+  rememberIdToken,
 } from "~/modules/auth/oidc.server";
+import {
+  throttleSignIn,
+  tooManyAttemptsMessage,
+} from "~/modules/auth/ratelimit.server";
 import {
   createUserSession,
   getCurrentUser,
@@ -32,6 +37,16 @@ export async function loader({ request }: Route.LoaderArgs) {
     throw new Response("Not found", { status: 404 });
   }
 
+  // The provider's way back after a logout: the same URI, with no code and no
+  // error, because Aurora asked to be returned here (see providerLogoutUrl).
+  const params = new URL(request.url).searchParams;
+
+  if (!params.has("code") && !params.has("error")) {
+    return redirect("/signin", {
+      headers: { "Set-Cookie": await clearFlowCookie() },
+    });
+  }
+
   const flow = await readFlow(request);
   const user = await getCurrentUser(request);
 
@@ -46,6 +61,21 @@ export async function loader({ request }: Route.LoaderArgs) {
     return response;
   };
 
+  // Each callback is a token request to the provider, so it is throttled
+  // before anything here makes one.
+  const wait = throttleSignIn(request);
+
+  if (wait !== null) {
+    const response = await redirectWithError(
+      request,
+      user ? "/account" : "/signin",
+      tooManyAttemptsMessage(wait)
+    );
+    response.headers.append("Set-Cookie", await clearFlowCookie());
+
+    return response;
+  }
+
   if (!flow) {
     return fail(user ? "/account" : "/signin", "expired");
   }
@@ -58,9 +88,10 @@ export async function loader({ request }: Route.LoaderArgs) {
   }
 
   let profile;
+  let idToken;
 
   try {
-    profile = await completeOidcFlow(settings, request, flow);
+    ({ profile, idToken } = await completeOidcFlow(settings, request, flow));
   } catch (error) {
     if (!(error instanceof OidcError)) {
       throw error;
@@ -91,9 +122,16 @@ export async function loader({ request }: Route.LoaderArgs) {
 
   const response = await createUserSession(
     outcome.userId,
-    safeRedirect(flow.redirectTo)
+    safeRedirect(flow.redirectTo),
+    "sso"
   );
   response.headers.append("Set-Cookie", await clearFlowCookie());
+
+  const remembered = await rememberIdToken(idToken);
+
+  if (remembered) {
+    response.headers.append("Set-Cookie", remembered);
+  }
 
   return response;
 }

@@ -5,7 +5,8 @@ import { FieldSeparator } from "~/shared/ui/field";
 
 /**
  * "Continue with <provider>", and the divider that sets it apart from the
- * password form under it.
+ * password form under it — or, with password sign-in turned off, the only way
+ * in, with nothing to set it apart from.
  *
  * `reloadDocument`, because the answer is a redirect to another origin: a
  * document POST lets the browser follow it, and keeps the flow cookie on the
@@ -14,9 +15,11 @@ import { FieldSeparator } from "~/shared/ui/field";
 export function SsoSignIn({
   providerName,
   redirectTo = "/",
+  only = false,
 }: {
   providerName: string;
   redirectTo?: string;
+  only?: boolean;
 }) {
   return (
     <div className="flex flex-col gap-5">
@@ -24,13 +27,18 @@ export function SsoSignIn({
         <input type="hidden" name="intent" value="signin" />
         <input type="hidden" name="redirectTo" value={redirectTo} />
 
-        <Button type="submit" variant="outline" size="lg" className="w-full">
+        <Button
+          type="submit"
+          variant={only ? "default" : "outline"}
+          size="lg"
+          className="w-full"
+        >
           <KeyRoundIcon />
           Continue with {providerName}
         </Button>
       </Form>
 
-      <FieldSeparator>or</FieldSeparator>
+      {!only && <FieldSeparator>or</FieldSeparator>}
     </div>
   );
 }

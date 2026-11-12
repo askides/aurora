@@ -98,7 +98,7 @@ export async function action({ request }: Route.ActionArgs) {
   try {
     const user = await createUser(parsed.data);
 
-    return createUserSession(user.id, "/");
+    return createUserSession(user.id, "/", "password");
   } catch (error) {
     if (isUniqueViolation(error)) {
       return { error: "An account with that email already exists." };

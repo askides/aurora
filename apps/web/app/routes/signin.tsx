@@ -11,6 +11,10 @@ import { authConfig } from "~/modules/auth/config.server";
 import { verify } from "~/modules/auth/hash.server";
 import { getUserByEmail } from "~/modules/auth/queries.server";
 import {
+  throttleSignIn,
+  tooManyAttemptsMessage,
+} from "~/modules/auth/ratelimit.server";
+import {
   consumeFlashError,
   createUserSession,
   getCurrentUser,
@@ -42,6 +46,7 @@ export async function loader({ request }: Route.LoaderArgs) {
       ),
       error,
       sso: authConfig.oidc && { providerName: authConfig.oidc.providerName },
+      passwordLogin: authConfig.passwordLogin,
       passwordSignup: authConfig.passwordSignup,
     },
     { headers }
@@ -49,6 +54,13 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export async function action({ request }: Route.ActionArgs) {
+  if (!authConfig.passwordLogin) {
+    return data(
+      { error: "Password sign-in is turned off on this instance." },
+      { status: 403 }
+    );
+  }
+
   const formData = await request.formData();
 
   const parsed = signInSchema.safeParse({
@@ -63,7 +75,18 @@ export async function action({ request }: Route.ActionArgs) {
   // Lowercased to match what /signup stores: Postgres compares text exactly, so
   // an address typed with different capitalisation than it was registered with
   // would otherwise find no row and read as a wrong password.
-  const user = await getUserByEmail(parsed.data.email.trim().toLowerCase());
+  const email = parsed.data.email.trim().toLowerCase();
+
+  // Before the lookup and bcrypt, which are what a guesser is spending. Counted
+  // whether or not the account exists, so the throttle cannot be used to probe
+  // for one either.
+  const wait = throttleSignIn(request, email);
+
+  if (wait !== null) {
+    return data({ error: tooManyAttemptsMessage(wait) }, { status: 429 });
+  }
+
+  const user = await getUserByEmail(email);
 
   // Same message either way, so the response can't be used to probe for emails.
   // An account created through SSO has no password, and nothing matches it.
@@ -72,7 +95,11 @@ export async function action({ request }: Route.ActionArgs) {
   }
 
   // Only allow relative paths, so ?redirectTo can't bounce to another origin.
-  return createUserSession(user.id, safeRedirect(formData.get("redirectTo")));
+  return createUserSession(
+    user.id,
+    safeRedirect(formData.get("redirectTo")),
+    "password"
+  );
 }
 
 export default function SignIn({
@@ -109,62 +136,65 @@ export default function SignIn({
           <SsoSignIn
             providerName={loaderData.sso.providerName}
             redirectTo={loaderData.redirectTo}
+            only={!loaderData.passwordLogin}
           />
         )}
 
-        <Form method="post">
-          <input
-            type="hidden"
-            name="redirectTo"
-            value={loaderData.redirectTo}
-          />
+        {loaderData.passwordLogin && (
+          <Form method="post">
+            <input
+              type="hidden"
+              name="redirectTo"
+              value={loaderData.redirectTo}
+            />
 
-          <FieldGroup>
-            <Field>
-              <FieldLabel htmlFor="email">Email</FieldLabel>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                placeholder="you@example.com"
-                className="h-9"
-                required
-              />
-            </Field>
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor="email">Email</FieldLabel>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  placeholder="you@example.com"
+                  className="h-9"
+                  required
+                />
+              </Field>
 
-            <Field>
-              <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                className="h-9"
-                required
-              />
-            </Field>
+              <Field>
+                <FieldLabel htmlFor="password">Password</FieldLabel>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  autoComplete="current-password"
+                  className="h-9"
+                  required
+                />
+              </Field>
 
-            <Button
-              type="submit"
-              size="lg"
-              className="w-full"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <>
-                  <Spinner />
-                  Signing in…
-                </>
-              ) : (
-                <>
-                  Sign in
-                  <ArrowRightIcon className="transition-transform group-hover/button:translate-x-0.5" />
-                </>
-              )}
-            </Button>
-          </FieldGroup>
-        </Form>
+              <Button
+                type="submit"
+                size="lg"
+                className="w-full"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <Spinner />
+                    Signing in…
+                  </>
+                ) : (
+                  <>
+                    Sign in
+                    <ArrowRightIcon className="transition-transform group-hover/button:translate-x-0.5" />
+                  </>
+                )}
+              </Button>
+            </FieldGroup>
+          </Form>
+        )}
 
         {loaderData.passwordSignup && (
           <p className="text-sm text-muted-foreground">

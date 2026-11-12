@@ -62,6 +62,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     {
       user,
       error,
+      passwordLogin: authConfig.passwordLogin,
       sso: settings && {
         providerName: settings.providerName,
         connected: !!(await getUserIdentity(user.id)),
@@ -82,6 +83,13 @@ export async function action({ request }: Route.ActionArgs) {
       throw new Response("Not found", { status: 404 });
     }
 
+    // With password sign-in off, the identity is the only way in at all.
+    if (!authConfig.passwordLogin) {
+      return {
+        error: `Password sign-in is turned off on this instance, so ${settings.providerName} cannot be disconnected.`,
+      };
+    }
+
     // Refused in the statement itself when there is no password to fall back
     // on, so an SSO-only account cannot lock itself out.
     if (!(await unlinkIdentity(user.id))) {
@@ -93,7 +101,11 @@ export async function action({ request }: Route.ActionArgs) {
     return { ok: true, notice: `${settings.providerName} disconnected` };
   }
 
-  const password = String(formData.get("password") ?? "");
+  // A password nobody can sign in with would only be a latent way around the
+  // provider for the day the switch is turned back off.
+  const password = authConfig.passwordLogin
+    ? String(formData.get("password") ?? "")
+    : "";
 
   if (password && password !== String(formData.get("confirmPassword") ?? "")) {
     return { error: "Passwords do not match." };
@@ -125,7 +137,7 @@ export default function Account({
   loaderData,
   actionData,
 }: Route.ComponentProps) {
-  const { user, sso } = loaderData;
+  const { user, sso, passwordLogin } = loaderData;
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
   const error =
@@ -202,42 +214,44 @@ export default function Account({
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Password</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="password">New password</FieldLabel>
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="new-password"
-                />
-                <FieldDescription>
-                  {user.has_password
-                    ? "Leave blank to keep your current password."
-                    : "You sign in through single sign-on. Set a password to also sign in with your email."}{" "}
-                  Minimum 8 characters.
-                </FieldDescription>
-              </Field>
+        {passwordLogin && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Password</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <FieldGroup>
+                <Field>
+                  <FieldLabel htmlFor="password">New password</FieldLabel>
+                  <Input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="new-password"
+                  />
+                  <FieldDescription>
+                    {user.has_password
+                      ? "Leave blank to keep your current password."
+                      : "You sign in through single sign-on. Set a password to also sign in with your email."}{" "}
+                    Minimum 8 characters.
+                  </FieldDescription>
+                </Field>
 
-              <Field>
-                <FieldLabel htmlFor="confirmPassword">
-                  Repeat new password
-                </FieldLabel>
-                <Input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type="password"
-                  autoComplete="new-password"
-                />
-              </Field>
-            </FieldGroup>
-          </CardContent>
-        </Card>
+                <Field>
+                  <FieldLabel htmlFor="confirmPassword">
+                    Repeat new password
+                  </FieldLabel>
+                  <Input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type="password"
+                    autoComplete="new-password"
+                  />
+                </Field>
+              </FieldGroup>
+            </CardContent>
+          </Card>
+        )}
 
         <div className="flex justify-end">
           <Button type="submit" disabled={isSubmitting}>
@@ -259,7 +273,12 @@ export default function Account({
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col items-start gap-3">
-            {sso.connected ? (
+            {sso.connected && !passwordLogin ? (
+              <FieldDescription>
+                Password sign-in is turned off on this instance, so{" "}
+                {sso.providerName} is how you sign in.
+              </FieldDescription>
+            ) : sso.connected ? (
               <Form method="post">
                 <input type="hidden" name="intent" value="disconnect-sso" />
                 <Button
@@ -280,7 +299,7 @@ export default function Account({
               </Form>
             )}
 
-            {sso.connected && !user.has_password && (
+            {sso.connected && passwordLogin && !user.has_password && (
               <FieldDescription>
                 Set a password above before disconnecting, or you will have no
                 way to sign in.

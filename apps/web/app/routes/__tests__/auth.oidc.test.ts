@@ -8,6 +8,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
  */
 vi.mock("~/modules/auth/config.server", () => ({
   authConfig: {
+    passwordLogin: true,
     passwordSignup: true,
     oidc: { providerName: "Keycloak", allowedDomains: [] },
   },
@@ -23,6 +24,11 @@ vi.mock("~/modules/auth/oidc.server", async (importOriginal) => {
     completeOidcFlow: vi.fn(),
     beginOidcFlow: vi.fn(),
     clearFlowCookie: vi.fn(async () => "__aurora_oidc=; Max-Age=0"),
+    rememberIdToken: vi.fn(async (token?: string) =>
+      token ? `__aurora_idt=${token}; Path=/signout` : null
+    ),
+    clearIdTokenCookie: vi.fn(async () => "__aurora_idt=; Max-Age=0"),
+    providerLogoutUrl: vi.fn(),
   };
 });
 
@@ -43,6 +49,8 @@ vi.mock("~/modules/auth/queries.server", () => ({
 
 const { loader: callback } = await import("../auth.oidc.callback");
 const { action: start } = await import("../auth.oidc");
+const { action: signoutAction } = await import("../signout");
+const { resetSignInThrottle } = await import("~/modules/auth/ratelimit.server");
 const oidc = await import("~/modules/auth/oidc.server");
 const sso = await import("~/modules/auth/sso.server");
 const { getUser } = await import("~/modules/auth/queries.server");
@@ -69,17 +77,21 @@ const profile = {
 };
 
 /** A session cookie for `userId`, as the browser would hold it. */
-async function sessionFor(userId: string) {
+async function sessionFor(
+  userId: string,
+  method: "password" | "sso" = "password"
+) {
   const session = await getSession();
   session.set("userId", userId);
+  session.set("method", method);
 
   return (await commitSession(session)).split(";")[0];
 }
 
-async function call(cookie?: string) {
+async function call(cookie?: string, query = "?code=c&state=st") {
   return (await callback({
     request: new Request(
-      "https://aurora.example.com/auth/oidc/callback?code=c&state=st",
+      `https://aurora.example.com/auth/oidc/callback${query}`,
       { headers: cookie ? { Cookie: cookie } : {} }
     ),
     params: {},
@@ -103,9 +115,21 @@ const clearsFlow = (response: Response) =>
     .getSetCookie()
     .some((line) => line.startsWith("__aurora_oidc=;"));
 
+/** The session a response sets, as the next request would read it. */
+async function sessionSetBy(response: Response) {
+  return getSession(
+    response.headers
+      .getSetCookie()
+      .find((line) => line.startsWith("__aurora_session="))
+  );
+}
+
 beforeEach(() => {
+  resetSignInThrottle();
   vi.mocked(oidc.readFlow).mockReset().mockResolvedValue(flow);
-  vi.mocked(oidc.completeOidcFlow).mockReset().mockResolvedValue(profile);
+  vi.mocked(oidc.completeOidcFlow)
+    .mockReset()
+    .mockResolvedValue({ profile, idToken: "the.id.token" });
   vi.mocked(sso.signInWithIdentity).mockReset();
   vi.mocked(sso.connectIdentity).mockReset();
   vi.mocked(getUser).mockReset().mockResolvedValue(null);
@@ -119,14 +143,42 @@ describe("GET /auth/oidc/callback", () => {
     });
 
     const response = await call();
-    const session = await getSession(
-      response.headers
-        .getSetCookie()
-        .find((line) => line.startsWith("__aurora_session="))
-    );
+    const session = await sessionSetBy(response);
 
     expect(response.headers.get("Location")).toBe("/websites/abc/analytics");
     expect(session.get("userId")).toBe("u1");
+    // What /signout reads to decide whether the provider is involved.
+    expect(session.get("method")).toBe("sso");
+    expect(response.headers.getSetCookie()).toContain(
+      "__aurora_idt=the.id.token; Path=/signout"
+    );
+    expect(clearsFlow(response)).toBe(true);
+  });
+
+  /** Where the provider sends the browser back to after a logout. */
+  it("forwards an arrival with no code to sign-in, quietly", async () => {
+    const response = await call(undefined, "");
+
+    expect(response.headers.get("Location")).toBe("/signin");
+    expect(await flashed(response)).toBeUndefined();
+    expect(oidc.readFlow).not.toHaveBeenCalled();
+  });
+
+  it("throttles before redeeming anything", async () => {
+    vi.mocked(sso.signInWithIdentity).mockResolvedValue({
+      ok: true,
+      userId: "u1",
+    });
+
+    for (let i = 0; i < 30; i += 1) {
+      await call();
+    }
+
+    vi.mocked(oidc.completeOidcFlow).mockClear();
+    const response = await call();
+
+    expect(await flashed(response)).toMatch(/Too many sign-in attempts/);
+    expect(oidc.completeOidcFlow).not.toHaveBeenCalled();
     expect(clearsFlow(response)).toBe(true);
   });
 
@@ -281,5 +333,52 @@ describe("POST /auth/oidc", () => {
 
     expect(response.headers.get("Location")).toBe("/signin");
     expect(await flashed(response)).toMatch(/could not be reached/);
+  });
+});
+
+describe("POST /signout", () => {
+  const post = (cookie?: string) =>
+    signoutAction({
+      request: new Request("https://aurora.example.com/signout", {
+        method: "POST",
+        headers: cookie ? { Cookie: cookie } : {},
+      }),
+      params: {},
+      context: {},
+    } as never) as Promise<Response>;
+
+  beforeEach(() => {
+    vi.mocked(oidc.providerLogoutUrl)
+      .mockReset()
+      .mockResolvedValue("https://id.example.com/logout?id_token_hint=x");
+  });
+
+  it("ends an SSO session at the provider too", async () => {
+    const response = await post(await sessionFor("u1", "sso"));
+
+    expect(response.headers.get("Location")).toBe(
+      "https://id.example.com/logout?id_token_hint=x"
+    );
+    expect((await sessionSetBy(response)).get("userId")).toBeUndefined();
+    expect(response.headers.getSetCookie()).toContain(
+      "__aurora_idt=; Max-Age=0"
+    );
+  });
+
+  /** Their provider session was never Aurora's to end. */
+  it("leaves the provider alone for a password session", async () => {
+    const response = await post(await sessionFor("u1", "password"));
+
+    expect(response.headers.get("Location")).toBe("/signin");
+    expect(oidc.providerLogoutUrl).not.toHaveBeenCalled();
+  });
+
+  it("still signs out locally when the provider cannot be used", async () => {
+    vi.mocked(oidc.providerLogoutUrl).mockResolvedValue(null);
+
+    const response = await post(await sessionFor("u1", "sso"));
+
+    expect(response.headers.get("Location")).toBe("/signin");
+    expect((await sessionSetBy(response)).get("userId")).toBeUndefined();
   });
 });

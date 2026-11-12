@@ -51,6 +51,7 @@ Then open `http://localhost:3000/signup`, create an account, and add a site.
 | `AURORA_IP_HEADER`               | strongly recommended | The forwarding header your proxy overwrites, e.g. `cf-connecting-ip`.                            |
 | `AURORA_COUNTRY_HEADER`          | no                   | The header your edge writes the country code into, when it isn't one of the three known ones.    |
 | `AURORA_DISABLE_PASSWORD_SIGNUP` | no                   | `true` closes `/signup`. Existing accounts keep their passwords; new ones come only through SSO. |
+| `AURORA_DISABLE_PASSWORD_LOGIN`  | no                   | `true` makes SSO the only way in and ends existing password sessions. Requires `OIDC_ISSUER`.    |
 
 `AURORA_IP_HEADER` deserves a word. Every forwarding header is client-supplied
 until some hop overwrites it, and which hop that is depends on your topology
@@ -80,6 +81,7 @@ as a confidential web client using the authorization code flow, with
 | `OIDC_SCOPES`             | no       | Defaults to `openid email profile`.                                                                                                                                    |
 | `OIDC_ALLOWED_DOMAINS`    | no       | Comma-separated email domains allowed to sign in. Only addresses the provider has verified count.                                                                      |
 | `OIDC_CLIENT_AUTH_METHOD` | no       | `client_secret_basic` (default) or `client_secret_post`, matching the provider's client setting.                                                                       |
+| `OIDC_PROVIDER_LOGOUT`    | no       | `false` keeps signing out of Aurora from also signing out at the provider. Defaults to `true`.                                                                         |
 
 A sign-in button appears on `/signin` and `/signup`. A sign-in returns to the
 page that asked for it, on the domain it started from. Someone signing in for
@@ -95,6 +97,38 @@ people who should have it. With a provider anyone can sign up at, such as
 Google, set `OIDC_ALLOWED_DOMAINS`. Entra ID doesn't send `email_verified`, so
 the allowlist rejects everyone there. Restrict access through a single-tenant
 issuer and app assignment instead.
+
+### Signing out
+
+Signing out of a session that started through SSO also ends the session at the
+provider. That signs the user out of every app using it, which is what you want
+on a shared machine. Set `OIDC_PROVIDER_LOGOUT=false` to sign out of Aurora
+only. Sessions started with a password are never sent to the provider.
+
+After signing out, the provider sends the browser back to the callback URI,
+which forwards it to `/signin`. Keycloak, Authentik and Entra ID accept a
+registered redirect URI as the post-logout target, so they need no extra setup.
+Okta keeps a separate list of sign-out redirect URIs; add the callback URI
+there.
+
+### SSO only
+
+`AURORA_DISABLE_PASSWORD_LOGIN=true` removes password sign-in, so the provider's
+policies, such as MFA, can't be bypassed with a local password. It also closes
+`/signup`. Sessions started with a password end at once instead of running to
+their 30-day expiry. SSO-only users can't set or remove a password.
+
+Have users connect SSO from the account page before you turn this on. An account
+without a connected identity has no way in afterwards, and SSO won't take it
+over by email (see above). To let such a user connect, turn password sign-in
+back on for as long as it takes.
+
+### Rate limits
+
+Password attempts are throttled per client and per account. The client is the
+address `AURORA_IP_HEADER` names, so set it. Both steps of an SSO round trip
+count against the client's limit. A throttled account can sign in again after a
+few seconds, whether or not the password was right.
 
 ## Adding the tracker to a site
 

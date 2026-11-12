@@ -1,7 +1,15 @@
 import { createCookieSessionStorage, redirect } from "react-router";
+import { authConfig } from "./config.server";
 import { getUser } from "./queries.server";
 
-type SessionData = { userId: string };
+/** How a session was started, which decides what signing out has to undo. */
+export type SignInMethod = "password" | "sso";
+
+type SessionData = {
+  userId: string;
+  /** Absent on sessions from before SSO existed, which were all passwords. */
+  method: SignInMethod;
+};
 type SessionFlashData = { error: string };
 
 const sessionSecret = process.env.SESSION_SECRET;
@@ -49,6 +57,13 @@ export async function getCurrentUser(
   const userId = session.get("userId");
 
   if (!userId) {
+    return null;
+  }
+
+  // Turning password sign-in off has to end the password sessions already out
+  // there, or it only takes effect as they expire — up to 30 days later, which
+  // is a long time for an MFA requirement to be optional.
+  if (!authConfig.passwordLogin && session.get("method") !== "sso") {
     return null;
   }
 
@@ -130,19 +145,36 @@ export async function consumeFlashError(request: Request) {
   };
 }
 
-export async function createUserSession(userId: string, redirectTo: string) {
+export async function createUserSession(
+  userId: string,
+  redirectTo: string,
+  method: SignInMethod
+) {
   const session = await getSession();
   session.set("userId", userId);
+  session.set("method", method);
 
   return redirect(redirectTo, {
     headers: { "Set-Cookie": await commitSession(session) },
   });
 }
 
-export async function signout(request: Request) {
+export async function getSignInMethod(
+  request: Request
+): Promise<SignInMethod | null> {
   const session = await getSession(request.headers.get("Cookie"));
 
-  return redirect("/signin", {
+  if (!session.get("userId")) {
+    return null;
+  }
+
+  return session.get("method") ?? "password";
+}
+
+export async function signout(request: Request, to = "/signin") {
+  const session = await getSession(request.headers.get("Cookie"));
+
+  return redirect(to, {
     headers: { "Set-Cookie": await destroySession(session) },
   });
 }

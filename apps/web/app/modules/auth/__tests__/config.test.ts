@@ -10,7 +10,11 @@ const oidc = {
 
 describe("readAuthConfig", () => {
   it("leaves SSO off and password signup on with nothing set", () => {
-    expect(readAuthConfig({})).toEqual({ oidc: null, passwordSignup: true });
+    expect(readAuthConfig({})).toEqual({
+      oidc: null,
+      passwordLogin: true,
+      passwordSignup: true,
+    });
   });
 
   it("reads a complete provider with its defaults", () => {
@@ -23,6 +27,7 @@ describe("readAuthConfig", () => {
       providerName: "SSO",
       scope: "openid email profile",
       allowedDomains: [],
+      providerLogout: true,
     });
     expect(settings?.issuer.href).toBe("https://id.example.com/realms/aurora");
     expect(settings?.redirectUris.map((uri) => uri.href)).toEqual([
@@ -112,6 +117,26 @@ describe("readAuthConfig", () => {
     expect(
       readAuthConfig({ AURORA_DISABLE_PASSWORD_SIGNUP: value }).passwordSignup
     ).toBe(open);
+  });
+
+  it("lets provider logout be turned off", () => {
+    expect(
+      readAuthConfig({ ...oidc, OIDC_PROVIDER_LOGOUT: "false" }).oidc
+        ?.providerLogout
+    ).toBe(false);
+  });
+
+  it("turns password sign-in off, and signup with it", () => {
+    expect(
+      readAuthConfig({ ...oidc, AURORA_DISABLE_PASSWORD_LOGIN: "true" })
+    ).toMatchObject({ passwordLogin: false, passwordSignup: false });
+  });
+
+  /** Neither way in would leave an instance nobody can enter. */
+  it("refuses to turn password sign-in off without SSO", () => {
+    expect(() =>
+      readAuthConfig({ AURORA_DISABLE_PASSWORD_LOGIN: "true" })
+    ).toThrow(/needs OIDC_ISSUER/);
   });
 
   /** A typo must not be the thing that leaves registration open. */

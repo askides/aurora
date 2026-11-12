@@ -2,9 +2,15 @@ import { describe, expect, it, vi } from "vitest";
 
 vi.mock("../queries.server", () => ({ getUser: vi.fn() }));
 
+/** Mutable, so a case can turn password sign-in off for itself. */
+vi.mock("../config.server", () => ({
+  authConfig: { oidc: null, passwordLogin: true, passwordSignup: true },
+}));
+
 const { commitSession, getCurrentUser, getSession, safeRedirect } =
   await import("../session.server");
 const { getUser } = await import("../queries.server");
+const { authConfig } = await import("../config.server");
 
 describe("safeRedirect", () => {
   it.each([
@@ -24,9 +30,13 @@ describe("safeRedirect", () => {
 });
 
 describe("getCurrentUser", () => {
-  const request = async () => {
+  const request = async (method?: "password" | "sso") => {
     const session = await getSession();
     session.set("userId", "u1");
+
+    if (method) {
+      session.set("method", method);
+    }
 
     return new Request("https://aurora.test/", {
       headers: { Cookie: (await commitSession(session)).split(";")[0] },
@@ -58,4 +68,29 @@ describe("getCurrentUser", () => {
       has_password: false,
     });
   });
+
+  /**
+   * Turning password sign-in off must end the sessions passwords already
+   * started — including those from before sessions recorded a method at all —
+   * or an MFA requirement stays optional for another 30 days.
+   */
+  it.each([
+    ["password", null],
+    [undefined, null],
+    ["sso", "u1"],
+  ] as const)(
+    "with password sign-in off, a %s session resolves to %s",
+    async (method, expected) => {
+      vi.mocked(getUser).mockResolvedValue({ ...row, password: "$2a$10$hash" });
+      authConfig.passwordLogin = false;
+
+      try {
+        const user = await getCurrentUser(await request(method));
+
+        expect(user?.id ?? null).toBe(expected);
+      } finally {
+        authConfig.passwordLogin = true;
+      }
+    }
+  );
 });

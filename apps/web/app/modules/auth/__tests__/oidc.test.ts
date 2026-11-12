@@ -18,6 +18,10 @@ vi.mock("openid-client", async (importOriginal) => {
       (_config: unknown, params: Record<string, string>) =>
         new URL(`https://id.example.com/auth?${new URLSearchParams(params)}`)
     ),
+    buildEndSessionUrl: vi.fn(
+      (_config: unknown, params: Record<string, string>) =>
+        new URL(`https://id.example.com/logout?${new URLSearchParams(params)}`)
+    ),
   };
 });
 
@@ -35,10 +39,14 @@ const settings: OidcSettings = {
   providerName: "Keycloak",
   scope: "openid email profile",
   allowedDomains: [],
+  providerLogout: true,
 };
 
-const fakeConfig = (userinfo_endpoint?: string) => ({
-  serverMetadata: () => ({ userinfo_endpoint }),
+const fakeConfig = (
+  userinfo_endpoint?: string,
+  end_session_endpoint = "https://id.example.com/logout"
+) => ({
+  serverMetadata: () => ({ userinfo_endpoint, end_session_endpoint }),
 });
 
 const claims = {
@@ -55,6 +63,7 @@ const claims = {
 
 const tokens = (idClaims: Record<string, unknown> = claims) => ({
   access_token: "at",
+  id_token: "header.payload.signature",
   token_type: "bearer",
   claims: () => idClaims,
 });
@@ -310,12 +319,15 @@ describe("completeOidcFlow", () => {
         flow
       )
     ).resolves.toEqual({
-      issuer: claims.iss,
-      subject: claims.sub,
-      email: "ada@example.com",
-      emailVerified: true,
-      firstname: "Ada",
-      lastname: "Lovelace",
+      idToken: "header.payload.signature",
+      profile: {
+        issuer: claims.iss,
+        subject: claims.sub,
+        email: "ada@example.com",
+        emailVerified: true,
+        firstname: "Ada",
+        lastname: "Lovelace",
+      },
     });
     expect(client.fetchUserInfo).not.toHaveBeenCalled();
   });
@@ -335,7 +347,7 @@ describe("completeOidcFlow", () => {
       name: "Ada King Lovelace",
     } as never);
 
-    const profile = await oidc.completeOidcFlow(
+    const { profile } = await oidc.completeOidcFlow(
       settings,
       new Request("https://aurora.example.com/auth/oidc/callback"),
       flow
@@ -384,6 +396,97 @@ describe("completeOidcFlow", () => {
         flow
       )
     ).rejects.toMatchObject({ name: "OidcError", failure: "failed" });
+  });
+});
+
+describe("rememberIdToken", () => {
+  it("keeps a token that fits in a cookie", async () => {
+    const { rememberIdToken } = await load();
+    const header = await rememberIdToken("a".repeat(1500));
+
+    expect(header).toMatch(/^__aurora_idt=.*Path=\/signout/);
+  });
+
+  /** A browser drops an oversized cookie silently; better to not set it. */
+  it("skips one that would not", async () => {
+    const { rememberIdToken } = await load();
+
+    await expect(rememberIdToken("a".repeat(4000))).resolves.toBeNull();
+    await expect(rememberIdToken(undefined)).resolves.toBeNull();
+  });
+});
+
+describe("providerLogoutUrl", () => {
+  const signedOut = async (
+    from: string,
+    headers: Record<string, string> = {}
+  ) => {
+    const oidc = await load();
+
+    return {
+      oidc,
+      url: await oidc.providerLogoutUrl(
+        settings,
+        new Request(from, { headers })
+      ),
+    };
+  };
+
+  it("returns through this host's callback, with the token as a hint", async () => {
+    const oidc = await load();
+    const cookie = (await oidc.rememberIdToken("the.id.token"))!.split(";")[0];
+
+    const url = new URL(
+      (await oidc.providerLogoutUrl(
+        settings,
+        new Request("https://aurora.example.de/signout", {
+          headers: { Cookie: cookie },
+        })
+      ))!
+    );
+
+    expect(Object.fromEntries(url.searchParams)).toEqual({
+      post_logout_redirect_uri: "https://aurora.example.de/auth/oidc/callback",
+      id_token_hint: "the.id.token",
+    });
+  });
+
+  it("goes without the hint when no token was kept", async () => {
+    const { url } = await signedOut("https://aurora.example.com/signout");
+
+    expect(new URL(url!).searchParams.has("id_token_hint")).toBe(false);
+  });
+
+  it("is null for a provider with no end-session endpoint", async () => {
+    vi.mocked(client.discovery).mockResolvedValue(
+      fakeConfig(undefined, "") as never
+    );
+
+    expect((await signedOut("https://aurora.example.com/signout")).url).toBe(
+      null
+    );
+  });
+
+  it("is null when turned off, without asking the provider", async () => {
+    const oidc = await load();
+
+    await expect(
+      oidc.providerLogoutUrl(
+        { ...settings, providerLogout: false },
+        new Request("https://aurora.example.com/signout")
+      )
+    ).resolves.toBeNull();
+    expect(client.discovery).not.toHaveBeenCalled();
+  });
+
+  /** The Aurora session still ends; only the provider's is left alone. */
+  it("is null when the provider cannot be reached", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    vi.mocked(client.discovery).mockRejectedValue(new Error("ECONNREFUSED"));
+
+    expect((await signedOut("https://aurora.example.com/signout")).url).toBe(
+      null
+    );
   });
 });
 

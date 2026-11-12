@@ -27,10 +27,23 @@ export type OidcSettings = {
   scope: string;
   /** Lowercased email domains; empty means the provider decides who gets in. */
   allowedDomains: string[];
+  /**
+   * Whether signing out of Aurora also ends the session at the provider, for
+   * sessions that SSO started. On by default: on a shared machine, an Aurora
+   * sign-out that leaves the provider signed in leaves the next person one
+   * click away from the previous person's account.
+   */
+  providerLogout: boolean;
 };
 
 export type AuthConfig = {
   oidc: OidcSettings | null;
+  /**
+   * Off makes SSO the only way in, so the provider's policies — MFA, device
+   * checks, deprovisioning — cannot be stepped around with a local password.
+   */
+  passwordLogin: boolean;
+  /** Always off while password sign-in is: an account nobody can sign into. */
   passwordSignup: boolean;
 };
 
@@ -72,10 +85,14 @@ function readUrls(env: NodeJS.ProcessEnv, name: string) {
   });
 }
 
-function readBoolean(env: NodeJS.ProcessEnv, name: string) {
+function readBoolean(env: NodeJS.ProcessEnv, name: string, fallback = false) {
   const value = read(env, name)?.toLowerCase();
 
-  if (value === undefined || value === "false" || value === "0") {
+  if (value === undefined) {
+    return fallback;
+  }
+
+  if (value === "false" || value === "0") {
     return false;
   }
 
@@ -141,13 +158,25 @@ function readOidc(env: NodeJS.ProcessEnv): OidcSettings | null {
       .split(",")
       .map((domain) => domain.trim().toLowerCase().replace(/^@/, ""))
       .filter(Boolean),
+    providerLogout: readBoolean(env, "OIDC_PROVIDER_LOGOUT", true),
   };
 }
 
 export function readAuthConfig(env: NodeJS.ProcessEnv): AuthConfig {
+  const oidc = readOidc(env);
+  const passwordLogin = !readBoolean(env, "AURORA_DISABLE_PASSWORD_LOGIN");
+
+  if (!passwordLogin && !oidc) {
+    throw new Error(
+      "AURORA_DISABLE_PASSWORD_LOGIN needs OIDC_ISSUER: with neither, nobody could sign in."
+    );
+  }
+
   return {
-    oidc: readOidc(env),
-    passwordSignup: !readBoolean(env, "AURORA_DISABLE_PASSWORD_SIGNUP"),
+    oidc,
+    passwordLogin,
+    passwordSignup:
+      passwordLogin && !readBoolean(env, "AURORA_DISABLE_PASSWORD_SIGNUP"),
   };
 }
 

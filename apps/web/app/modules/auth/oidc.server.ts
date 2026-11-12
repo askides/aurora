@@ -64,6 +64,89 @@ export function clearFlowCookie() {
 }
 
 /**
+ * The ID token from sign-in, kept for one purpose: `id_token_hint` when signing
+ * out at the provider, which lets it end the right session without asking.
+ *
+ * In its own cookie rather than the session, and scoped to /signout, so the
+ * kilobyte or two it weighs rides along on one request instead of every one —
+ * and so a token too large for a cookie costs the hint rather than the
+ * session. Same lifetime as the session it belongs to.
+ */
+const idTokenCookie = createCookie("__aurora_idt", {
+  httpOnly: true,
+  path: "/signout",
+  sameSite: "lax",
+  secure: process.env.NODE_ENV === "production",
+  maxAge: 60 * 60 * 24 * 30,
+  secrets: cookieSecrets,
+});
+
+/**
+ * Browsers drop a cookie past about 4096 bytes without a word, so anything
+ * near that is not set at all. Entra ID tokens carrying group claims get
+ * there; a provider then shows its own "which account?" prompt instead.
+ */
+const MAX_COOKIE_BYTES = 3800;
+
+/** A `Set-Cookie` holding the ID token, or null when it would not fit. */
+export async function rememberIdToken(idToken: string | undefined) {
+  if (!idToken) {
+    return null;
+  }
+
+  const header = await idTokenCookie.serialize(idToken);
+
+  return header.length <= MAX_COOKIE_BYTES ? header : null;
+}
+
+export function clearIdTokenCookie() {
+  return idTokenCookie.serialize("", { maxAge: 0 });
+}
+
+/**
+ * Where to send the browser to end its session at the provider, or null when
+ * there is nothing to do there: logout turned off, a provider without an
+ * end-session endpoint (Google has none), or one that cannot be reached — in
+ * which case the Aurora session still ends and the user is told nothing worse
+ * than they would have been before.
+ *
+ * The provider is asked to send the browser back to the callback URI for this
+ * host, because that one is already registered: Keycloak's default ("+"),
+ * Authentik and Entra ID all accept a registered redirect URI as the place to
+ * return to after logout, so this needs no second registration there. The
+ * callback recognises an arrival with no code and forwards it to /signin.
+ */
+export async function providerLogoutUrl(
+  settings: OidcSettings,
+  request: Request
+) {
+  if (!settings.providerLogout) {
+    return null;
+  }
+
+  try {
+    const config = await getConfiguration(settings);
+
+    if (!config.serverMetadata().end_session_endpoint) {
+      return null;
+    }
+
+    const idToken = await idTokenCookie.parse(request.headers.get("Cookie"));
+
+    return client.buildEndSessionUrl(config, {
+      post_logout_redirect_uri: redirectUriFor(settings, request).href,
+      ...(typeof idToken === "string" && idToken
+        ? { id_token_hint: idToken }
+        : {}),
+    }).href;
+  } catch (error) {
+    console.error("[oidc] provider logout unavailable", error);
+
+    return null;
+  }
+}
+
+/**
  * Discovery is fetched on first use rather than at boot, so an identity
  * provider that is down while Aurora starts degrades the SSO button and not
  * the whole instance. A failed fetch is not cached: the next click retries.
@@ -206,13 +289,14 @@ export async function readFlow(request: Request): Promise<Flow | null> {
 
 /**
  * Validates the provider's redirect against the flow it belongs to, redeems the
- * code and returns the profile. Throws `OidcError` and nothing else.
+ * code and returns the profile, plus the raw ID token for a later logout hint.
+ * Throws `OidcError` and nothing else.
  */
 export async function completeOidcFlow(
   settings: OidcSettings,
   request: Request,
   flow: Flow
-): Promise<OidcProfile> {
+): Promise<{ profile: OidcProfile; idToken: string | undefined }> {
   // The URL the provider redirected to, rebuilt from the redirect URI the flow
   // was sent through rather than taken from the request. openid-client sends
   // it back to the token endpoint as `redirect_uri`, which must match the one
@@ -255,7 +339,7 @@ export async function completeOidcFlow(
         ? await client.fetchUserInfo(config, tokens.access_token, claims.sub)
         : undefined;
 
-    return toProfile(claims, userinfo);
+    return { profile: toProfile(claims, userinfo), idToken: tokens.id_token };
   } catch (error) {
     if (error instanceof client.AuthorizationResponseError) {
       throw new OidcError("denied", { cause: error });
